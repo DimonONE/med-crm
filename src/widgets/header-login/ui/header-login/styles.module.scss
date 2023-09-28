@@ -1,0 +1,33 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: var(--color-base);
+  height: 245px;
+
+  &.white {
+    background-color: var(--color-white);
+
+    .navbarBrand {
+      color: var(--color-base);
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin-top: 55px;
+  margin-bottom: 60px;
+}
+
+.navbarBrand {
+  min-width: 140px;
+  margin-right: auto;
+  font-family: Montserrat;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 140%;
+}

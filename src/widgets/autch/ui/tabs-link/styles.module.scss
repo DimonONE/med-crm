@@ -1,0 +1,21 @@
+.tabs {
+  display: flex;
+  margin-bottom: 45px;
+}
+
+.tab {
+  text-align: center;
+  width: 278px;
+  padding-block: 10px;
+  border-bottom: 2px solid #A1B6C1;
+  color: #A1B6C1;
+  font-size: 24px;
+  font-weight: 400;
+
+
+  &.active {
+    color: #578695;
+    font-weight: 500;
+    border-bottom: 2px solid #578695;
+  }
+}
