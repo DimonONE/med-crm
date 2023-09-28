@@ -10,7 +10,7 @@
  */
 
 export interface LoginUserDto {
-  email: string;
+  username: string;
   /** @format password */
   password: string;
 }
@@ -152,7 +152,7 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = 'https://api.realworld.io/api';
+  public baseUrl: string = 'https://petstore3.swagger.io/api/v3';
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>['securityWorker'];
   private abortControllers = new Map<CancelToken, AbortController>();
@@ -346,16 +346,6 @@ export class HttpClient<SecurityDataType = unknown> {
     });
   };
 }
-
-/**
- * @title Conduit API
- * @version 1.0.0
- * @license MIT License (https://opensource.org/licenses/MIT)
- * @baseUrl https://api.realworld.io/api
- * @contact RealWorld (https://realworld.how)
- *
- * Conduit API documentation
- */
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
@@ -380,9 +370,11 @@ export class Api<
         },
         ErrorModelDto
       >({
-        path: `/users/login`,
-        method: 'POST',
-        body: data,
+        path: `/user/login`,
+        method: 'GET',
+        query: {
+          data
+        },
         ...params,
       }),
 

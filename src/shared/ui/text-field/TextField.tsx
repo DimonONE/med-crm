@@ -19,9 +19,10 @@ export function TextField(props: TextFieldProps) {
     iconEnd,
     className,
   } = props;
+
   return (
     <div className={classNames(s.textField, className)} >
-      <div className={s.iconStart}>
+      <div className='icon-start'>
         {iconStart && iconStart}
       </div>
       <input
@@ -29,10 +30,9 @@ export function TextField(props: TextFieldProps) {
         placeholder={placeholder}
         {...field}
       />
-      <div className={s.iconEnd}>
+      <div className='icon-end'>
         {iconEnd && iconEnd}
       </div>
-
     </div>
   );
 }

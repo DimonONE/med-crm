@@ -6,6 +6,7 @@ import EmailICO from '~shared/svg/email-ico.svg';
 import LockICO from '~shared/svg/lock-ico.svg';
 import { Button } from '~shared/ui/button';
 import { ErrorHandler } from '~shared/ui/error-handler';
+import { Modal } from '~shared/ui/modal';
 import { TextField } from '~shared/ui/text-field';
 import { Container, TabsLink } from '~widgets/autch';
 
@@ -15,17 +16,23 @@ export function LoginPage() {
 
   return (
     <div className="auth-page">
+      <Modal isOpen onClose={() => false} >
+        <div>
+          test
+        </div>
+      </Modal>
+
       {isError && <ErrorHandler error={error!} />}
       <Container >
         <>
           <TabsLink />
           <Formik
             initialValues={{
-              email: '',
+              username: '',
               password: '',
             }}
             validationSchema={object().shape({
-              email: string().email().required(),
+              // email: string().email().required(),
               password: string().min(5).required(),
             })}
             onSubmit={(values, { setSubmitting }) => {
@@ -40,39 +47,34 @@ export function LoginPage() {
             }}
           >
             {({ isSubmitting }) => (
-              <Form>
-                <fieldset>
-                  <Field
-                    name="email"
-                  >
-                    {(props: FieldProps) =>
-                      <TextField
-                        {...props}
-                        iconStart={<EmailICO />}
-                        placeholder="Почта"
-
-                        className='form-input'
-                        type="text"
-                      />}
-                  </Field>
-                </fieldset>
-                <fieldset>
-                  <Field
-                    name="password"
-                  >
-                    {(props: FieldProps) =>
-                      <TextField
-                        {...props}
-                        placeholder="Пароль"
-                        iconStart={<LockICO />}
-                        className='form-input'
-                        type="password"
-                      />}
-                  </Field>
-                </fieldset>
+              <Form className='full-width center'>
+                <Field
+                  name="username"
+                >
+                  {(props: FieldProps) =>
+                    <TextField
+                      {...props}
+                      iconStart={<EmailICO />}
+                      placeholder="Почта"
+                      className='form-input'
+                      type="text"
+                    />}
+                </Field>
+                <Field
+                  name="password"
+                >
+                  {(props: FieldProps) =>
+                    <TextField
+                      {...props}
+                      placeholder="Пароль"
+                      iconStart={<LockICO />}
+                      className='form-input'
+                      type="password"
+                    />}
+                </Field>
 
                 <Button
-                  // className={s.submit}
+                  className='form-submit'
                   type="submit"
                   color="primary"
                   disabled={isSubmitting}

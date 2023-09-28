@@ -1,92 +1,150 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Link } from 'react-router-dom';
+import { Formik, Form, Field, ErrorMessage, FieldProps } from 'formik';
 import { object, string } from 'yup';
-import { sessionModel } from '~entities/session';
+// import { sessionModel } from '~entities/session';
 import { useCreateUser } from '~features/session';
-import { PATH_PAGE } from '~shared/lib/react-router';
+import { Button } from '~shared/ui/button';
 import { ErrorHandler } from '~shared/ui/error-handler';
+import { SelectField } from '~shared/ui/select-field';
+import { Container, TabsLink } from '~widgets/autch';
 
 export function RegisterPage() {
-  const { mutate, isError, error } = useCreateUser();
+  const { isError, error } = useCreateUser();
+  const selectOptions = [{ value: 12, label: 'Option 1' }, { value: 1, label: 'Option 1' }, { value: 10, label: 'Option 1' }];
 
   return (
     <div className="auth-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Sign up</h1>
-            <p className="text-xs-center">
-              <Link to={PATH_PAGE.login}>Have an account?</Link>
-            </p>
+      {isError && <ErrorHandler error={error} />}
 
-            {isError && <ErrorHandler error={error} />}
+      <Container>
+        <>
+          <TabsLink />
 
-            <Formik
-              initialValues={{
-                username: '',
-                email: '',
-                password: '',
-              }}
-              validationSchema={object().shape({
-                username: string().min(5).required(),
-                email: string().email().required(),
-                password: string().min(5).required(),
-              })}
-              onSubmit={(values, { setSubmitting }) => {
-                mutate(values, {
-                  onSuccess: (response) => {
-                    sessionModel.addUser(response.data.user);
-                  },
-                  onSettled: () => {
-                    setSubmitting(false);
-                  },
-                });
-              }}
-            >
-              {({ isSubmitting }) => (
-                <Form>
-                  <fieldset disabled={isSubmitting}>
-                    <fieldset className="form-group">
-                      <Field
-                        name="username"
-                        className="form-control form-control-lg"
-                        type="text"
-                        placeholder="Your Name"
-                      />
-                      <ErrorMessage name="username" />
-                    </fieldset>
-                    <fieldset className="form-group">
-                      <Field
-                        name="email"
-                        className="form-control form-control-lg"
-                        type="text"
-                        placeholder="Email"
-                      />
-                      <ErrorMessage name="email" />
-                    </fieldset>
-                    <fieldset className="form-group">
-                      <Field
-                        name="password"
-                        className="form-control form-control-lg"
-                        type="password"
-                        placeholder="Password"
-                      />
-                      <ErrorMessage name="password" />
-                    </fieldset>
-                    <button
-                      className="btn btn-lg btn-primary pull-xs-right"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      Sign up
-                    </button>
+          <Formik
+            initialValues={{
+              clinicName: '',
+              typeClinic: '',
+              address: '',
+              side: '',
+              backyard: '',
+              email: '',
+            }}
+            validationSchema={object().shape({
+              clinicName: string().min(5).required(),
+              email: string().email().required(),
+            })}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onSubmit={(values) => {
+              console.log('values', values);
+
+              // mutate(values, {
+              //   onSuccess: (response) => {
+              //     sessionModel.addUser(response.data.user);
+              //   },
+              //   onSettled: () => {
+              //     setSubmitting(false);
+              //   },
+              // });
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form className='full-width'>
+                <fieldset disabled={isSubmitting}>
+                  <fieldset className='full-width center'>
+                    <Field
+                      name="clinicName"
+                      className='form-input'
+                      type="text"
+                      placeholder="Название клиники"
+                    />
+                    <ErrorMessage name="clinicName" />
                   </fieldset>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </div>
-      </div>
+
+                  <fieldset className='full-width center'>
+                    <Field
+                      name="typeClinic"
+                      className='form-input'
+                      placeholder="Тип клиники"
+                    >
+                      {(props: FieldProps) =>
+                        <SelectField
+                          {...props}
+                          className='form-input'
+                          selectOptions={selectOptions}
+                        />}
+                    </Field>
+                    <ErrorMessage name="typeClinic" />
+                  </fieldset>
+
+                  <fieldset className='full-width center'>
+                    <Field
+                      name="address"
+                      className='form-input'
+                      type="text"
+                      placeholder="Адрес"
+                    />
+                    <ErrorMessage name="address" />
+                  </fieldset>
+
+                  <fieldset>
+                    <Field
+                      name="side"
+                      className='form-input'
+                      type="text"
+                      placeholder="Страна"
+                    />
+                    <ErrorMessage name="side" />
+                  </fieldset>
+
+                  <fieldset>
+                    <Field
+                      name="email"
+                      className='form-input'
+                      type="text"
+                      placeholder="Город"
+                    />
+                    <ErrorMessage name="email" />
+                  </fieldset>
+                  <fieldset>
+                    <Field
+                      name="email"
+                      className='form-input'
+                      type="text"
+                      placeholder="+7 (000) - 00 - 00"
+                    />
+                    <ErrorMessage name="email" />
+                  </fieldset>
+                  <fieldset>
+                    <Field
+                      name="email"
+                      className='form-input'
+                      type="text"
+                      placeholder="Почта"
+                    />
+                    <ErrorMessage name="email" />
+                  </fieldset>
+                  <fieldset>
+                    <Field
+                      name="username"
+                      className='form-input'
+                      type="text"
+                      placeholder="Имя главврача"
+                    />
+                    <ErrorMessage name="username" />
+                  </fieldset>
+                </fieldset>
+                <Button
+                  className='form-submit'
+                  type="submit"
+                  color="primary"
+                  disabled={isSubmitting}
+                >
+                  Подать заявку
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </>
+      </Container>
     </div>
   );
 }

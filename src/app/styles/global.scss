@@ -163,6 +163,8 @@ textarea {
 }
 
 .form-input {
+  width: 100%;
+  max-width: 425px;
   height: 50px;
   margin-bottom: 10px;
   border-radius: 69px;
@@ -183,4 +185,55 @@ textarea {
   text-align: center;
   font-size: 18px;
   font-weight: 500;
+}
+
+.form-submit {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+
+.icon-start {
+  padding-right: 17px;
+}
+
+.icon-end {
+  padding-left: 17px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// Material UI
+
+.MuiSelect-root.MuiSelect-select:focus {
+  background-color: initial;
+}
+ 
+.MuiInputBase-root.MuiInput-root::before,
+.MuiInputBase-root.MuiInput-underline:hover:not(.Mui-disabled):before{
+  border-bottom: none;
+}
+
+.MuiInputBase-root.MuiInput-underline.Mui-focused:after {
+  transform: none;
+}
+
+.MuiInputBase-root.MuiInput-underline:after {
+  border-bottom: none;
+}
+
+.MuiInputBase-root .MuiSelect-root{
+  display: flex;
+  align-items: center;
+  padding-block: 0;
+  height: 100%;
 }
