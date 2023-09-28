@@ -6,7 +6,6 @@ import EmailICO from '~shared/svg/email-ico.svg';
 import LockICO from '~shared/svg/lock-ico.svg';
 import { Button } from '~shared/ui/button';
 import { ErrorHandler } from '~shared/ui/error-handler';
-import { Modal } from '~shared/ui/modal';
 import { TextField } from '~shared/ui/text-field';
 import { Container, TabsLink } from '~widgets/autch';
 
@@ -16,12 +15,6 @@ export function LoginPage() {
 
   return (
     <div className="auth-page">
-      <Modal isOpen onClose={() => false} >
-        <div>
-          test
-        </div>
-      </Modal>
-
       {isError && <ErrorHandler error={error!} />}
       <Container >
         <>

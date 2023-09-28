@@ -1,11 +1,8 @@
 import { factory, nullable, primaryKey } from '@mswjs/data';
-import {
-  userConfig,
-  profilesConfig,
-  commentsConfig,
-  tagsConfig,
-  articlesConfig,
-} from './config';
+// import {
+//   userConfig,
+//   profilesConfig,
+// } from './config';
 
 type DatabaseApiType = ReturnType<typeof getDatabaseAPI>;
 
@@ -68,17 +65,13 @@ function getDatabaseAPI() {
     },
   });
 }
-
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function seedDatabase(databaseApi: DatabaseApiType) {
-  databaseApi.user.create(userConfig);
+  // databaseApi.user.create(userConfig);
 
-  profilesConfig.map((profile) => databaseApi.profile.create(profile));
+  // profilesConfig.map((profile) => databaseApi.profile.create(profile));
 
-  articlesConfig.map((article) => databaseApi.article.create(article));
-
-  commentsConfig.map((comment) => databaseApi.comment.create(comment));
-
-  tagsConfig.map((tag) => databaseApi.tag.create(tag));
 }
 
 export function initTestDatabase() {
