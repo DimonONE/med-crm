@@ -21,14 +21,15 @@ export function LoginPage() {
           <TabsLink />
           <Formik
             initialValues={{
-              username: '',
+              email: '',
               password: '',
             }}
             validationSchema={object().shape({
-              // email: string().email().required(),
+              email: string().email().required(),
               password: string().min(5).required(),
             })}
             onSubmit={(values, { setSubmitting }) => {
+              // @ts-ignore
               mutate(values, {
                 onSuccess: (response) => {
                   sessionModel.addUser(response.data.user);
@@ -42,7 +43,7 @@ export function LoginPage() {
             {({ isSubmitting }) => (
               <Form className='full-width center'>
                 <Field
-                  name="username"
+                  name="email"
                 >
                   {(props: FieldProps) =>
                     <TextField

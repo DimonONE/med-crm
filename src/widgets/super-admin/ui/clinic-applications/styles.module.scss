@@ -1,0 +1,35 @@
+.table {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
+.header,
+.itemContainer {
+  display: grid;
+  grid-template-columns: 245px auto  ;
+  padding-left: clamp(20px, 32vw, 40px);
+  width: 100%;
+}
+
+.header{
+  border-bottom: 1px solid#578695;
+}
+
+.itemContainer {
+  color: #578695;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.buttonLink {
+  padding: 9px 45px;
+  color:  #0E5F8C;
+  font-size: 14px;
+  font-weight: 600;
+}

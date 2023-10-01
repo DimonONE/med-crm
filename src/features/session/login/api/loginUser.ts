@@ -1,17 +1,13 @@
 import { UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { sessionApi } from '~entities/session';
+// import { sessionApi } from '~entities/session';
 import {
   HttpResponse,
-  UserDto,
-  LoginUserDto,
+  UserEntityDto,
   realworldApi,
-  GenericErrorModel,
 } from '~shared/api/realworld';
 
 type UseLoginUserMutation = UseMutationOptions<
-  HttpResponse<{ user: UserDto }, unknown>,
-  GenericErrorModel,
-  LoginUserDto,
+  HttpResponse<{ user: UserEntityDto }, unknown>,
   unknown
 >;
 
@@ -20,9 +16,14 @@ type UseLoginUserOptions = Omit<
   'mutationFn' | 'mutationKey'
 >;
 
+type LoginUserDto = {
+  email: string,
+  password: string
+};
+
 export const useLoginUser = (oprions?: UseLoginUserOptions) =>
   useMutation({
-    mutationKey: sessionApi.sessionKeys.mutation.login(),
-    mutationFn: (user: LoginUserDto) => realworldApi.users.login({ user }),
+    // @ts-ignore
+    mutationFn: (user: LoginUserDto) => realworldApi.users.usersControllerLogin( user ),
     ...oprions,
   });

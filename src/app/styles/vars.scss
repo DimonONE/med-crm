@@ -9,4 +9,8 @@
 
   // Sizes
   --font-size: 18px;
+
+  // Constants
+  --header-height: 86px;
+  --sidebar-width: clamp(280px, 32vw, 420px);
 }

@@ -1,0 +1,28 @@
+.table {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
+.header,
+.itemContainer {
+  display: grid;
+  grid-template-columns: 170px 180px 265px 265px 265px 265px 90px;
+  padding-left: clamp(20px, 32vw, 40px);
+  width: max-content;
+}
+
+.header{
+  border-bottom: 1px solid#578695;
+}
+
+.itemContainer {
+  color: #578695;
+  font-size: 18px;
+  font-weight: 400;
+}

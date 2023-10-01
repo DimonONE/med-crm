@@ -9,96 +9,113 @@
  * ---------------------------------------------------------------
  */
 
-export interface LoginUserDto {
-  username: string;
-  /** @format password */
-  password: string;
-}
-
-export interface NewUserDto {
-  username: string;
+export interface CreateUserDtoDto {
+  /** First name of the user */
+  firstName: string;
+  /** Surname of the user */
+  surname: string;
+  /** Last name of the user */
+  lastName: string;
+  /** Email of the user */
   email: string;
-  /** @format password */
+  /** Phone of the user */
+  phone: string;
+  /** Image of the user */
+  image?: string | null;
+  /** Password of the user */
   password: string;
+  /** Role for user */
+  role: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  /** Specialization for doctor */
+  specialization?: string;
 }
 
-export interface UserDto {
-  email: string;
-  token: string;
-  username: string;
-  bio: string;
-  image: string;
-}
-
-export interface UpdateUserDto {
+export interface UpdateUserDtoDto {
+  /** First name of the user */
+  firstName?: string;
+  /** Surname of the user */
+  surname?: string;
+  /** Last name of the user */
+  lastName?: string;
+  /** Email of the user */
   email?: string;
+  /** Phone of the user */
+  phone?: string;
+  /** Image of the user */
+  image?: string | null;
+  /** Password of the user */
   password?: string;
-  username?: string;
-  bio?: string;
-  image?: string;
+  /** Role for user */
+  role?: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  /** Specialization for doctor */
+  specialization?: string;
 }
 
-export interface ProfileDto {
-  username: string;
-  bio: string;
-  image: string;
-  following: boolean;
+export interface CreatePatientDtoDto {
+  /** First name of the patient */
+  firstName: string;
+  /** Surname of the patient */
+  surname: string;
+  /** Last name of the patient */
+  lastName: string;
+  /** Email of the patient */
+  email: string;
+  /** Phone of the patient */
+  phone: string;
+  /** Image of the patient */
+  image?: string | null;
+  /**
+   * Date of birth of the patient
+   * @format date-time
+   */
+  dateOfBirth: string;
+  /** Notice about patient */
+  notice?: string | null;
 }
 
-export interface ArticleDto {
-  slug: string;
-  title: string;
-  description: string;
-  body: string;
-  tagList: string[];
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  favorited: boolean;
-  favoritesCount: number;
-  author: ProfileDto;
-}
-
-export interface NewArticleDto {
-  title: string;
-  description: string;
-  body: string;
-  tagList?: string[];
-}
-
-export interface UpdateArticleDto {
-  title?: string;
-  description?: string;
-  body?: string;
-}
-
-export interface CommentDto {
+export interface RoleEntityDto {
   id: number;
+  name: string;
+  users: UserEntityDto[];
+}
+
+export interface PatientEntityDto {
+  id: string;
+  firstName: string;
+  surname: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  image: string;
+  /** @format date-time */
+  dateOfBirth: string;
+  notice: string;
+  user: UserEntityDto;
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
-  body: string;
-  author: ProfileDto;
 }
 
-export interface NewCommentDto {
-  body: string;
-}
-
-export interface GenericErrorModelDto {
+export interface UserEntityDto {
+  id: string;
+  firstName: string;
+  surname: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  image: string;
+  password: string;
+  role: RoleEntityDto;
+  specialization?: string;
+  createdBy: string;
   status: string;
-  message: string;
+  patients: PatientEntityDto[];
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
 }
-
-export interface UnexpectedErrorModelDto {
-  errors: {
-    body: string[];
-  };
-}
-
-export type ErrorModelDto = GenericErrorModelDto | UnexpectedErrorModelDto;
 
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>;
@@ -152,7 +169,7 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = 'https://petstore3.swagger.io/api/v3';
+  public baseUrl: string = '';
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>['securityWorker'];
   private abortControllers = new Map<CancelToken, AbortController>();
@@ -308,9 +325,10 @@ export class HttpClient<SecurityDataType = unknown> {
             ? { 'Content-Type': type }
             : {}),
         },
-        signal: cancelToken
-          ? this.createAbortSignal(cancelToken)
-          : requestParams.signal,
+        signal:
+          (cancelToken
+            ? this.createAbortSignal(cancelToken)
+            : requestParams.signal) || null,
         body:
           typeof body === 'undefined' || body === null
             ? null
@@ -346,488 +364,187 @@ export class HttpClient<SecurityDataType = unknown> {
     });
   };
 }
+
+/**
+ * @title Med CRM
+ * @version 0.1
+ * @contact
+ *
+ * Application for medical clinic
+ */
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
   users = {
     /**
-     * @description Login for existing user
+     * No description
      *
-     * @tags User and Authentication
-     * @name Login
-     * @summary Existing user login
+     * @tags Users
+     * @name UsersControllerCreateUser
+     * @request POST:/users/create
+     */
+    usersControllerCreateUser: (
+      data: CreateUserDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<string, any>({
+        path: `/users/create`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerMakeProposal
+     * @request POST:/users/make_proposal
+     */
+    usersControllerMakeProposal: (
+      data: CreateUserDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<string, any>({
+        path: `/users/make_proposal`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerLogin
      * @request POST:/users/login
      */
-    login: (
-      data: {
-        user: LoginUserDto;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          user: UserDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/user/login`,
-        method: 'GET',
-        query: {
-          data
-        },
+    usersControllerLogin: (params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/users/login`,
+        method: 'POST',
+        format: 'json',
         ...params,
       }),
 
     /**
-     * @description Register a new user
+     * No description
      *
-     * @tags User and Authentication
-     * @name CreateUser
-     * @request POST:/users
+     * @tags Users
+     * @name UsersControllerGetсurentUser
+     * @request GET:/users/currentuser
      */
-    createUser: (
-      data: {
-        user: NewUserDto;
-      },
+    usersControllerGetсurentUser: (params: RequestParams = {}) =>
+      this.request<object, any>({
+        path: `/users/currentuser`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerGetListOfAviableUser
+     * @request GET:/users/listofusers
+     */
+    usersControllerGetListOfAviableUser: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/listofusers`,
+        method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerGetUserById
+     * @request GET:/users/user/{id}
+     */
+    usersControllerGetUserById: (id: string, params: RequestParams = {}) =>
+      this.request<object, any>({
+        path: `/users/user/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerUpdate
+     * @request PATCH:/users/update
+     */
+    usersControllerUpdate: (
+      data: UpdateUserDtoDto,
       params: RequestParams = {},
     ) =>
-      this.request<
-        {
-          user: UserDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/users`,
-        method: 'POST',
+      this.request<string, any>({
+        path: `/users/update`,
+        method: 'PATCH',
         body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerRemoveCard
+     * @request DELETE:/users/delete
+     */
+    usersControllerRemoveCard: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/delete`,
+        method: 'DELETE',
         ...params,
       }),
   };
-  user = {
+  patients = {
     /**
-     * @description Gets the currently logged-in user
+     * No description
      *
-     * @tags User and Authentication
-     * @name GetCurrentUser
-     * @summary Get current user
-     * @request GET:/user
-     * @secure
+     * @tags Patients
+     * @name PatientsControllerCreatePatient
+     * @request POST:/patients/create
      */
-    getCurrentUser: (params: RequestParams = {}) =>
-      this.request<
-        {
-          user: UserDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/user`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Updated user information for current user
-     *
-     * @tags User and Authentication
-     * @name UpdateCurrentUser
-     * @summary Update current user
-     * @request PUT:/user
-     * @secure
-     */
-    updateCurrentUser: (
-      data: {
-        user: UpdateUserDto;
-      },
+    patientsControllerCreatePatient: (
+      data: CreatePatientDtoDto,
       params: RequestParams = {},
     ) =>
-      this.request<
-        {
-          user: UserDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/user`,
-        method: 'PUT',
-        body: data,
-        secure: true,
-        ...params,
-      }),
-  };
-  profiles = {
-    /**
-     * @description Get a profile of a user of the system. Auth is optional
-     *
-     * @tags Profile
-     * @name GetProfileByUsername
-     * @summary Get a profile
-     * @request GET:/profiles/{username}
-     */
-    getProfileByUsername: (username: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          profile: ProfileDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/profiles/${username}`,
-        method: 'GET',
-        ...params,
-      }),
-
-    /**
-     * @description Follow a user by username
-     *
-     * @tags Profile
-     * @name FollowUserByUsername
-     * @summary Follow a user
-     * @request POST:/profiles/{username}/follow
-     * @secure
-     */
-    followUserByUsername: (username: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          profile: ProfileDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/profiles/${username}/follow`,
-        method: 'POST',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Unfollow a user by username
-     *
-     * @tags Profile
-     * @name UnfollowUserByUsername
-     * @summary Unfollow a user
-     * @request DELETE:/profiles/{username}/follow
-     * @secure
-     */
-    unfollowUserByUsername: (username: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          profile: ProfileDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/profiles/${username}/follow`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-  };
-  articles = {
-    /**
-     * @description Get most recent articles from users you follow. Use query parameters to limit. Auth is required
-     *
-     * @tags Articles
-     * @name GetArticlesFeed
-     * @summary Get recent articles from users you follow
-     * @request GET:/articles/feed
-     * @secure
-     */
-    getArticlesFeed: (
-      query?: {
-        /**
-         * The number of items to skip before starting to collect the result set.
-         * @min 0
-         */
-        offset?: number;
-        /**
-         * The numbers of items to return.
-         * @min 1
-         * @default 20
-         */
-        limit?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          articles: ArticleDto[];
-          articlesCount: number;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles/feed`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Get most recent articles globally. Use query parameters to filter results. Auth is optional
-     *
-     * @tags Articles
-     * @name GetArticles
-     * @summary Get recent articles globally
-     * @request GET:/articles
-     */
-    getArticles: (
-      query?: {
-        /** Filter by tag */
-        tag?: string;
-        /** Filter by author (username) */
-        author?: string;
-        /** Filter by favorites of a user (username) */
-        favorited?: string;
-        /**
-         * The number of items to skip before starting to collect the result set.
-         * @min 0
-         */
-        offset?: number;
-        /**
-         * The numbers of items to return.
-         * @min 1
-         * @default 20
-         */
-        limit?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          articles: ArticleDto[];
-          articlesCount: number;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles`,
-        method: 'GET',
-        query: query,
-        ...params,
-      }),
-
-    /**
-     * @description Create an article. Auth is required
-     *
-     * @tags Articles
-     * @name CreateArticle
-     * @summary Create an article
-     * @request POST:/articles
-     * @secure
-     */
-    createArticle: (
-      data: {
-        article: NewArticleDto;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          article: ArticleDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles`,
+      this.request<string, any>({
+        path: `/patients/create`,
         method: 'POST',
         body: data,
-        secure: true,
+        type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
 
     /**
-     * @description Get an article. Auth not required
+     * No description
      *
-     * @tags Articles
-     * @name GetArticle
-     * @summary Get an article
-     * @request GET:/articles/{slug}
+     * @tags Patients
+     * @name PatientsControllerGetPatientById
+     * @request GET:/patients/{id}
      */
-    getArticle: (slug: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          article: ArticleDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles/${slug}`,
-        method: 'GET',
-        ...params,
-      }),
-
-    /**
-     * @description Update an article. Auth is required
-     *
-     * @tags Articles
-     * @name UpdateArticle
-     * @summary Update an article
-     * @request PUT:/articles/{slug}
-     * @secure
-     */
-    updateArticle: (
-      slug: string,
-      data: {
-        article: UpdateArticleDto;
-      },
+    patientsControllerGetPatientById: (
+      id: string,
       params: RequestParams = {},
     ) =>
-      this.request<
-        {
-          article: ArticleDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles/${slug}`,
-        method: 'PUT',
-        body: data,
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Delete an article. Auth is required
-     *
-     * @tags Articles
-     * @name DeleteArticle
-     * @summary Delete an article
-     * @request DELETE:/articles/{slug}
-     * @secure
-     */
-    deleteArticle: (slug: string, params: RequestParams = {}) =>
-      this.request<any, ErrorModelDto>({
-        path: `/articles/${slug}`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Get the comments for an article. Auth is optional
-     *
-     * @tags Comments
-     * @name GetArticleComments
-     * @summary Get comments for an article
-     * @request GET:/articles/{slug}/comments
-     */
-    getArticleComments: (slug: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          comments: CommentDto[];
-        },
-        ErrorModelDto
-      >({
-        path: `/articles/${slug}/comments`,
+      this.request<PatientEntityDto, any>({
+        path: `/patients/${id}`,
         method: 'GET',
-        ...params,
-      }),
-
-    /**
-     * @description Create a comment for an article. Auth is required
-     *
-     * @tags Comments
-     * @name CreateArticleComment
-     * @summary Create a comment for an article
-     * @request POST:/articles/{slug}/comments
-     * @secure
-     */
-    createArticleComment: (
-      slug: string,
-      data: {
-        comment: NewCommentDto;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<
-        {
-          comment: CommentDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles/${slug}/comments`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Delete a comment for an article. Auth is required
-     *
-     * @tags Comments
-     * @name DeleteArticleComment
-     * @summary Delete a comment for an article
-     * @request DELETE:/articles/{slug}/comments/{id}
-     * @secure
-     */
-    deleteArticleComment: (
-      slug: string,
-      id: number,
-      params: RequestParams = {},
-    ) =>
-      this.request<any, ErrorModelDto>({
-        path: `/articles/${slug}/comments/${id}`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Favorite an article. Auth is required
-     *
-     * @tags Favorites
-     * @name CreateArticleFavorite
-     * @summary Favorite an article
-     * @request POST:/articles/{slug}/favorite
-     * @secure
-     */
-    createArticleFavorite: (slug: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          article: ArticleDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles/${slug}/favorite`,
-        method: 'POST',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * @description Unfavorite an article. Auth is required
-     *
-     * @tags Favorites
-     * @name DeleteArticleFavorite
-     * @summary Unfavorite an article
-     * @request DELETE:/articles/{slug}/favorite
-     * @secure
-     */
-    deleteArticleFavorite: (slug: string, params: RequestParams = {}) =>
-      this.request<
-        {
-          article: ArticleDto;
-        },
-        ErrorModelDto
-      >({
-        path: `/articles/${slug}/favorite`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-  };
-  tags = {
-    /**
-     * @description Get tags. Auth not required
-     *
-     * @tags Tags
-     * @name GetTags
-     * @summary Get tags
-     * @request GET:/tags
-     */
-    getTags: (params: RequestParams = {}) =>
-      this.request<
-        {
-          tags: string[];
-        },
-        ErrorModelDto
-      >({
-        path: `/tags`,
-        method: 'GET',
+        format: 'json',
         ...params,
       }),
   };

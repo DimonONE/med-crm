@@ -62,6 +62,6 @@ export const useAuth = () =>
 export const useCurrentUser = () =>
   useStore(sessionStore, (state) => state.user);
 
-export const addUser = (user: User) => sessionStore.getState().addUser(user);
+export const addUser = (user: any) => sessionStore.getState().addUser(user);
 
 export const deleteToken = () => sessionStore.getState().deleteUser();

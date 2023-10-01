@@ -4,11 +4,15 @@ import { AuthGuard, sessionModel } from '~entities/session';
 // import { MainLayout } from '~pages/layouts';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
-import { HeaderLogin } from '~widgets/header-login';
+import { Header, HeaderLogin } from '~widgets/header';
 
 // const ArticlePage = Loadable(lazy(() => import('~pages/article')));
 // const EditorPage = Loadable(lazy(() => import('~pages/editor')));
 // const HomePage = Loadable(lazy(() => import('~pages/home')));
+const AllClinicsPage = Loadable(lazy(() => import('~pages/suter-admin/all-clinics')));
+const AddClinicPage = Loadable(lazy(() => import('~pages/suter-admin/add-clinic')));
+const EditClinicPage = Loadable(lazy(() => import('~pages/suter-admin/edit-clinic')));
+const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/suter-admin/clinic-applications')));
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
 const Page404 = Loadable(lazy(() => import('~pages/page-404')));
 // const ProfilePage = Loadable(lazy(() => import('~pages/profile')));
@@ -20,8 +24,40 @@ export function Router() {
 
   return useRoutes([
     {
-      element: <HeaderLogin />,
+      element: !isAuth ? <Header /> : <HeaderLogin />,
       children: [
+        {
+          path: 'all-clinic/:id?',
+          element: (
+            <AuthGuard isAuth={isAuth}>
+              <AllClinicsPage />
+            </AuthGuard>
+          ),
+        },
+        {
+          path: 'clinic-applications',
+          element: (
+            <AuthGuard isAuth={isAuth}>
+              <ClinicApplicationsPage />
+            </AuthGuard>
+          ),
+        },
+        {
+          path: 'add-clinic',
+          element: (
+            <AuthGuard isAuth={isAuth}>
+              <AddClinicPage />
+            </AuthGuard>
+          ),
+        },
+        {
+          path: 'edit-clinic',
+          element: (
+            <AuthGuard isAuth={isAuth}>
+              <EditClinicPage />
+            </AuthGuard>
+          ),
+        },
         {
           path: 'login',
           element: (

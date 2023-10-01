@@ -2,6 +2,10 @@ export const PATH_PAGE = {
   root: '/',
   login: '/login',
   register: '/register',
+  allClinic: '/all-clinic',
+  addClinic: '/add-clinic',
+  editClinic: '/edit-clinic',
+  clinicApplications: '/clinic-applications',
   settings: '/settings',
   profile: {
     root: (username: string) => `/profile/${username}`,

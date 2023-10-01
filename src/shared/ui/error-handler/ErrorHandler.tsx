@@ -1,12 +1,7 @@
 /* eslint-disable no-case-declarations */
-import {
-  GenericErrorModel,
-  GenericErrorModelDto,
-  UnexpectedErrorModelDto,
-} from '~shared/api/realworld';
 
 type ErrorHandlerProps = {
-  error: GenericErrorModel;
+  error: any;
 };
 
 export function ErrorHandler(props: ErrorHandlerProps) {
@@ -17,15 +12,8 @@ export function ErrorHandler(props: ErrorHandlerProps) {
   let errorList: string[] = [];
 
   switch (true) {
-    case Object.hasOwn(error.error, 'errors'):
-      const unexpectedError = error.error as UnexpectedErrorModelDto;
-      errorList = Object.entries(unexpectedError.errors).flatMap(
-        ([key, value]) => value.map((curError) => `${key} ${curError}`),
-      );
-      break;
-
     case Object.hasOwn(error.error, 'message'):
-      const genericError = error.error as GenericErrorModelDto;
+      const genericError = error.error;
       errorList = [genericError.message];
       break;
 

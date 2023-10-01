@@ -1,0 +1,43 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 90px;
+  height: var(--header-height);
+  background-color: var(--color-base);
+}
+
+.headerLogo {
+  display: flex;
+  padding-block: 5px;
+  padding-right: 29px;
+  color: var(--color-white);
+  font-size: 26px;
+  font-weight: 700;
+  border-right: 1px solid var(--color-white);
+
+  
+  .ico {
+    width: 25px;
+    height: 27px;
+  }
+}
+
+.status {
+  margin-right: 17px;
+}
+
+.navbar {
+  width: 100%;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  float: right;
+
+  .name{
+    margin-left: 8px;
+    color: var(--color-white);
+  }
+}

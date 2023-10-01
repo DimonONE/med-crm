@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import styles from './full-page-wrapper.module.css';
+import styles from './styles.module.scss';
 
 type FullPageWrapperProps = {
   children: ReactNode;

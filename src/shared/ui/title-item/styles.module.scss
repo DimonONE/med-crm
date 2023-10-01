@@ -1,0 +1,19 @@
+.titleItem {
+  display: flex;
+  align-items: center;
+  cursor: default;
+
+  &.filter {
+    cursor: pointer;
+  }
+}
+
+.title {
+  display: flex;
+  min-height: 58px;
+  margin-right: 10px;
+  align-items: center;
+  color: #0E5F8C;
+  font-size: clamp(16px, 2vw, 20px) ;
+  font-weight: 600;
+}

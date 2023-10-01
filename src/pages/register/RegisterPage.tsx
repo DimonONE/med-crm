@@ -1,19 +1,18 @@
 import { Formik, Form, Field, ErrorMessage, FieldProps } from 'formik';
 import { object, string } from 'yup';
 // import { sessionModel } from '~entities/session';
-import { useCreateUser } from '~features/session';
 import { Button } from '~shared/ui/button';
-import { ErrorHandler } from '~shared/ui/error-handler';
+// import { ErrorHandler } from '~shared/ui/error-handler';
 import { SelectField } from '~shared/ui/select-field';
 import { Container, TabsLink } from '~widgets/autch';
 
 export function RegisterPage() {
-  const { isError, error } = useCreateUser();
+  // const { isError, error } = useCreateUser();
   const selectOptions = [{ value: 12, label: 'Option 1' }, { value: 1, label: 'Option 1' }, { value: 10, label: 'Option 1' }];
 
   return (
     <div className="auth-page">
-      {isError && <ErrorHandler error={error} />}
+      {/* {isError && <ErrorHandler error={error} />} */}
 
       <Container>
         <>
@@ -47,8 +46,8 @@ export function RegisterPage() {
             }}
           >
             {({ isSubmitting }) => (
-              <Form className='full-width'>
-                <fieldset disabled={isSubmitting}>
+              <Form className='full-width center'>
+                <fieldset disabled={isSubmitting} className='full-width center'>
                   <fieldset className='full-width center'>
                     <Field
                       name="clinicName"
@@ -85,7 +84,7 @@ export function RegisterPage() {
                     <ErrorMessage name="address" />
                   </fieldset>
 
-                  <fieldset>
+                  <fieldset className='full-width center'>
                     <Field
                       name="side"
                       className='form-input'
@@ -95,7 +94,7 @@ export function RegisterPage() {
                     <ErrorMessage name="side" />
                   </fieldset>
 
-                  <fieldset>
+                  <fieldset className='full-width center'>
                     <Field
                       name="email"
                       className='form-input'
@@ -104,7 +103,7 @@ export function RegisterPage() {
                     />
                     <ErrorMessage name="email" />
                   </fieldset>
-                  <fieldset>
+                  <fieldset className='full-width center'>
                     <Field
                       name="email"
                       className='form-input'
@@ -113,7 +112,7 @@ export function RegisterPage() {
                     />
                     <ErrorMessage name="email" />
                   </fieldset>
-                  <fieldset>
+                  <fieldset className='full-width center'>
                     <Field
                       name="email"
                       className='form-input'
@@ -122,7 +121,7 @@ export function RegisterPage() {
                     />
                     <ErrorMessage name="email" />
                   </fieldset>
-                  <fieldset>
+                  <fieldset className='full-width center'>
                     <Field
                       name="username"
                       className='form-input'
@@ -131,7 +130,20 @@ export function RegisterPage() {
                     />
                     <ErrorMessage name="username" />
                   </fieldset>
+                  <fieldset className='full-width center'>
+                    <div className='form-textarea-label'>Краткое описание</div>
+                    <Field
+                      name="comment"
+                      className='form-textarea'
+                      type="text"
+                      placeholder="Коментарий..."
+                      component="textarea"
+                    />
+                    <ErrorMessage name="comment" />
+                  </fieldset>
                 </fieldset>
+
+
                 <Button
                   className='form-submit'
                   type="submit"

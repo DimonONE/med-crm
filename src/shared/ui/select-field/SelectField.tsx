@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MenuItem, Select } from '@material-ui/core';
 import classNames from 'classnames';
 import { FieldProps } from 'formik';
@@ -22,20 +22,30 @@ export function SelectField(props: SelectFieldProps) {
     className,
   } = props;
   const [isOpen, setOpen] = useState(false);
+  const [selectValue, setValue] = useState<number | string>('');
+
+  useEffect(() => {
+    if (selectValue) {
+      setValue(field.value);
+    } else
+      setValue(selectOptions[0].value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field.value]);
 
   return (
     <div className={classNames(s.selectField, className)} >
       <Select
-        labelId="demo-simple-select-helper-label"
-        id="demo-simple-select-helper"
-        className={s.select}
+        {...field}
+        value={selectValue}
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        className={classNames('select', s.select)}
         IconComponent={() => null}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
-        {...field}
       >
         {selectOptions.map(({ label, value }) => (
-          <MenuItem id={`${value}-${label}`} value={value}>
+          <MenuItem id={`${value}`} value={value} className={s.testss}>
             {label}
           </MenuItem>
         ))}
