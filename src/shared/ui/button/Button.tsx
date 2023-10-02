@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react';
 import cn from 'classnames';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  color?: 'primary' | 'secondary';
+  color?: 'primary' | 'secondary' | 'primary-reverse';
   variant?: 'outline';
   size?: 'sm' | 'md' | 'lg' | 'xl';
 };

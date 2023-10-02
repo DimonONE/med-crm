@@ -29,10 +29,9 @@ export function LoginPage() {
               password: string().min(5).required(),
             })}
             onSubmit={(values, { setSubmitting }) => {
-              // @ts-ignore
               mutate(values, {
                 onSuccess: (response) => {
-                  sessionModel.addUser(response.data.user);
+                  sessionModel.addUser(response.data);
                 },
                 onSettled: () => {
                   setSubmitting(false);

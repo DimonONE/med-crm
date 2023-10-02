@@ -241,13 +241,13 @@ textarea {
   margin-bottom: 40px;
 }
 
-
 .icon-start {
   padding-right: 17px;
 }
 
 .icon-end {
-  padding-left: 17px;
+  position: absolute;
+  right: 20px;
 }
 
 .full-width {
@@ -290,4 +290,48 @@ textarea {
   align-items: center;
   padding-block: 0;
   height: 100%;
+}
+
+.select-navigate {
+  .MuiPaper-root {
+    background: none;
+    box-shadow: none;
+
+    .MuiList-root .MuiButtonBase-root,
+    .MuiList-root .select-link {
+      margin-bottom: 8px;
+      justify-content: center;
+      border-radius: 28.928px;
+      border: 1px solid var(--color-base);
+      background: #FFF;
+      color: var(--color-base);
+    }
+  }
+}
+
+.buttons-header {
+  width: max-content;
+  min-width: 186px;
+  height: auto;
+  margin: 0;
+  justify-content: center;
+  border-radius: 40px;
+  border: 1px solid #FFF;
+  background: var(--color-base);
+
+  &, .MuiSelect-root.MuiSelect-select  {
+    padding: 5px 0;
+    justify-content: center;
+    color: var(--color-white);
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.MuiList-root .select-link {
+  display: flex;
+  width: 100%;
+  min-width: 86px;
+  padding-block: 11px;
 }

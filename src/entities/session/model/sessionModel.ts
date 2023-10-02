@@ -12,7 +12,7 @@ type User = {
 
 type SessionState = {
   user: User | null;
-  addUser: (user: User) => void;
+  addUser: (token: string) => void;
   deleteUser: () => void;
 };
 
@@ -24,9 +24,9 @@ const createSessionSlice: StateCreator<
 > = (set) => ({
   user: null,
 
-  addUser: (user: User) => {
-    set({ user }, false, 'session/addUser');
-    realworldApi.setSecurityData(user.token);
+  addUser: (token: string) => {
+    // set({ user }, false, 'session/addUser');
+    realworldApi.setSecurityData(token);
   },
 
   deleteUser: () => {

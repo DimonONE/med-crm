@@ -1,4 +1,5 @@
 .selectField {
+  position: relative;
   display: flex;
   align-items: center;
 }
@@ -9,8 +10,9 @@
   max-width: 400px;
 }
 
-.testss {
-  color:  #A1B6C1;
-  font-size: 18px;
-  font-weight: 400;
+.inputSelect .MuiPopover-root  {
+  background: red;
+  border-radius: 40px;
+  border: 1px solid  #FFF;
+  background: --color-base;
 }

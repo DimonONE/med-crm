@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { NavigateButton } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import HeartICO from '~shared/svg/heart-ico.svg';
 import FingerprintICO from '~shared/svg/settings-ico.svg';
@@ -20,6 +21,8 @@ export function Header() {
         </NavLink>
 
         <nav className={s.navbar}>
+          <NavigateButton />
+
           <NavLink className={s.navLink} to={PATH_PAGE.settings}>
             <FingerprintICO />
             <span className={s.name}>

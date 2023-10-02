@@ -11,6 +11,7 @@
   display: flex;
   padding-block: 5px;
   padding-right: 29px;
+  margin-right: 27px;
   color: var(--color-white);
   font-size: 26px;
   font-weight: 700;
@@ -28,13 +29,15 @@
 }
 
 .navbar {
+  display: flex;
   width: 100%;
 }
 
 .navLink {
   display: flex;
   align-items: center;
-  float: right;
+  margin-left: auto;
+  font-size: 18px;
 
   .name{
     margin-left: 8px;

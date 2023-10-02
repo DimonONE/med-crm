@@ -9,46 +9,60 @@ interface MenuItemProps {
   value: string | number
   label: string
 }
-interface SelectFieldProps extends FieldProps {
+
+
+type DataProps = FieldProps | {
+  value: string,
+  onChange: (event: any) => void
+};
+
+type SelectFieldProps = {
   selectOptions: MenuItemProps[]
+  children?: JSX.Element[]
   className?: string
-  iconStart?: React.ReactElement
-}
+  selectNavigate?: boolean
+} & DataProps;
 
 export function SelectField(props: SelectFieldProps) {
-  const {
-    field,
-    selectOptions,
-    className,
-  } = props;
   const [isOpen, setOpen] = useState(false);
   const [selectValue, setValue] = useState<number | string>('');
+  const { children, selectOptions, selectNavigate, className, ...propsSpread } = props;
+  const fieldValue = 'field' in propsSpread ? propsSpread.field : propsSpread;
 
   useEffect(() => {
     if (selectValue) {
-      setValue(field.value);
-    } else
+      setValue(fieldValue.value);
+    } else if (selectValue !== selectOptions[0].value)
       setValue(selectOptions[0].value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [field.value]);
+  }, ['field' in propsSpread ? propsSpread.field.value : propsSpread.value]);
 
   return (
     <div className={classNames(s.selectField, className)} >
       <Select
-        {...field}
+        {...'field' in propsSpread && propsSpread.field}
         value={selectValue}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
         className={classNames('select', s.select)}
         IconComponent={() => null}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
+        MenuProps={{
+          className: classNames({ 'select-navigate': selectNavigate }),
+          getContentAnchorEl: null,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'left',
+          },
+        }}
+        {...propsSpread}
       >
-        {selectOptions.map(({ label, value }) => (
-          <MenuItem id={`${value}`} value={value} className={s.testss}>
-            {label}
-          </MenuItem>
-        ))}
+        {
+          children || selectOptions.map(({ label, value }) => (
+            <MenuItem key={value} id={`${value}`} value={value}>
+              {label}
+            </MenuItem>
+          ))
+        }
       </Select>
       <div className='icon-end'>
         {isOpen ? <FiChevronUp /> : <FiChevronDown />}

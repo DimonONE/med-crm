@@ -1,29 +1,20 @@
-import { UseMutationOptions, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { sessionApi } from '~entities/session';
 // import { sessionApi } from '~entities/session';
 import {
-  HttpResponse,
-  UserEntityDto,
+  RequestParams,
   realworldApi,
 } from '~shared/api/realworld';
 
-type UseLoginUserMutation = UseMutationOptions<
-  HttpResponse<{ user: UserEntityDto }, unknown>,
-  unknown
->;
 
-type UseLoginUserOptions = Omit<
-  UseLoginUserMutation,
-  'mutationFn' | 'mutationKey'
->;
 
-type LoginUserDto = {
+export type LoginUserDto = {
   email: string,
   password: string
 };
 
-export const useLoginUser = (oprions?: UseLoginUserOptions) =>
+export const useLoginUser = () =>
   useMutation({
-    // @ts-ignore
-    mutationFn: (user: LoginUserDto) => realworldApi.users.usersControllerLogin( user ),
-    ...oprions,
+    mutationKey: sessionApi.sessionKeys.mutation.login(),
+    mutationFn: (user: LoginUserDto) => realworldApi.users.usersControllerLogin( { body: user } as RequestParams ),
   });
