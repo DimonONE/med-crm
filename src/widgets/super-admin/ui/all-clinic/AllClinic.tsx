@@ -3,7 +3,7 @@ import { TitleItem } from '~shared/ui/title-item';
 import s from './styles.module.scss';
 
 export function AllClinic() {
-  const items = [{ row: ['Арноль Качер Шварценегерович', 'Арноль Качер Шварценегерович', 'Арноль Качер Шварценегерович', 'Арноль Качер Шварценегерович'] }];
+  const items = [{ row: ['03.02.2021', 'Сывтывкар', 'ул.Пушкина 23\\77', '+7 095 518 58 36', 'Осипенко Владимир Николаевич', 'до 12.12.2023'] }];
   const titles = [
     {
       title: 'ДАТА РЕГ.',

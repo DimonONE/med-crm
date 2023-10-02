@@ -1,6 +1,5 @@
 import { lazy } from 'react';
-import { Navigate, useRoutes } from 'react-router-dom';
-import { AuthGuard, sessionModel } from '~entities/session';
+import { Navigate, useLocation, useRoutes } from 'react-router-dom';
 // import { MainLayout } from '~pages/layouts';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
@@ -20,58 +19,50 @@ const RegisterPage = Loadable(lazy(() => import('~pages/register')));
 // const SettingsPage = Loadable(lazy(() => import('~pages/settings')));
 
 export function Router() {
-  const isAuth = sessionModel.useAuth();
+  // const isAuth = sessionModel.useAuth();
+  const location = useLocation();
+  const isAuth = location.pathname !== PATH_PAGE.register && location.pathname !== PATH_PAGE.login;
 
   return useRoutes([
     {
-      element: !isAuth ? <Header /> : <HeaderLogin />,
+      element: isAuth ? <Header /> : <HeaderLogin />,
       children: [
         {
           path: 'all-clinic/:id?',
           element: (
-            <AuthGuard isAuth={isAuth}>
-              <AllClinicsPage />
-            </AuthGuard>
+            <AllClinicsPage />
           ),
         },
         {
-          path: 'clinic-applications',
+          path: 'clinic-applications/:id?',
           element: (
-            <AuthGuard isAuth={isAuth}>
-              <ClinicApplicationsPage />
-            </AuthGuard>
+            <ClinicApplicationsPage />
           ),
         },
         {
           path: 'add-clinic',
           element: (
-            <AuthGuard isAuth={isAuth}>
-              <AddClinicPage />
-            </AuthGuard>
+            <AddClinicPage />
           ),
         },
         {
           path: 'edit-clinic',
           element: (
-            <AuthGuard isAuth={isAuth}>
-              <EditClinicPage />
-            </AuthGuard>
+            // <AuthGuard isAuth={isAuth}>
+            <EditClinicPage />
+            // </AuthGuard>
           ),
         },
         {
           path: 'login',
           element: (
-            <AuthGuard isAuth={isAuth}>
-              <LoginPage />
-            </AuthGuard>
+            <LoginPage />
           ),
         },
         {
           path: 'register',
           element: (
-            <AuthGuard isAuth={isAuth}>
-              <RegisterPage />
-            </AuthGuard>
+            <RegisterPage />
           ),
         },
         // {
@@ -127,6 +118,7 @@ export function Router() {
       ],
     },
     { path: '404', element: <Page404 /> },
+    { path: '', element: <Navigate to={PATH_PAGE.allClinic} replace /> },
     { path: '*', element: <Navigate to={PATH_PAGE.page404} replace /> },
   ]);
 }

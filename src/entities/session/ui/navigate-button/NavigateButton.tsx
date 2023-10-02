@@ -1,9 +1,8 @@
 // import { useQueryClient } from '@tanstack/react-query';
 // import { Button } from '~shared/ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MenuItem } from '@material-ui/core';
-// import { useLocation } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { SelectField } from '~shared/ui/select-field';
 
@@ -22,12 +21,22 @@ const getNavigateList = (role: string) => {
 };
 
 export function NavigateButton() {
-  // const location = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [value, setValue] = useState('');
   // const queryClient = useQueryClient();
 
   // const handleClick = () => logout(queryClient);
   const selectOptions = getNavigateList('super-admin');
+
+  useEffect(() => {
+    const isOption = selectOptions.find((option) => option.value === location.pathname);
+    if (isOption !== undefined) {
+      setValue(isOption.value);
+    } else
+      setValue(selectOptions[0].value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   return (
     <SelectField
@@ -39,8 +48,13 @@ export function NavigateButton() {
     >
       {
         selectOptions.map(({ label, value: link }) => (
-          <MenuItem key={link} value={link} className='select-link'>
-            <NavLink to={link} >{label}</NavLink>
+          <MenuItem
+            key={link}
+            value={link}
+            className='select-link'
+            onClick={() => navigate(link)}
+          >
+            {label}
           </MenuItem>
         ))
       }

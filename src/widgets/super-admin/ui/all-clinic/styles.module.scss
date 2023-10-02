@@ -4,15 +4,15 @@
   flex-direction: column;
   overflow: auto;
 
-  &::-webkit-scrollbar {
-    width: 0;
-  }
+  // &::-webkit-scrollbar {
+  //   height: 20px;
+  // }
 }
 
 .header,
 .itemContainer {
   display: grid;
-  grid-template-columns: 170px 180px 265px 265px 265px 265px 90px;
+  grid-template-columns: 170px 180px 265px 265px 265px 180px 90px;
   padding-left: clamp(20px, 32vw, 40px);
   width: max-content;
 }

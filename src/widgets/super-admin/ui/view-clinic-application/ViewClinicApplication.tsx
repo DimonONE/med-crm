@@ -1,15 +1,12 @@
-import classNames from 'classnames';
-import { useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
 
-export function SelectClinic() {
-  const navigate = useNavigate();
+export function ViewClinicApplication() {
   return (
     <div className={s.container}>
-      <BackButton title='' link={PATH_PAGE.allClinic} />
+      <BackButton title='' link={PATH_PAGE.clinicApplications} />
 
       <div className={s.row}>
         <div className={s.column}>
@@ -64,13 +61,11 @@ export function SelectClinic() {
         </div>
       </div>
 
-      <Button color='secondary' className={s.editButton} onClick={() => navigate(PATH_PAGE.editClinic)}>
-        Редактировать
-      </Button>
-
-      <div className={classNames(s.row, s.buttonsRemove)}>
-        <button type='button' className={s.remove}>Блокировать</button>
-        <button type='button' className={s.remove}>Удалить клинику</button>
+      <div className={s.row}>
+        <button type='button' className={s.remove}>Отклонить</button>
+        <Button className={s.editButton}>
+          Одобрить
+        </Button>
       </div>
     </div>
   );

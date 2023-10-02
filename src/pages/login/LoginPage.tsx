@@ -1,21 +1,21 @@
 import { ErrorMessage, Field, FieldProps, Form, Formik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import { object, string } from 'yup';
-import { sessionModel } from '~entities/session';
-import { useLoginUser } from '~features/session';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import EmailICO from '~shared/svg/email-ico.svg';
 import LockICO from '~shared/svg/lock-ico.svg';
 import { Button } from '~shared/ui/button';
-import { ErrorHandler } from '~shared/ui/error-handler';
+// import { ErrorHandler } from '~shared/ui/error-handler';
 import { TextField } from '~shared/ui/text-field';
 import { Container, TabsLink } from '~widgets/autch';
 
-
 export function LoginPage() {
-  const { mutate, isError, error } = useLoginUser();
+  // const { mutate, isError, error } = useLoginUser();
+  const navigate = useNavigate();
 
   return (
     <div className="auth-page">
-      {isError && <ErrorHandler error={error!} />}
+      {/* {isError && <ErrorHandler error={error!} />} */}
       <Container >
         <>
           <TabsLink />
@@ -28,15 +28,17 @@ export function LoginPage() {
               email: string().email().required(),
               password: string().min(5).required(),
             })}
-            onSubmit={(values, { setSubmitting }) => {
-              mutate(values, {
-                onSuccess: (response) => {
-                  sessionModel.addUser(response.data);
-                },
-                onSettled: () => {
-                  setSubmitting(false);
-                },
-              });
+            onSubmit={() => {
+              // mutate(values, {
+              //   onSuccess: (response) => {
+              //     sessionModel.addUser(response.data);
+              //   },
+              //   onSettled: () => {
+              //     setSubmitting(false);
+              //   },
+              // });
+              navigate(PATH_PAGE.allClinic);
+
             }}
           >
             {({ isSubmitting }) => (

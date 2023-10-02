@@ -38,7 +38,10 @@ export default defineConfig({
       exclude: ['src/shared/api/realworld/**'],
     },
   },
-  server: { host: false },
+  server: { 
+    port: 3000
+
+   },
   preview: { open: true },
   resolve: {
     alias: {
