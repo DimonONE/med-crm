@@ -268,28 +268,15 @@ textarea {
 
 // Material UI
 
-.MuiSelect-root.MuiSelect-select:focus {
-  background-color: initial;
-}
- 
-.MuiInputBase-root.MuiInput-root::before,
-.MuiInputBase-root.MuiInput-underline:hover:not(.Mui-disabled):before{
-  border-bottom: none;
+.MuiInputBase-root .MuiSelect-select {
+  color: var(--color-white);
+  font-family: "Montserrat";
 }
 
-.MuiInputBase-root.MuiInput-underline.Mui-focused:after {
-  transform: none;
-}
+.MuiInputBase-input.MuiOutlinedInput-input{
+  padding: 0;
+  padding-right: 0 !important;
 
-.MuiInputBase-root.MuiInput-underline:after {
-  border-bottom: none;
-}
-
-.MuiInputBase-root .MuiSelect-root{
-  display: flex;
-  align-items: center;
-  padding-block: 0;
-  height: 100%;
 }
 
 .select-navigate {
@@ -326,6 +313,10 @@ textarea {
     text-align: center;
     font-size: 18px;
     font-weight: 500;
+  }
+
+  .icon-end {
+    right: 10px;
   }
 }
 

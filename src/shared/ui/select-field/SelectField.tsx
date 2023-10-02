@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { MenuItem, Select } from '@material-ui/core';
+import { Select } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 import classNames from 'classnames';
 import { FieldProps } from 'formik';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
@@ -9,7 +10,6 @@ interface MenuItemProps {
   value: string | number
   label: string
 }
-
 
 type DataProps = FieldProps | {
   value: string,
@@ -40,6 +40,14 @@ export function SelectField(props: SelectFieldProps) {
   return (
     <div className={classNames(s.selectField, className)} >
       <Select
+        sx={{
+          boxShadow: 'none',
+          '.MuiOutlinedInput-notchedOutline': { border: 0 },
+          '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline':
+            { border: 0 },
+          '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+            { border: 0 },
+        }}
         {...'field' in propsSpread && propsSpread.field}
         value={selectValue}
         className={classNames('select', s.select)}
@@ -48,10 +56,9 @@ export function SelectField(props: SelectFieldProps) {
         onClose={() => setOpen(false)}
         MenuProps={{
           className: classNames({ 'select-navigate': selectNavigate }),
-          getContentAnchorEl: null,
           anchorOrigin: {
             vertical: 'bottom',
-            horizontal: 'left',
+            horizontal: 'center',
           },
         }}
         {...propsSpread}

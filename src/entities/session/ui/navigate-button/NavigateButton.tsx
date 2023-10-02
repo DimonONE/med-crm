@@ -1,7 +1,7 @@
 // import { useQueryClient } from '@tanstack/react-query';
 // import { Button } from '~shared/ui/button';
 import { useEffect, useState } from 'react';
-import { MenuItem } from '@material-ui/core';
+import MenuItem from '@mui/material/MenuItem';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { SelectField } from '~shared/ui/select-field';
