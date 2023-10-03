@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  width: 586px;
+  width:clamp(586px, 55vw, 620px) ;
   padding: 29px 23px 0 44px ;
   border-right: 1px solid #D0EEFF;
 }
@@ -31,6 +31,10 @@
 
 .column:nth-child(2) {
   width: 40%;
+}
+
+.dateInput {
+  color: var(--color-white);
 }
 
 .editButton{

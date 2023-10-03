@@ -1,3 +1,4 @@
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
@@ -7,6 +8,8 @@ import s from './styles.module.scss';
 
 export function SelectClinic() {
   const navigate = useNavigate();
+
+
   return (
     <div className={s.container}>
       <BackButton title='' link={PATH_PAGE.allClinic} />
@@ -44,7 +47,11 @@ export function SelectClinic() {
         </div>
         <div className={s.column}>
           <div className={s.title}>Оплачено до</div>
-          <span className={s.subTitle}>dentalclinic.ru</span>
+          <span className={s.subTitle}>
+            <DatePicker
+              className={classNames('date-input', s.dateInput)}
+            />
+          </span>
         </div>
       </div>
       <div className={s.row}>
@@ -64,7 +71,11 @@ export function SelectClinic() {
         </div>
       </div>
 
-      <Button color='secondary' className={s.editButton} onClick={() => navigate(PATH_PAGE.editClinic)}>
+      <Button
+        color='secondary'
+        className={s.editButton}
+        onClick={() => navigate(PATH_PAGE.editClinic)}
+      >
         Редактировать
       </Button>
 
