@@ -5,14 +5,16 @@
   overflow: auto;
 
   // &::-webkit-scrollbar {
-  //   height: 20px;
+  //   color: #000;
+  //   width: 120px;
+  //   height: 120px;
   // }
 }
 
 .header,
 .itemContainer {
   display: grid;
-  grid-template-columns: 170px 180px 265px 265px 265px 180px 90px;
+  grid-template-columns: 170px 180px 250px 205px 265px 180px 90px;
   padding-left: clamp(20px, 32vw, 40px);
   width: max-content;
 }

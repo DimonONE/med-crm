@@ -1,14 +1,16 @@
+import { useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
+import { Modal } from '~shared/ui/modal';
 import s from './styles.module.scss';
 
 export function SelectClinic() {
   const navigate = useNavigate();
-
+  const [isOpen, setOpen] = useState(false);
 
   return (
     <div className={s.container}>
@@ -79,6 +81,12 @@ export function SelectClinic() {
         Редактировать
       </Button>
 
+      <Modal isOpen={isOpen} onSuccess={() => false} onClose={() => setOpen(false)} type='warn' >
+        <div>
+          Вы уверены, что хотите удалить клинику <br />
+          <span className={s.modalNameClinic}>Клиника Чайковского?</span>
+        </div>
+      </Modal>
       <div className={classNames(s.row, s.buttonsRemove)}>
         <button type='button' className={s.remove}>Блокировать</button>
         <button type='button' className={s.remove}>Удалить клинику</button>

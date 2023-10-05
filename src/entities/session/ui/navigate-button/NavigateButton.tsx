@@ -3,22 +3,13 @@
 import { useEffect, useState } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PATH_PAGE } from '~shared/lib/react-router';
+import { RoleEnum } from '~shared/lib/react-router';
 import { SelectField } from '~shared/ui/select-field';
+import { getNavigateList } from '../../lib';
+
 
 // eslint-disable-next-line consistent-return
-const getNavigateList = (role: string) => {
-  switch (role) {
-    case 'super-admin':
-      return [
-        { value: PATH_PAGE.allClinic, label: 'Все клиники' },
-        { value: PATH_PAGE.clinicApplications, label: 'Заявки' },
-      ];
 
-    default:
-      return [];
-  }
-};
 
 export function NavigateButton() {
   const location = useLocation();
@@ -27,7 +18,7 @@ export function NavigateButton() {
   // const queryClient = useQueryClient();
 
   // const handleClick = () => logout(queryClient);
-  const selectOptions = getNavigateList('super-admin');
+  const selectOptions = getNavigateList(RoleEnum.SuperAdmin);
 
   useEffect(() => {
     const isOption = selectOptions.find((option) => option.value === location.pathname);
