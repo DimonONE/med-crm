@@ -1,0 +1,25 @@
+.root {
+  margin-left: clamp(0px, 4vw, 66px);
+  padding: 25px 0 13px 0;
+}
+
+.datePicker {
+  margin-left: 13px;
+}
+
+.workDay {
+  margin-left: 22px;
+}
+
+.presentDay, .nextDay {
+  color: var(--color-base);
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration-line: underline;
+}
+
+.presentDay {
+  margin-left: 43px;
+  margin-right: 26px;
+}

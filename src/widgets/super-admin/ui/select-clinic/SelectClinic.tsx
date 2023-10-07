@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
+import { DatePicker } from '~shared/ui/date-picker';
 import { Modal } from '~shared/ui/modal';
 import s from './styles.module.scss';
 
 export function SelectClinic() {
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
+  const [paidTo, setPaidTo] = useState('11/12/2023');
+
+  console.log('paidTo', dayjs(paidTo).format('DD/MM/YYYY'));
 
   return (
     <div className={s.container}>
@@ -51,7 +55,7 @@ export function SelectClinic() {
           <div className={s.title}>Оплачено до</div>
           <span className={s.subTitle}>
             <DatePicker
-              className={classNames('date-input', s.dateInput)}
+              onChange={(event) => event && setPaidTo(event)}
             />
           </span>
         </div>

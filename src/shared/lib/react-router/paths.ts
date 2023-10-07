@@ -7,16 +7,10 @@ export const PATH_PAGE = {
   editClinic: '/edit-clinic',
   clinicApplications: '/clinic-applications',
   settings: '/settings',
-  profile: {
-    root: (username: string) => `/profile/${username}`,
-    favorites: (username: string) => `/profile/${username}/favorites`,
-  },
-  editor: {
-    root: '/editor',
-    edit: (slug: string) => `/editor/${slug}`,
-  },
-  article: {
-    slug: (slug: string) => `/article/${slug}`,
+  doctor: {
+    root: '/doctor',
+    patient: (patientId: string) => `/doctor/${patientId}`,
+    record: (patientId: string, record: 'record') => `/doctor/${patientId}/${record}`,
   },
   page404: '/404',
 };

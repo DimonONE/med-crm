@@ -1,0 +1,52 @@
+.root {
+  display: flex;
+  margin-top: 10px ;
+}
+
+.times {
+  width: max-content;
+  height: 60px;
+  border-radius: 8px;
+  background:  #FFF;
+
+  .time {
+    width: 56px;
+    height: 100%;
+    border: 1px solid #578695;
+    color: #578695;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+
+    &:not(&:last-child) {
+      border-right: none;
+    }
+
+    &:first-child {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+  }
+
+  .timeWork {
+    background: #D5FFE8;
+  }
+}
+
+.arrowLeft,
+.arrowRight {
+  margin: auto 0;
+}
+
+.arrowLeft {
+  margin-right: 5px;
+}
+
+.arrowRight {
+  margin-left: 5px;
+}

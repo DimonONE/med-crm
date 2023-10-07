@@ -1,0 +1,109 @@
+.root {
+  .header {
+    display: flex;
+    height: 68px;
+    background: #F3FBFF;
+    border-block: 1px solid #578695;
+
+    .name  {
+      color:  #578695;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 140%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status {
+      color:  #029B64;
+      font-family: Montserrat;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 140%;
+    }
+  }
+
+  .time {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px; 
+
+    color: #578695;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .doctorInfo,
+  .patientInfo {
+    display: flex;
+    width: 192px;
+    padding: 0 15px 0 25px;
+  }
+
+  .doctorInfo {
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid #A1B6C1;
+    border-left: 1px solid #A1B6C1;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    
+    .time {
+      position: relative;
+      height: 96px;
+      padding: 5px 12px 5px;
+      align-items: start;
+      justify-content: end;
+      border-bottom: 1px solid #A1B6C1;
+
+      .timeScale {
+        height: auto;
+        position: absolute;
+        width: 7px;
+        border-block: 1px solid #A1B6C1;
+        top: 25%;
+        bottom: 25%;
+        right: 0;
+      }
+
+      .timeScale::after {
+        content: '';
+        position: absolute;
+        width: 24px;
+        border-bottom: 1px solid #A1B6C1;
+        top: 50%;
+        right: 0;
+      }
+    }
+
+    .patientInfo {
+      align-items: center;
+      border: 1px solid #A1B6C1;
+      border-top: none;
+      color: #578695;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 107%;
+
+      
+      &.passed {
+        background: #EAEAEA;
+      }
+
+      &.active {
+        background: #D5FFE8;
+      }
+
+      &.select {
+        background: #876AFF;
+        color: #FFF;
+        font-weight: 600;
+      }
+    }
+  }
+}
