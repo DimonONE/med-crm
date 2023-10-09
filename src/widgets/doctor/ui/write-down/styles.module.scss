@@ -1,0 +1,63 @@
+.root {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+
+  padding: 30px;
+  box-sizing: border-box;
+  border-radius: 20px 0px 0px 0px;
+  background: #F9FDFF;
+  box-shadow: -7px 6px 17px 0px rgba(0, 0, 0, 0.15);
+}
+
+.selectDoctor {
+  max-width: 340px;
+  height: 45px;
+  margin-top: 38px ;
+  margin-bottom: 48px ;
+}
+
+.times {
+  display: flex;
+  align-items: center;
+  margin-top: 28px;
+
+  &::after {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: #578695;
+    order: 2;
+    margin: 20px 5px 0 5px;
+  }
+
+  .time {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .label {
+      color: var(--color-font);
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .selectTime {
+      width: 120px;
+      margin: 0;
+    }
+
+    &:last-child {
+      order: 3;
+    }
+  }
+}
+
+.writeButton {
+  display: flex;
+  width: max-content;
+  padding: 13px 37px;
+  margin: 60px 0 70px auto;
+}

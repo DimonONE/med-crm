@@ -15,9 +15,6 @@ export function NavigateButton() {
   const location = useLocation();
   const navigate = useNavigate();
   const [value, setValue] = useState('');
-  // const queryClient = useQueryClient();
-
-  // const handleClick = () => logout(queryClient);
   const selectOptions = getNavigateList(RoleEnum.SuperAdmin);
 
   useEffect(() => {

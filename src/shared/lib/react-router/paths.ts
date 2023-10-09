@@ -10,7 +10,7 @@ export const PATH_PAGE = {
   doctor: {
     root: '/doctor',
     patient: (patientId: string) => `/doctor/${patientId}`,
-    record: (patientId: string, record: 'record') => `/doctor/${patientId}/${record}`,
+    record: (patientId: string | undefined) => `/doctor/${patientId}/record`,
   },
   page404: '/404',
 };

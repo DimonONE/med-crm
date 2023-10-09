@@ -67,13 +67,16 @@ export function Router() {
         },
         {
           path: 'doctor',
+          element: (
+            <DoctorPage />
+          ),
           children: [
             {
               element: <DoctorPage />,
               index: true,
             },
-            { path: ':patientId', element: <>test1</> },
-            { path: ':patientId/:record', element: <>test2</> },
+            { path: ':patientId/record', element: <DoctorPage /> },
+            { path: ':patientId', element: <DoctorPage /> },
           ],
         },
       ],
