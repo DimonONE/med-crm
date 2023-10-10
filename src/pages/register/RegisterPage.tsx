@@ -32,8 +32,7 @@ export function RegisterPage() {
               email: string().email().required(),
             })}
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onSubmit={(values) => {
-              console.log('values', values);
+            onSubmit={() => {
 
               // mutate(values, {
               //   onSuccess: (response) => {

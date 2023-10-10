@@ -1,0 +1,37 @@
+.root {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: calc(100vh - var(--header-height)) ;
+}
+
+.sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  min-width: 250px;
+  padding-inline: 45px;
+  box-sizing: content-box;
+  background: linear-gradient(164deg, rgba(255, 255, 255, 0.20) -10.51%, rgba(39, 209, 232, 0.20) 130.19%);
+  border-right: none;
+
+  .sidebarContent {
+    margin-bottom: var(--header-height);
+    
+
+    .logo svg {
+      width: max-content;
+      height: auto;
+    } 
+
+    .label {
+      padding-left: 3px;
+      color: var(--blue, #229CE1);
+      font-size: clamp(17px, 2vw, 26px);
+      font-weight: 400;
+      letter-spacing: 1.4px;
+    }
+  }
+}
+

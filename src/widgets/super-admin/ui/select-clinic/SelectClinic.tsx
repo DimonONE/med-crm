@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
@@ -12,9 +11,8 @@ import s from './styles.module.scss';
 export function SelectClinic() {
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
-  const [paidTo, setPaidTo] = useState('11/12/2023');
+  const [, setPaidTo] = useState('11/12/2023');
 
-  console.log('paidTo', dayjs(paidTo).format('DD/MM/YYYY'));
 
   return (
     <div className={s.container}>

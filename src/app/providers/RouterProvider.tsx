@@ -10,6 +10,7 @@ const EditClinicPage = Loadable(lazy(() => import('~pages/super-admin/edit-clini
 const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
 const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
+const PatientsPage = Loadable(lazy(() => import('~pages/patients')));
 
 
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
@@ -67,9 +68,6 @@ export function Router() {
         },
         {
           path: 'doctor',
-          element: (
-            <DoctorPage />
-          ),
           children: [
             {
               element: <DoctorPage />,
@@ -77,6 +75,15 @@ export function Router() {
             },
             { path: ':patientId/record', element: <DoctorPage /> },
             { path: ':patientId', element: <DoctorPage /> },
+          ],
+        },
+        {
+          path: 'patients',
+          children: [
+            {
+              element: <PatientsPage />,
+              index: true,
+            },
           ],
         },
       ],

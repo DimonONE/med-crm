@@ -23,7 +23,7 @@ export function Header() {
         <nav className={s.navbar}>
           <NavigateButton />
 
-          <NavLink className={s.navLink} to={PATH_PAGE.settings}>
+          <NavLink className={s.navLink} to="#">
             <FingerprintICO />
             <span className={s.name}>
               Настройки
