@@ -16,7 +16,7 @@ export function SelectClinic() {
 
   return (
     <div className={s.container}>
-      <BackButton title='' link={PATH_PAGE.allClinic} />
+      <BackButton title='' link={PATH_PAGE.superAdmin.root} />
 
       <div className={s.row}>
         <div className={s.column}>
@@ -78,7 +78,7 @@ export function SelectClinic() {
       <Button
         color='secondary'
         className={s.editButton}
-        onClick={() => navigate(PATH_PAGE.editClinic)}
+        onClick={() => navigate(PATH_PAGE.superAdmin.editClinic)}
       >
         Редактировать
       </Button>

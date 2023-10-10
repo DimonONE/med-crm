@@ -6,10 +6,16 @@ import { ClinicApplications, ViewClinicApplication } from '~widgets/super-admin/
 export function ClinicApplicationPage() {
   const params = useParams();
 
+  const items = [
+    { id: '1', title: 'Арноль Качер Шварценегерович', subTitle: 12 },
+    { id: '2', title: 'test', subTitle: 12 },
+    { id: '3', title: 'test', subTitle: 12 },
+  ];
+
   return (
     <div className="super-admin-page">
       <div className='d-flex'>
-        <SidebarItemList rootUrl={PATH_PAGE.clinicApplications} selectId={params.id} />
+        <SidebarItemList items={items} rootUrl={PATH_PAGE.superAdmin.clinicApplications} selectId={params.id} />
         <div className='container'>
           {params.id ? <ViewClinicApplication /> : <ClinicApplications />}
         </div>

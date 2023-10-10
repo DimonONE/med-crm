@@ -2,12 +2,12 @@ import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
+import { Records } from '~widgets/patients';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
-import { AllClinic, SelectClinic } from '~widgets/super-admin/';
 
-export function AllClinics() {
-  const params = useParams();
+export function RecordsPage() {
   const navigate = useNavigate();
+  const params = useParams();
 
 
   const items = [
@@ -15,21 +15,16 @@ export function AllClinics() {
     { id: '2', title: 'test', subTitle: 12 },
     { id: '3', title: 'test', subTitle: 12 },
   ];
-
   return (
-    <div className="super-admin-page">
+    <div>
       <div className='d-flex'>
         <SidebarItemList items={items} rootUrl={PATH_PAGE.superAdmin.root} selectId={params.id} />
-        <div className='container'>
-          {
-            params.id ? <SelectClinic /> : <AllClinic />
-          }
-        </div>
-        <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>
-          <AiOutlinePlusCircle />
-          Добавить клинику
-        </Button>
+        <Records />
       </div>
+      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>
+        <AiOutlinePlusCircle />
+        Добавить клинику
+      </Button>
     </div>
   );
 }

@@ -10,7 +10,7 @@ import s from './styles.module.scss';
 export function EditClinics() {
   return (
     <div className={s.editClinic}>
-      <BackButton link={PATH_PAGE.addClinic} title='Редактировать клинику' />
+      <BackButton link={PATH_PAGE.superAdmin.addClinic} title='Редактировать клинику' />
       <div className={s.formContainer}>
         <Formik
           initialValues={{

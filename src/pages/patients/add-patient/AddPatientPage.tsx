@@ -1,27 +1,29 @@
 import classNames from 'classnames';
-import { ErrorMessage, Field, FieldProps, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { object, string } from 'yup';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
-import { SelectField } from '~shared/ui/select-field';
 import s from './styles.module.scss';
 
-export function AddClinics() {
+export function AddPatientPage() {
   return (
     <div className={s.root}>
-      <BackButton title='Добавить клинику' />
+      <BackButton title='Добавить клиента' />
       <div className={s.formContainer}>
         <Formik
           initialValues={{
-            clinicName: '',
-            typeClinic: '',
-            address: '',
-            side: '',
-            backyard: '',
+            fullName: '',
             email: '',
+            phone: '',
+            passportNumber: '',
+            issuedBy: '',
+            inn: '',
+            country: '',
+            city: '',
+            address: '',
           }}
           validationSchema={object().shape({
-            clinicName: string().min(5).required(),
+            fullName: string().min(5).required(),
             email: string().email().required(),
           })}
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,69 +43,15 @@ export function AddClinics() {
               <fieldset disabled={isSubmitting}>
                 <fieldset className='full-width'>
                   <Field
-                    name="clinicName"
+                    name="fullName"
                     className='form-input'
                     type="text"
-                    placeholder="Название клиники"
+                    placeholder="ФИО"
                   />
-                  <ErrorMessage name="clinicName" />
+                  <ErrorMessage name="fullName" />
                 </fieldset>
 
                 <fieldset className='full-width'>
-                  <Field
-                    name="typeClinic"
-                    className='form-input'
-                    placeholder="Тип клиники"
-                  >
-                    {(props: FieldProps) =>
-                      <SelectField
-                        {...props}
-                        className='form-input'
-                        selectOptions={[{ value: '30', label: 'test2' }, { value: 10, label: 'test' }]}
-                      />}
-                  </Field>
-                  <ErrorMessage name="typeClinic" />
-                </fieldset>
-
-                <fieldset className='full-width'>
-                  <Field
-                    name="address"
-                    className='form-input'
-                    type="text"
-                    placeholder="Адрес"
-                  />
-                  <ErrorMessage name="address" />
-                </fieldset>
-
-                <fieldset>
-                  <Field
-                    name="side"
-                    className='form-input'
-                    type="text"
-                    placeholder="Страна"
-                  />
-                  <ErrorMessage name="side" />
-                </fieldset>
-
-                <fieldset>
-                  <Field
-                    name="email"
-                    className='form-input form-input-text'
-                    type="text"
-                    placeholder="Город"
-                  />
-                  <ErrorMessage name="email" />
-                </fieldset>
-                <fieldset>
-                  <Field
-                    name="email"
-                    className='form-input'
-                    type="text"
-                    placeholder="+7 (000) - 00 - 00"
-                  />
-                  <ErrorMessage name="email" />
-                </fieldset>
-                <fieldset>
                   <Field
                     name="email"
                     className='form-input'
@@ -112,26 +60,75 @@ export function AddClinics() {
                   />
                   <ErrorMessage name="email" />
                 </fieldset>
-                <fieldset>
-                  <Field
-                    name="username"
-                    className='form-input'
-                    type="text"
-                    placeholder="Имя главврача"
-                  />
-                  <ErrorMessage name="username" />
-                </fieldset>
 
                 <fieldset className='full-width'>
-                  <div className='form-textarea-label'>Краткое описание</div>
                   <Field
-                    name="comment"
-                    className='form-textarea'
+                    name="phone"
+                    className='form-input'
                     type="text"
-                    placeholder="Коментарий..."
-                    component="textarea"
+                    placeholder="Телефон"
                   />
-                  <ErrorMessage name="comment" />
+                  <ErrorMessage name="phone" />
+                </fieldset>
+
+                <fieldset>
+                  <Field
+                    name="passportNumber"
+                    className='form-input'
+                    type="text"
+                    placeholder="Номер паспорта"
+                  />
+                  <ErrorMessage name="passportNumber" />
+                </fieldset>
+
+                <fieldset>
+                  <Field
+                    name="issuedBy"
+                    className='form-input'
+                    type="text"
+                    placeholder="Кем выдан"
+                  />
+                  <ErrorMessage name="issuedBy" />
+                </fieldset>
+
+                <fieldset>
+                  <Field
+                    name="inn"
+                    className='form-input form-input-text'
+                    type="text"
+                    placeholder="ИНН"
+                  />
+                  <ErrorMessage name="inn" />
+                </fieldset>
+
+                <fieldset>
+                  <Field
+                    name="country"
+                    className='form-input'
+                    type="text"
+                    placeholder="Страна"
+                  />
+                  <ErrorMessage name="country" />
+                </fieldset>
+
+                <fieldset>
+                  <Field
+                    name="city"
+                    className='form-input'
+                    type="text"
+                    placeholder="Город \ поселок"
+                  />
+                  <ErrorMessage name="city" />
+                </fieldset>
+
+                <fieldset>
+                  <Field
+                    name="address"
+                    className='form-input'
+                    type="text"
+                    placeholder="Адрес"
+                  />
+                  <ErrorMessage name="address" />
                 </fieldset>
               </fieldset>
               <Button
@@ -146,7 +143,6 @@ export function AddClinics() {
           )}
         </Formik>
       </div>
-
     </div>
   );
 }

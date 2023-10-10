@@ -6,7 +6,7 @@ import s from './styles.module.scss';
 export function ViewClinicApplication() {
   return (
     <div className={s.container}>
-      <BackButton title='' link={PATH_PAGE.clinicApplications} />
+      <BackButton title='' link={PATH_PAGE.superAdmin.clinicApplications} />
 
       <div className={s.row}>
         <div className={s.column}>

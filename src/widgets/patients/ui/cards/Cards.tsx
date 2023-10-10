@@ -6,7 +6,7 @@ import ServicesICO from '../../svg/services-ico.svg';
 import SettingsICO from '../../svg/settings-ico.svg';
 import s from './styles.module.scss';
 
-export function Widgets() {
+export function Cards() {
   return (
     <div className={s.root}>
       <NavLink to='/' className={s.card}>

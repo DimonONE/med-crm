@@ -1,6 +1,6 @@
 import LogoBlue from '~shared/svg/logo-blue.svg';
 import { Sidebar } from '~shared/ui/sidebar';
-import { Widgets } from '~widgets/patients';
+import { Cards } from '~widgets/patients';
 import s from './styles.module.scss';
 
 export function PatientsPage() {
@@ -17,7 +17,7 @@ export function PatientsPage() {
         </div>
       </Sidebar>
 
-      <Widgets />
+      <Cards />
     </div>
   );
 }

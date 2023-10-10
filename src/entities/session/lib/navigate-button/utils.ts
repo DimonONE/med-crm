@@ -4,8 +4,8 @@ export const getNavigateList = (role: RoleEnum) => {
   switch (role) {
     case RoleEnum.SuperAdmin:
       return [
-        { value: PATH_PAGE.allClinic, label: 'Все клиники' },
-        { value: PATH_PAGE.clinicApplications, label: 'Заявки' },
+        { value: PATH_PAGE.superAdmin.root, label: 'Все клиники' },
+        { value: PATH_PAGE.superAdmin.clinicApplications, label: 'Заявки' },
       ];
 
     default:

@@ -1,0 +1,29 @@
+.statusInfo {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 140%;
+
+  .status {
+    color: #029B64;
+    font-weight: 400;
+
+    &.cancel {
+      color: #A41111;
+    }
+  }
+
+  .date {
+    color: #A1B6C1;
+  }
+
+  .name {
+    color: #578695;
+  }
+}
+
+.buttonLink {
+  padding: 9px 45px;
+  color: #0E5F8C;
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -10,7 +10,10 @@ const EditClinicPage = Loadable(lazy(() => import('~pages/super-admin/edit-clini
 const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
 const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
-const PatientsPage = Loadable(lazy(() => import('~pages/patients')));
+
+const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
+const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
+const PatientsAddPatientPage = Loadable(lazy(() => import('~pages/patients/add-patient')));
 
 
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
@@ -81,15 +84,17 @@ export function Router() {
           path: 'patients',
           children: [
             {
-              element: <PatientsPage />,
+              element: <PatientsHomePage />,
               index: true,
             },
+            { path: 'records', element: <PatientsRecordsPage /> },
+            { path: 'add-patient', element: <PatientsAddPatientPage /> },
+
           ],
         },
       ],
     },
     { path: '404', element: <Page404 /> },
-    { path: '', element: <Navigate to={PATH_PAGE.allClinic} replace /> },
     { path: '*', element: <Navigate to={PATH_PAGE.page404} replace /> },
   ]);
 }

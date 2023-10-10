@@ -22,7 +22,7 @@ export function DoctorPage() {
       {
         location.pathname === PATH_PAGE.doctor.record(params.patientId) ? <WriteDown patientId={params.patientId!} /> : <ClientInfo />
       }
-      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.addClinic)}>
+      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>
         <AiOutlinePlusCircle />
         Добавить запись
       </Button>

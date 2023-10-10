@@ -18,7 +18,7 @@ export function ClinicApplications() {
           <span>
             {date}
           </span>
-          <Button className={s.buttonLink} color='secondary' onClick={() => navigaete(`${PATH_PAGE.clinicApplications}/1`)}>Подробнее</Button>
+          <Button className={s.buttonLink} color='secondary' onClick={() => navigaete(`${PATH_PAGE.superAdmin.clinicApplications}/1`)}>Подробнее</Button>
         </ItemContainer>
       ))}
     </div>

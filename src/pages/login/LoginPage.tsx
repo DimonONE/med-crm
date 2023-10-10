@@ -37,7 +37,7 @@ export function LoginPage() {
               //     setSubmitting(false);
               //   },
               // });
-              navigate(PATH_PAGE.allClinic);
+              navigate(PATH_PAGE.superAdmin.root);
 
             }}
           >

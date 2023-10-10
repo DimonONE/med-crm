@@ -4,17 +4,20 @@ import { ItemContainer } from '~shared/ui/item-container';
 import { Sidebar } from '~shared/ui/sidebar';
 import s from './styles.module.scss';
 
+type ItemList = {
+  id: string | number
+  title: string
+  subTitle: number
+};
+
 type Props = {
   rootUrl: string
   selectId: string | undefined
+  items: ItemList[]
 };
 
-export function SidebarItemList({ rootUrl, selectId }: Props) {
-  const items = [
-    { id: '1', title: 'Арноль Качер Шварценегерович', subTitle: 12 },
-    { id: '2', title: 'test', subTitle: 12 },
-    { id: '3', title: 'test', subTitle: 12 },
-  ];
+export function SidebarItemList({ rootUrl, selectId, items }: Props) {
+
 
   return (
     <Sidebar>
