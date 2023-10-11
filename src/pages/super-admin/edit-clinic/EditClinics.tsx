@@ -60,7 +60,7 @@ export function EditClinics() {
                       <SelectField
                         {...props}
                         className='form-input'
-                        selectOptions={[{ value: '30', label: 'test2' }, { value: 10, label: 'test' }]}
+                        selectOptions={[{ value: '30', label: 'test2' }, { value: '10', label: 'test' }]}
                       />}
                   </Field>
                   <ErrorMessage name="typeClinic" />

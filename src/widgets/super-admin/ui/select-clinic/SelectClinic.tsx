@@ -53,7 +53,7 @@ export function SelectClinic() {
           <div className={s.title}>Оплачено до</div>
           <span className={s.subTitle}>
             <DatePicker
-              onChange={(event) => event && setPaidTo(event)}
+              onChange={(event) => event && setPaidTo(event as string)}
             />
           </span>
         </div>

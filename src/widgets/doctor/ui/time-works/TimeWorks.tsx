@@ -11,7 +11,7 @@ export function TimeWorks() {
       <div className='d-flex'>
         <DatePicker
           className={s.datePicker}
-          onChange={(event) => event && setPaidTo(event)}
+          onChange={(event) => event && setPaidTo(event as string)}
         />
         <WorkDay className={s.workDay} />
         <button type='button' className={s.presentDay}>Сегодня</button>

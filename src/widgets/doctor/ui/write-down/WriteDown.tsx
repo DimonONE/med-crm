@@ -18,7 +18,7 @@ export function WriteDown({ patientId }: IProps) {
   const [, setPaidTo] = useState('11/12/2023');
 
   const [value, setValue] = useState('');
-  const selectOptions = [{ value: 1, label: 'Имя врача' }];
+  const selectOptions = [{ value: '1', label: 'Имя врача' }];
 
   return (
     <div className={s.root}>
@@ -48,7 +48,7 @@ export function WriteDown({ patientId }: IProps) {
       <div className='d-flex'>
         <DatePicker
           className={s.datePicker}
-          onChange={(event) => event && setPaidTo(event)}
+          onChange={(event) => event && setPaidTo(event as any)}
         />
         <WorkDay className={s.workDay} />
       </div>

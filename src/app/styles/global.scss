@@ -267,9 +267,9 @@ textarea {
 
 
 // Material UI
-
+.MuiInputBase-root.MuiOutlinedInput-root,
 .MuiInputBase-root .MuiSelect-select {
-  color: var(--color-white);
+  color: inherit;
   font-family: "Montserrat";
 }
 

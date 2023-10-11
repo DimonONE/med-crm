@@ -8,7 +8,7 @@ import { Container, TabsLink } from '~widgets/autch';
 
 export function RegisterPage() {
   // const { isError, error } = useCreateUser();
-  const selectOptions = [{ value: 12, label: 'Option 12' }, { value: 1, label: 'Option 1' }, { value: 10, label: 'Option 10' }];
+  const selectOptions = [{ value: '12', label: 'Option 12' }, { value: '1', label: 'Option 1' }, { value: '10', label: 'Option 10' }];
 
   return (
     <div className="auth-page">

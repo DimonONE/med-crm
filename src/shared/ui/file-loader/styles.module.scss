@@ -1,0 +1,40 @@
+.root {
+}
+
+.downloadButton, 
+.fileInfo .name {
+  display: flex;
+  align-items: center;
+}
+
+.fileInfo {
+  display: flex;
+  margin-bottom: 12px;
+
+  .name {
+    padding: 0 10px 0 7px;
+    color: var(--color-success);
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration-line: underline;
+  }
+}
+
+.downloadButton {
+  justify-content: center;
+  width: 125px;
+  padding-block: 8px;
+  border-radius: 24px;
+  background: var(--color-success);
+  color: #fff;
+
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+
+.input {
+  display: none;
+}
