@@ -22,8 +22,8 @@ export const PATH_PAGE = {
   personnel: {
     root: '/personnel',
     details: '/personnel/details',
-    add: '/personnel/add',
-    edit: '/personnel/edit',
+    add: '/personnel/member',
+    edit: (personalId: string) => `/personnel/member/${personalId}`,
   },
 
   page404: '/404',
