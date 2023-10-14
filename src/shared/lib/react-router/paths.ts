@@ -19,6 +19,12 @@ export const PATH_PAGE = {
     records: '/patients/records',
     viewing: '/patients/viewing',
   },
+  personnel: {
+    root: '/personnel',
+    details: '/personnel/details',
+    add: '/personnel/add',
+    edit: '/personnel/edit',
+  },
 
   page404: '/404',
 };

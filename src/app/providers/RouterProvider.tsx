@@ -4,18 +4,29 @@ import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
 import { Header, HeaderLogin } from '~widgets/header';
 
+// SuperAdmin
+
 const AllClinicsPage = Loadable(lazy(() => import('~pages/super-admin/all-clinics')));
 const AddClinicPage = Loadable(lazy(() => import('~pages/super-admin/add-clinic')));
 const EditClinicPage = Loadable(lazy(() => import('~pages/super-admin/edit-clinic')));
 const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
+// Doctor
+
 const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
+
+// Patients
 
 const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
 const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
 const PatientsAddPatientPage = Loadable(lazy(() => import('~pages/patients/add-patient')));
 const PatientsViewingPage = Loadable(lazy(() => import('~pages/patients/viewing-questionnaire')));
 
+// Personnel
+const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
+
+
+// Auth
 
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
 const Page404 = Loadable(lazy(() => import('~pages/page-404')));
@@ -91,6 +102,19 @@ export function Router() {
             { path: 'records', element: <PatientsRecordsPage /> },
             { path: 'add-patient', element: <PatientsAddPatientPage /> },
             { path: 'viewing', element: <PatientsViewingPage /> },
+
+          ],
+        },
+        {
+          path: 'personnel',
+          children: [
+            {
+              element: <PersonnelHomePage />,
+              index: true,
+            },
+            { path: 'details', element: <>details</> },
+            { path: 'add', element: <>add</> },
+            { path: 'edit', element: <>edit</> },
 
           ],
         },
