@@ -24,6 +24,7 @@ const PatientsViewingPage = Loadable(lazy(() => import('~pages/patients/viewing-
 
 // Personnel
 const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
+const PersonnelDetailsPage = Loadable(lazy(() => import('~pages/personnel/details')));
 const EmployeeManagementPage = Loadable(lazy(() => import('~pages/personnel/employee-management')));
 
 
@@ -113,7 +114,7 @@ export function Router() {
               element: <PersonnelHomePage />,
               index: true,
             },
-            { path: 'details', element: <>details</> },
+            { path: 'details', element: <PersonnelDetailsPage /> },
             { path: 'member/:id?', element: <EmployeeManagementPage /> },
           ],
         },

@@ -1,0 +1,37 @@
+.root {
+  max-width: 750px;
+}
+
+.loadFails {
+  margin-block: 70px;
+  display: flex;
+  flex-direction: column;
+
+  .title {
+    margin-bottom: 26px;
+    color: var(--color-font);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 107%;
+  }
+}
+
+.submit,
+.delete {
+  width: max-content;
+  min-width: 194px;
+  margin-top: 35px;
+  padding: 12px 26px;
+  float: right;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.submit {
+  padding-block: 11px;
+}
+
+.delete {
+  background-color: var(--color-error);
+  margin-right: 11px;
+}
