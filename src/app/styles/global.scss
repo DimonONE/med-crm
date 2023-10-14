@@ -356,6 +356,8 @@ textarea {
 
 .table-head-cell.MuiTableCell-root, 
 .table-body-cell.MuiTableCell-root {
+  padding: 0;
+  
   &:first-child {
     padding-left: clamp(20px, 32vw, 40px);
   }
@@ -364,8 +366,9 @@ textarea {
   }
 }
 
+
 .table-head-cell.MuiTableCell-root {
-  min-height: 58px;
+  height: 58px;
   border-bottom: 1px solid #578695;
   color: #0E5F8C;
   font-size: clamp(16px, 2vw, 20px);
