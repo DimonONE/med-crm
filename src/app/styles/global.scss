@@ -276,7 +276,11 @@ textarea {
 .MuiInputBase-input.MuiOutlinedInput-input{
   padding: 0;
   padding-right: 0 !important;
+}
 
+.MuiPaper-root.MuiTableContainer-root {
+  border-radius: 0;
+  box-shadow: none
 }
 
 .select-navigate {
@@ -366,7 +370,6 @@ textarea {
   }
 }
 
-
 .table-head-cell.MuiTableCell-root {
   height: 58px;
   border-bottom: 1px solid #578695;
@@ -383,4 +386,10 @@ textarea {
   color:#578695;
   font-size: 18px;
   font-weight: 400;
+}
+
+.MuiTableRow-root:last-child {
+  .table-body-cell {
+    border-bottom: 1px solid #A1B6C1;
+  }
 }

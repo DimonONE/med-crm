@@ -1,0 +1,30 @@
+.root {
+  display: flex;
+  align-items: center;
+  height: 58.5px;
+  padding-left: clamp(20px, 32vw, 40px);
+  padding-right: 12px;
+  border-bottom: 1px solid #578695;
+  color: #0E5F8C;
+}
+
+.name {
+  color: #0E5F8C;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.search {
+  position: relative;
+  width: 221.192px;
+  height: 34.387px;
+  margin: 0 0 0 auto;
+  padding: 0;
+  padding-right: 7px;
+  border-radius: 47px;
+  border: 0.764px solid var(--color-base);
+  background: var(--color-white);
+
+  font-size: 16px;
+  font-weight: 400;
+}

@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { SearchPersonnel } from '~features/personnel';
 import ArrowRightICO from '~shared/svg/arrowRight.svg';
 import { ItemContainer } from '~shared/ui/item-container';
 import { Sidebar } from '~shared/ui/sidebar';
@@ -18,9 +19,9 @@ type Props = {
 
 export function SidebarItemList({ rootUrl, selectId, items }: Props) {
 
-
   return (
     <Sidebar>
+      <SearchPersonnel />
       {
         items.map(({ id, title, subTitle }) => (
           <ItemContainer link={`${rootUrl}/${id}`} className={classNames(s.item, { [s.active]: id === selectId })} >
