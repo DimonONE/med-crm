@@ -26,7 +26,7 @@ export function PersonnelList() {
       '+389658256715',
       <Button className={s.buttonLink}
         color='secondary'
-        onClick={() => navigate(`${PATH_PAGE.superAdmin.clinicApplications}/1`)
+        onClick={() => navigate(`${PATH_PAGE.personnel.details('1')}`)
         }>
         Подробнее
       </Button>),
@@ -36,7 +36,7 @@ export function PersonnelList() {
       '+389658256715',
       <Button className={s.buttonLink}
         color='secondary'
-        onClick={() => navigate(`${PATH_PAGE.superAdmin.clinicApplications}/1`)}>
+        onClick={() => navigate(`${PATH_PAGE.personnel.details('2')}`)}>
         Подробнее
       </Button>),
   ];

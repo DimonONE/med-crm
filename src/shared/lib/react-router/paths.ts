@@ -21,7 +21,7 @@ export const PATH_PAGE = {
   },
   personnel: {
     root: '/personnel',
-    details: '/personnel/details',
+    details: (personalId: string) => `/personnel/details/${personalId}`,
     add: '/personnel/member',
     edit: (personalId: string) => `/personnel/member/${personalId}`,
   },

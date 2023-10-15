@@ -114,7 +114,7 @@ export function Router() {
               element: <PersonnelHomePage />,
               index: true,
             },
-            { path: 'details', element: <PersonnelDetailsPage /> },
+            { path: 'details/:userId', element: <PersonnelDetailsPage /> },
             { path: 'member/:id?', element: <EmployeeManagementPage /> },
           ],
         },
