@@ -12,20 +12,17 @@ import { SelectField } from '~shared/ui/select-field';
 import s from './styles.module.scss';
 
 type Params = {
-  id?: string
+  personalId?: string
 };
 
-export function EmployeeManagement() {
+export function RecordPatient() {
   const params = useParams<Params>();
 
-  console.log('params', params);
-
   const selectOptions = [{ value: '0', label: 'Пол' }, { value: '1', label: 'Мужской' }, { value: '2', label: 'Женский' }];
-  const positionsOptions = [{ value: '0', label: 'Должность' }, { value: '1', label: 'Медсестра' }, { value: '2', label: 'Медсестра' }];
 
   return (
     <div className={s.root}>
-      <BackButton title={params?.id ? 'Редактировать персонал' : 'Добавить персонал'} />
+      <BackButton title="Записать пациента на прием" />
       <div className={s.formContainer}>
         <Formik
           initialValues={{
@@ -60,17 +57,7 @@ export function EmployeeManagement() {
             <Form className='full-width'>
               <div className={s.userInfo} >
                 <span className='full-width'>
-                  <Field
-                    name="positions"
-                    className='form-input'
-                  >
-                    {(props: FieldProps) =>
-                      <SelectField
-                        {...props}
-                        className={classNames('form-input')}
-                        selectOptions={positionsOptions}
-                      />}
-                  </Field>
+
 
                   <div className={s.formLabel}>
                     Паспортные данные
@@ -231,7 +218,7 @@ export function EmployeeManagement() {
               </Button>
 
               {
-                params?.id && (
+                params?.personalId && (
                   <Button
                     className={classNames(s.delete, 'form-submit')}
                     type="submit"

@@ -21,11 +21,13 @@ const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
 const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
 const PatientsAddPatientPage = Loadable(lazy(() => import('~pages/patients/add-patient')));
 const PatientsViewingPage = Loadable(lazy(() => import('~pages/patients/viewing-questionnaire')));
+const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
+const PatientRecord = Loadable(lazy(() => import('~pages/patients/record-patient')));
 
 // Personnel
 const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
 const PersonnelDetailsPage = Loadable(lazy(() => import('~pages/personnel/details')));
-const EmployeeManagementPage = Loadable(lazy(() => import('~pages/personnel/employee-management')));
+const PersonnelManagementPage = Loadable(lazy(() => import('~pages/personnel/employee-management')));
 
 
 // Auth
@@ -104,7 +106,8 @@ export function Router() {
             { path: 'records', element: <PatientsRecordsPage /> },
             { path: 'add-patient', element: <PatientsAddPatientPage /> },
             { path: 'viewing', element: <PatientsViewingPage /> },
-
+            { path: 'record', element: <PatientRecord /> },
+            { path: 'member/:patientId?', element: <PatientManagementPage /> },
           ],
         },
         {
@@ -115,7 +118,7 @@ export function Router() {
               index: true,
             },
             { path: 'details/:userId', element: <PersonnelDetailsPage /> },
-            { path: 'member/:id?', element: <EmployeeManagementPage /> },
+            { path: 'member/:personalId?', element: <PersonnelManagementPage /> },
           ],
         },
       ],
