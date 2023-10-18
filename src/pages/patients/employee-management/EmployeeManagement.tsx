@@ -12,7 +12,7 @@ import { SelectField } from '~shared/ui/select-field';
 import s from './styles.module.scss';
 
 type Params = {
-  personalId?: string
+  patientId?: string
 };
 
 export function EmployeeManagement() {
@@ -20,9 +20,11 @@ export function EmployeeManagement() {
 
   const selectOptions = [{ value: '0', label: 'Пол' }, { value: '1', label: 'Мужской' }, { value: '2', label: 'Женский' }];
 
+  console.log('params', params);
+
   return (
     <div className={s.root}>
-      <BackButton title={params?.personalId ? 'Редактировать пациента' : 'Добавить пациента'} />
+      <BackButton title={params?.patientId ? 'Редактировать пациента' : 'Добавить пациента'} />
       <div className={s.formContainer}>
         <Formik
           initialValues={{
@@ -218,7 +220,7 @@ export function EmployeeManagement() {
               </Button>
 
               {
-                params?.personalId && (
+                params?.patientId && (
                   <Button
                     className={classNames(s.delete, 'form-submit')}
                     type="submit"

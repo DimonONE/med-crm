@@ -19,7 +19,6 @@ const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
 
 const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
 const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
-const PatientsAddPatientPage = Loadable(lazy(() => import('~pages/patients/add-patient')));
 const PatientsViewingPage = Loadable(lazy(() => import('~pages/patients/viewing-questionnaire')));
 const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
 const PatientRecord = Loadable(lazy(() => import('~pages/patients/record-patient')));
@@ -104,7 +103,6 @@ export function Router() {
               index: true,
             },
             { path: 'records', element: <PatientsRecordsPage /> },
-            { path: 'add-patient', element: <PatientsAddPatientPage /> },
             { path: 'viewing', element: <PatientsViewingPage /> },
             { path: 'record', element: <PatientRecord /> },
             { path: 'member/:patientId?', element: <PatientManagementPage /> },
