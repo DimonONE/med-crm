@@ -20,8 +20,6 @@ export function EmployeeManagement() {
 
   const selectOptions = [{ value: '0', label: 'Пол' }, { value: '1', label: 'Мужской' }, { value: '2', label: 'Женский' }];
 
-  console.log('params', params);
-
   return (
     <div className={s.root}>
       <BackButton title={params?.patientId ? 'Редактировать пациента' : 'Добавить пациента'} />

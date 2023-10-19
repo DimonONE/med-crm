@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
+import CloseICO from '../../close-gray-ico.svg';
 import s from './styles.module.scss';
-import CloseICO from './svg/close-ico.svg';
 import DownloadICO from './svg/download-ico.svg';
 
 type FileValues = File[] | null;

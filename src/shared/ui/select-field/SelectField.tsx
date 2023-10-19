@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Select } from '@mui/material';
+import { Select, SelectChangeEvent } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import classNames from 'classnames';
 import { FieldProps } from 'formik';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import s from './styles.module.scss';
 
-interface MenuItemProps {
+export interface MenuItemProps {
   value: string | number
   label: string
 }
 
 type DataProps = FieldProps | {
-  value: string,
-  onChange: (event: any) => void
+  value: string | number,
+  onChange: (event: SelectChangeEvent<string | number>, child: React.ReactNode) => void
 };
 
 type SelectFieldProps = {
@@ -61,11 +61,13 @@ export function SelectField(props: SelectFieldProps) {
             horizontal: 'center',
           },
         }}
+        placeholder='test'
         {...propsSpread}
       >
         {
           children || selectOptions.map(({ label, value }) => (
-            <MenuItem key={value} id={`${value}`} value={value}>
+            <MenuItem key={value} id={`${value}`} value={value}
+              sx={{ 'display': value === '0' ? 'none' : 'flex' }} >
               {label}
             </MenuItem>
           ))

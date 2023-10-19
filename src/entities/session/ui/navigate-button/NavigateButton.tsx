@@ -29,7 +29,7 @@ export function NavigateButton() {
   return (
     <SelectField
       value={value}
-      onChange={(event) => setValue(event.target.value)}
+      onChange={(event) => typeof event.target.value === 'string' && setValue(event.target.value)}
       className='form-input buttons-header'
       selectNavigate
       selectOptions={selectOptions}

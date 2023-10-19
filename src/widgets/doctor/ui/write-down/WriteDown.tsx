@@ -7,6 +7,7 @@ import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
 import { SelectField } from '~shared/ui/select-field';
+import { TimeSelect } from '~shared/ui/time-select';
 import s from './styles.module.scss';
 
 type IProps = {
@@ -17,7 +18,7 @@ export function WriteDown({ patientId }: IProps) {
 
   const [, setPaidTo] = useState('11/12/2023');
 
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
   const selectOptions = [{ value: '1', label: 'Имя врача' }];
 
   return (
@@ -26,7 +27,7 @@ export function WriteDown({ patientId }: IProps) {
 
       <SelectField
         value={value}
-        onChange={(event) => setValue(event.target.value)}
+        onChange={(event) => typeof event.target.value === 'string' && setValue(event.target.value)}
         className={classNames('form-input', s.selectDoctor)}
         selectNavigate
         selectOptions={selectOptions}
@@ -53,56 +54,9 @@ export function WriteDown({ patientId }: IProps) {
         <WorkDay className={s.workDay} />
       </div>
       <WorkTime />
-
       <div className={s.times}>
-        <div className={s.time}>
-          <span className={s.label}>Время от</span>
-          <SelectField
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-            className={classNames('form-input', s.selectTime)}
-            selectNavigate
-            selectOptions={selectOptions}
-          >
-            {
-              selectOptions.map(({ label, value: link }) => (
-                <MenuItem
-                  key={link}
-                  value={link}
-                  className='select-link'
-                  onClick={() => false}
-                >
-                  {label}
-                </MenuItem>
-              ))
-            }
-          </SelectField>
-        </div>
-
-        <div className={s.time}>
-          <span className={s.label}>Время до</span>
-          <SelectField
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-            className={classNames('form-input', s.selectTime)}
-            selectNavigate
-            selectOptions={selectOptions}
-          >
-            {
-              selectOptions.map(({ label, value: link }) => (
-                <MenuItem
-                  key={link}
-                  value={link}
-                  className='select-link'
-                  onClick={() => false}
-                >
-                  {label}
-                </MenuItem>
-              ))
-            }
-          </SelectField>
-
-        </div>
+        <TimeSelect title='Время от' selectOptions={selectOptions} />
+        <TimeSelect title='Время до' selectOptions={selectOptions} />
       </div>
       <Button type='submit' className={s.writeButton}>Записать</Button>
     </div>

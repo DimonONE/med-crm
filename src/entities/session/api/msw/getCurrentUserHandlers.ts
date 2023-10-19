@@ -1,12 +1,9 @@
 import { rest } from 'msw';
 import {
   server,
-  initTestDatabase,
   parseTokenFromRequest,
 } from '~shared/api/msw';
 import { realworldApi } from '~shared/api/realworld';
-
-const databaseApi = initTestDatabase();
 
 const getCurrentUserHandlers = [
   rest.get(`${realworldApi.baseUrl}/user`, (req, res, ctx) => {
@@ -21,9 +18,11 @@ const getCurrentUserHandlers = [
         }),
       );
 
-    const maybeUser = databaseApi.user.findFirst({
-      where: { token: { equals: token } },
-    });
+      // get user
+    const maybeUser = true;
+    // databaseApi.user.findFirst({
+    //   where: { token: { equals: token } },
+    // });
 
     if (maybeUser) return res(ctx.status(200), ctx.json({ user: maybeUser }));
 
