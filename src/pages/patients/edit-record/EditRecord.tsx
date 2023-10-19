@@ -11,8 +11,6 @@ import { SelectField } from '~shared/ui/select-field';
 import { TimeSelect } from '~shared/ui/time-select';
 import s from './styles.module.scss';
 
-
-
 export function EditRecord() {
   const selectOptions = [{ value: '0', label: 'Имя врача' }, { value: '1', label: 'Dima' }, { value: '2', label: 'Ivan' }];
 
@@ -70,8 +68,6 @@ export function EditRecord() {
                       <WorkDay className={s.workDay} />
                     </div>
                     <WorkTime className={s.workTime} />
-
-                    <TimeSelect selectOptions={selectOptions} />
 
                     <div className={s.times}>
                       <TimeSelect title='Время от' selectOptions={selectOptions} />
@@ -135,7 +131,6 @@ export function EditRecord() {
                         Добавить
                       </Button>
                     </div>
-
 
                     <div className={s.servicesList}>
                       <span className={s.price}>₽ 40</span>

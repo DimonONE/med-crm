@@ -28,5 +28,6 @@ export const PATH_PAGE = {
     edit: (personalId: string) => `/personnel/member/${personalId}`,
   },
 
+  services: '/services',
   page404: '/404',
 };

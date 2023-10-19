@@ -28,6 +28,9 @@ const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
 const PersonnelDetailsPage = Loadable(lazy(() => import('~pages/personnel/details')));
 const PersonnelManagementPage = Loadable(lazy(() => import('~pages/personnel/employee-management')));
 
+// Services
+const ServicesPage = Loadable(lazy(() => import('~pages/services')));
+
 
 // Auth
 
@@ -119,6 +122,7 @@ export function Router() {
             { path: 'member/:personalId?', element: <PersonnelManagementPage /> },
           ],
         },
+        { path: 'services', element: <ServicesPage /> },
       ],
     },
     { path: '404', element: <Page404 /> },
