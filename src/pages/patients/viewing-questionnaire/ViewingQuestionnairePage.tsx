@@ -11,15 +11,14 @@ export function ViewingQuestionnairePage() {
   const params = useParams();
 
   const items = [
-    { id: '1', title: 'Арноль Качер Шварценегерович', subTitle: 12 },
-    { id: '2', title: 'test', subTitle: 12 },
-    { id: '3', title: 'test', subTitle: 12 },
+    { id: '1', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 1' },
+    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
   ];
 
   return (
     <div className={s.root}>
       <div className='d-flex'>
-        <SidebarItemList items={items} rootUrl={PATH_PAGE.superAdmin.root} selectId={params.id} />
+        <SidebarItemList items={items} selectId={params.id} />
         <UserInfo />
       </div>
       <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>

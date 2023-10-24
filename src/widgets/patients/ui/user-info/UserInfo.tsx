@@ -1,6 +1,7 @@
 
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
+import { RoleEnum } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
 import BackICO from './svg/back-ico.svg';
@@ -9,6 +10,7 @@ import EmailICO from './svg/email-ico.svg';
 import PhoneICO from './svg/phone-ico.svg';
 
 export function UserInfo() {
+
   return (
     <div className={classNames(s.root, 'container')}>
       <div className={s.navigateInfo}>
@@ -16,7 +18,14 @@ export function UserInfo() {
           <BackICO />
         </NavLink>
         <span className={s.name}>Ганс Христиан Андерсон</span>
-        <EditICO />
+        {
+          RoleEnum.MedChief && (
+            <Button color='primary-reverse'>
+              <EditICO />
+            </Button>
+          )
+        }
+
       </div>
 
       <div className={classNames('d-flex', s.blockInfo)}>
@@ -78,13 +87,13 @@ export function UserInfo() {
         </div>
 
         <div className={s.note}>
-          <div className={s.textBold}>Заметка:</div>
-          <div className={s.noteInfo}>Непереносимость лактозы. Боязнь уколов.</div>
+          <div className={s.textBold}>Жалоба:</div>
+          <div className={s.noteInfo}>Болят зубы, желтый налет, смешение швардевита.</div>
         </div>
 
         <div className='d-flex'>
           <Button className={classNames(s.button, s.buttonSuccess)} onClick={() => false}>
-            Пришел
+            В оплату
           </Button>
 
           <Button className={classNames(s.button, s.buttonAttendance)} onClick={() => false}>

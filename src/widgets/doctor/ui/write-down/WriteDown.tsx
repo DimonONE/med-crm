@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
-import { WorkDay, WorkTime } from '~entities/work-time';
+import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
@@ -49,11 +49,11 @@ export function WriteDown({ patientId }: IProps) {
       <div className='d-flex'>
         <DatePicker
           className={s.datePicker}
-          onChange={(event) => event && setPaidTo(event as any)}
+          onChange={(event) => event && setPaidTo(event as string)}
         />
-        <WorkDay className={s.workDay} />
+        <WorkDay daysWork={daysWork} handleChange={() => false} className={s.workDay} />
       </div>
-      <WorkTime />
+      <WorkTime timesWork={timesWork} handleChange={() => false} />
       <div className={s.times}>
         <TimeSelect title='Время от' selectOptions={selectOptions} />
         <TimeSelect title='Время до' selectOptions={selectOptions} />

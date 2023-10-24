@@ -159,7 +159,6 @@ textarea {
 .container {
   width: calc(100vw - var(--sidebar-width));
   height: calc(100vh - var(--header-height));
-  overflow: auto;
 }
 
 .btn-primary {
@@ -380,6 +379,8 @@ textarea {
   color: #0E5F8C;
   font-size: clamp(16px, 2vw, 20px);
   font-weight: 600;
+  box-sizing: content-box;
+
 }
 
 .table-body-cell.MuiTableCell-root {

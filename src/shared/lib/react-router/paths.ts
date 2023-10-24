@@ -27,7 +27,10 @@ export const PATH_PAGE = {
     add: '/personnel/member',
     edit: (personalId: string) => `/personnel/member/${personalId}`,
   },
-
+  attendance: {
+    root: 'attendance',
+    schedule: (id: string) => `schedule/${id}`,
+  },
   services: '/services',
   page404: '/404',
 };

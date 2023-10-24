@@ -9,17 +9,15 @@ export function AllClinics() {
   const params = useParams();
   const navigate = useNavigate();
 
-
   const items = [
-    { id: '1', title: 'Арноль Качер Шварценегерович', subTitle: 12 },
-    { id: '2', title: 'test', subTitle: 12 },
-    { id: '3', title: 'test', subTitle: 12 },
+    { id: '1', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 1' },
+    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
   ];
 
   return (
     <div className="super-admin-page">
       <div className='d-flex'>
-        <SidebarItemList items={items} rootUrl={PATH_PAGE.superAdmin.root} selectId={params.id} />
+        <SidebarItemList items={items} selectId={params.id} />
         <div className='container'>
           {
             params.id ? <SelectClinic /> : <AllClinic />

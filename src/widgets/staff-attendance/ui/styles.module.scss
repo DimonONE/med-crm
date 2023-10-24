@@ -1,0 +1,28 @@
+.days {
+  display: flex;
+
+  .day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 2.511px;
+    border: 0.502px solid  #578695;
+    background-color: #fff;
+
+    color: #578695;
+    font-size: 12.055px;
+    font-weight: 500;
+    line-height: 140%; /* 16.876px */
+
+    &.active {
+      background-color: #D3EFFF;
+    }
+  }
+}
+
+.workTime {
+  margin-top: 0;
+  height: 52px;
+}

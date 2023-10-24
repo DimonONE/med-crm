@@ -2,7 +2,7 @@
 import classNames from 'classnames';
 import { ErrorMessage, Field, FieldProps, Form, Formik } from 'formik';
 import { object } from 'yup';
-import { WorkDay, WorkTime } from '~entities/work-time';
+import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import CloseICO from '~shared/svg/close-gray-ico.svg';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
@@ -65,9 +65,9 @@ export function EditRecord() {
                         className={s.datePicker}
                         onChange={() => false}
                       />
-                      <WorkDay className={s.workDay} />
+                      <WorkDay daysWork={daysWork} handleChange={() => false} className={s.workDay} />
                     </div>
-                    <WorkTime className={s.workTime} />
+                    <WorkTime className={s.workTime} timesWork={timesWork} handleChange={() => false} />
 
                     <div className={s.times}>
                       <TimeSelect title='Время от' selectOptions={selectOptions} />

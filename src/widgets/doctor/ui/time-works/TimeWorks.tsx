@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { WorkDay, WorkTime } from '~entities/work-time';
+import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import { DatePicker } from '~shared/ui/date-picker';
 import s from './styles.module.scss';
 
@@ -13,11 +13,11 @@ export function TimeWorks() {
           className={s.datePicker}
           onChange={(event) => event && setPaidTo(event as string)}
         />
-        <WorkDay className={s.workDay} />
+        <WorkDay daysWork={daysWork} handleChange={() => false} className={s.workDay} />
         <button type='button' className={s.presentDay}>Сегодня</button>
         <button type='button' className={s.nextDay}>Завтра</button>
       </div>
-      <WorkTime />
+      <WorkTime timesWork={timesWork} handleChange={() => false} />
     </div>
   );
 }

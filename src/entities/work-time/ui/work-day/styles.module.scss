@@ -23,13 +23,15 @@
 
 .arrowLeft,
 .arrowRight {
-  margin: auto 0;
+  display: flex;
+  height: auto;
+  align-items: center;
 }
 
 .arrowLeft {
-  margin-right: 5px;
+  padding-right: 5px;
 }
 
 .arrowRight {
-  margin-left: 5px;
+  padding-left: 5px;
 }

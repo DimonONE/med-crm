@@ -31,6 +31,10 @@ const PersonnelManagementPage = Loadable(lazy(() => import('~pages/personnel/emp
 // Services
 const ServicesPage = Loadable(lazy(() => import('~pages/services')));
 
+// Staff Attendance
+const AttendancePage = Loadable(lazy(() => import('~pages/staff-attendance/attendance')));
+const AttendanceSchedulePage = Loadable(lazy(() => import('~pages/staff-attendance/schedule')));
+
 
 // Auth
 
@@ -120,6 +124,16 @@ export function Router() {
             },
             { path: 'details/:userId', element: <PersonnelDetailsPage /> },
             { path: 'member/:personalId?', element: <PersonnelManagementPage /> },
+          ],
+        },
+        {
+          path: 'attendance',
+          children: [
+            {
+              element: <AttendancePage />,
+              index: true,
+            },
+            { path: 'schedule/:id', element: <AttendanceSchedulePage /> },
           ],
         },
         { path: 'services', element: <ServicesPage /> },
