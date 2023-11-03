@@ -22,7 +22,7 @@ export const timesWork = [
   {
     id: 5,
     time: '13:00',
-    isWork: true,
+    isWork: false,
   },
   {
     id: 6,

@@ -1,0 +1,132 @@
+.react_time_range__wrapper {
+  --react-time-range-height: 52px; 
+  position: relative;
+  display: flex;
+}
+
+
+.react_time_range__time_range_container {
+  position: relative;
+  overflow: hidden;
+  border: 0.873px solid #578695 !important;
+  padding: 0 !important;
+  width: 650px ;
+  margin-inline: 5px;
+  box-sizing: content-box !important ;
+  
+  &,
+  .react_time_range__handle_container,
+  .react_time_range__rail__inner,
+  .react_time_range__rail__outer,
+  .react_time_range__track,
+  .react_time_range__tick_label {
+    border-radius: 8px;
+    height: var(--react-time-range-height) !important;
+  }
+
+  .react_time_range__track,
+  .react_time_range__rail__inner,
+  .react_time_range__rail__outer {
+    transform: none !important;
+  }
+
+  .react_time_range__rail__inner {
+    background-color: #fff;
+  }
+
+  .react_time_range__track,
+  .border-blok  {
+    height: calc(var(--react-time-range-height)) !important;
+    &:nth-child(odd) {
+      background-color: rgb(213, 255, 232) !important; 
+      border-left: 2px solid #578695 !important;
+      border-right: none !important;
+
+      &::after,
+      &::before {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        
+        border-width: 10px 10px 10px 0px; 
+        left: -2px; 
+      }
+    }
+
+    &:nth-child(odd) {
+      &::after {
+        bottom: 0px;
+        border-color: transparent transparent #578695 transparent;
+      }
+
+      &::before {
+        top: 0;
+        border-color: #578695 transparent transparent transparent;
+      }
+    }
+
+
+    .border-blok {
+      position: relative;
+      float: right;
+      height: 100%;
+      right: -2px;
+      border-right: 2px solid #578695 !important;
+      border-left: none !important;
+      
+      &::after,
+      &::before {
+        border-width: 10px 0 10px 10px;
+        left: -8px;
+      }
+    }
+
+    &:nth-child(even) {
+      z-index: 1;
+      background: #fff !important;
+      border: none !important;
+
+      .border-blok,
+      .border-blok::after,
+      .border-blok::before {
+        border: none !important;
+      }
+    }
+  }
+
+  .react_time_range__handle_container {
+    pointer-events: none;
+    transform: translate(-50%, 0%);
+    z-index: 2;
+    width: 0;
+  }
+
+  .react_time_range__tick_marker {
+    display: none;
+  }
+ 
+  .react_time_range__tick_marker__large {
+    display: none;
+  }
+
+  .react_time_range__tick_label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    border-left: 0.873px solid  #578695;
+
+    pointer-events: none;
+    margin-top: 0;
+    margin-left: 0 !important;
+    z-index: 3;
+
+    color: #578695;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+

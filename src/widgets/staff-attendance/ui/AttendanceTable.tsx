@@ -2,9 +2,10 @@ import { ReactElement } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
-import { WorkTime, daysWork, timesWork } from '~entities/work-time';
+import { daysWork } from '~entities/work-time';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
+import { TimeScale, getTodayAtSpecificHour } from '~shared/ui/time-scale';
 import s from './styles.module.scss';
 
 function createData(
@@ -23,13 +24,19 @@ export function AttendanceTable() {
 
   const rows = [
     createData(
-      <WorkTime
-        className={s.workTime}
-        timesWork={timesWork}
-        handleChange={() => false}
-        handleDelete={() => false}
-        editTimes
-      />,
+      <>
+        {/* // */}
+        {/* <WorkTime
+          className={s.workTime}
+          timesWork={timesWork}
+          handleChange={() => false}
+          handleDelete={() => false}
+        // editTimes
+        /> */}
+
+      </>
+
+      ,
       <div className={s.days}>
         {
           daysWork.map(({ id, day }) => (
@@ -47,6 +54,9 @@ export function AttendanceTable() {
         Настроить
       </Button>),
   ];
+
+
+
 
   return (
     <div className={classNames(s.root, 'container')}>
@@ -81,6 +91,8 @@ export function AttendanceTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(21)} />
+
     </div>
   );
 }

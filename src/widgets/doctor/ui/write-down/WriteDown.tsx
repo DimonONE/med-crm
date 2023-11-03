@@ -53,7 +53,7 @@ export function WriteDown({ patientId }: IProps) {
         />
         <WorkDay daysWork={daysWork} handleChange={() => false} className={s.workDay} />
       </div>
-      <WorkTime timesWork={timesWork} handleChange={() => false} />
+      <WorkTime editTimes timesWork={timesWork} handleChange={() => false} />
       <div className={s.times}>
         <TimeSelect title='Время от' selectOptions={selectOptions} />
         <TimeSelect title='Время до' selectOptions={selectOptions} />
