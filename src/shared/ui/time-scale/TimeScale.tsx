@@ -5,7 +5,7 @@ import TimeRange from 'react-timeline-range-slider';
 import './styles.scss';
 import ArrowLeftICO from '../../svg/arrow-left-ico.svg';
 import ArrowRightICO from '../../svg/arrow-right-ico.svg';
-// import CloseICO from '../../svg/close-gray-ico.svg';
+import closeICO from './img/close-ico.png';
 import { createIntervals, createNewInterval, findChangedTime, getTodayAtSpecificHour, mergeIntervals } from './utils/fn';
 import { Interval } from './utils/type';
 
@@ -13,10 +13,11 @@ import { Interval } from './utils/type';
 type IProps = {
   startTime: Dayjs
   endTime: Dayjs
+  width?: string | number
 };
 
 
-export function TimeScale({ startTime, endTime }: IProps) {
+export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
   const defaultTime = dayjs().hour(9).minute(11).second(11).toDate();
   const [timelineInterval, setTimelineInterval] = useState<[Date, Date]>([
     startTime.toDate(),
@@ -102,6 +103,40 @@ export function TimeScale({ startTime, endTime }: IProps) {
       setTimelineInterval([startTimeSkip.toDate(), endTimeSkip.toDate()]);
   };
 
+  const deleteTime = (time: Dayjs, intervals: Interval[]) => {
+
+    console.log('intervals', intervals);
+    console.log('intervals', time);
+
+    const updatedIntervals: Date[] = intervals.reduce(
+      (result: Interval[], { start, end }: Interval) => {
+        if (start.isSame(time) || end.isSame(time) || (time.isAfter(start) && time.isBefore(end))) {
+          // Если time равен start, end или попадает в диапазон start -> end
+          // Удалить ровно час из интервала
+          const updatedStart = start.isSame(time) ? start.add(1, 'hour') : start;
+          const updatedEnd = end.isSame(time) ? end.subtract(1, 'hour') : end;
+
+          if (updatedStart.isBefore(updatedEnd)) {
+            // Если интервал остался ненулевой длины, добавить обновленный интервал в результат
+            result.push({ start: updatedStart, end: updatedEnd });
+          }
+        } else {
+          // Если интервал не подходит под условия, добавить его в результат без изменений
+          result.push({ start, end });
+        }
+        return result;
+      },
+      [],
+    ).flatMap(
+      ({ start, end }: Interval) => [start.toDate(), end.toDate()],
+    );
+
+    // isClickToInterval = null;
+    setSelectedIntervals(updatedIntervals);
+  };
+
+
+
   useEffect(() => {
     const reactTimeRange = document.querySelectorAll('.react_time_range__time_range_container .react_time_range__track');
     reactTimeRange.forEach((element) => {
@@ -114,57 +149,68 @@ export function TimeScale({ startTime, endTime }: IProps) {
       }
     });
 
-    // const timeRangeContainer = document.querySelector('.react_time_range__wrapper');
-    // const reactTimeRangeLabel = document.querySelectorAll('.react_time_range__time_range_container .react_time_range__tick_label');
-    // const containerCloseButton = document.createElement('div');
-    // containerCloseButton.style.margin = '0 10px';
-    // timeRangeContainer?.appendChild(containerCloseButton);
+    // Close buttons time line
 
-    // reactTimeRangeLabel.forEach((element) => {
-    //   const existingButton = timeRangeContainer?.querySelector('.react_time_range__close-button');
-    //   console.log('existingBorderBlok', existingButton);
+    const timeRangeContainer = document.querySelector('.react_time_range__wrapper');
+    const reactTimeRangeLabel = document.querySelectorAll('.react_time_range__time_range_container .react_time_range__tick_label');
+    const existingContainerCloseButton = timeRangeContainer?.querySelector('.react_time_range__close_button_container');
 
-    //   // ('.react_time_range__close-button');
+    const containerCloseButton = document.createElement('div');
+    if (!existingContainerCloseButton) {
+      containerCloseButton.className = 'react_time_range__close_button_container';
+      containerCloseButton.style.width = `${typeof width === 'string' ? width : `${width}px`}`;
+      timeRangeContainer?.appendChild(containerCloseButton);
+    }
 
-    //   if (!existingButton && timeRangeContainer) {
-    //     const closeButton = document.createElement('button');
-    //     closeButton.style.position = 'absolute';
-    //     closeButton.style.top = `${element.scrollHeight}px`;
-    //     closeButton.style.left = window.getComputedStyle(element).getPropertyValue('left');
-    //     closeButton.style.background = 'red';
-    //     closeButton.innerHTML = 'red';
+    reactTimeRangeLabel.forEach((element) => {
 
-    //     closeButton.className = '.react_time_range__close-button';
-    //     containerCloseButton.appendChild(closeButton);
-    //   }
-    // });
-    // console.log('selectedIntervals', selectedIntervals);
+      if (timeRangeContainer) {
+        const closeButton = document.createElement('button');
+        closeButton.className = 'react_time_range__close-button';
+        closeButton.style.top = `${element.scrollHeight}px`;
+        closeButton.style.width = `calc(100% / ${endTime.diff(startTime, 'hour')})`;
+
+        const intervals: Interval[] = createIntervals(selectedIntervals);
+        console.log('intervalsONE', intervals);
+
+        closeButton.onclick = () => deleteTime(dayjs(element.innerHTML, 'HH:mm'), intervals);
+
+
+        const closeButtonICO = document.createElement('img');
+        closeButtonICO.src = closeICO;
+
+
+        closeButton.appendChild(closeButtonICO);
+        containerCloseButton.appendChild(closeButton);
+      }
+    });
 
   }, [selectedIntervals]);
-
-
-
-
 
   return (
     <Box
       className='react_time_range__wrapper'
       sx={
         {
+          '.react_time_range__time_range_container': {
+            width: `${typeof width === 'string' ? width : `${width}px`} !important`,
+          },
           '.react_time_range__tick_label': {
             width: `calc(100% / ${endTime.diff(startTime, 'hour')}) !important`,
           },
         }
       }>
-      <button type='button' onClick={skipLeft}> <ArrowLeftICO /></button>
-      <TimeRange
-        mode={1}
-        selectedInterval={selectedIntervals}
-        timelineInterval={timelineInterval}
-        onUpdateCallback={onUpdateCallback}
-        onChangeCallback={onChangeCallback}
-      />
-      <button type='button' onClick={skipRight}> <ArrowRightICO /></button>
+      <div className='react_time_range__time_content'>
+        <button type='button' onClick={skipLeft}> <ArrowLeftICO /></button>
+        <TimeRange
+          mode={1}
+          selectedInterval={selectedIntervals}
+          timelineInterval={timelineInterval}
+          onUpdateCallback={onUpdateCallback}
+          onChangeCallback={onChangeCallback}
+        />
+        <button type='button' onClick={skipRight}> <ArrowRightICO /></button>
+      </div>
     </Box >
   );
 }

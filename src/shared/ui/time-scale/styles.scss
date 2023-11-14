@@ -1,7 +1,26 @@
 .react_time_range__wrapper {
   --react-time-range-height: 52px; 
   position: relative;
-  display: flex;
+  width: max-content;
+
+  .react_time_range__time_content {
+    width: 100%;
+    display: flex;
+  }
+
+  .react_time_range__close_button_container {
+    display: flex;
+    margin: 0 auto;
+
+    .react_time_range__close-button {
+      display: flex;
+      justify-content: center;
+      
+      &:last-child {
+        display: none;
+      }
+    }
+  }
 }
 
 
@@ -10,7 +29,6 @@
   overflow: hidden;
   border: 0.873px solid #578695 !important;
   padding: 0 !important;
-  width: 650px ;
   margin-inline: 5px;
   box-sizing: content-box !important ;
   
