@@ -1,3 +1,4 @@
+import { getCookie } from 'cookies-next';
 import { Api, ContentType } from './Api';
 import type {
   HttpResponse,
@@ -11,11 +12,11 @@ const realworldApi = new Api<string>({
   baseApiParams: {
     headers: {
       'Content-Type': ContentType.Json,
+      'Authorization': `Bearer ${getCookie('authToken')}`,
     },
     format: 'json',
   },
-  securityWorker: (token) =>
-    token ? { headers: { Authorization: `Token ${token}` } } : {},
+  // securityWorker: (token) => token ? { headers: { Authorization: `Bearer ${token}` } } : {},
 });
 
 export { realworldApi };
@@ -25,3 +26,4 @@ export type {
   UserEntityDto,
   CreateUserDtoDto,
 };
+export * as Api from './Api';

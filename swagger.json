@@ -9,7 +9,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateUserDto" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
             }
           }
         },
@@ -17,7 +19,11 @@
           "201": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -32,7 +38,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateUserDto" }
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
             }
           }
         },
@@ -40,7 +48,11 @@
           "201": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -51,11 +63,25 @@
       "post": {
         "operationId": "UsersController_login",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -70,7 +96,11 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "object" } }
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
             }
           }
         },
@@ -81,7 +111,11 @@
       "get": {
         "operationId": "UsersController_getListOfAviableUser",
         "parameters": [],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
         "tags": ["Users"]
       }
     },
@@ -93,14 +127,20 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "object" } }
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
             }
           }
         },
@@ -115,7 +155,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UpdateUserDto" }
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
             }
           }
         },
@@ -123,7 +165,11 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -134,7 +180,11 @@
       "delete": {
         "operationId": "UsersController_removeCard",
         "parameters": [],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
         "tags": ["Users"]
       }
     },
@@ -146,7 +196,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreatePatientDto" }
+              "schema": {
+                "$ref": "#/components/schemas/CreatePatientDto"
+              }
             }
           }
         },
@@ -154,7 +206,11 @@
           "201": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "string" } }
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
             }
           }
         },
@@ -169,7 +225,9 @@
             "name": "id",
             "required": true,
             "in": "path",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -177,7 +235,71 @@
             "description": "",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/PatientEntity" }
+                "schema": {
+                  "$ref": "#/components/schemas/PatientEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Patients"]
+      }
+    },
+    "/patients": {
+      "get": {
+        "operationId": "PatientsController_getPatients",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "Need count patients",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "description": "Page",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "description": "Sort by ASC or DESC",
+            "schema": {
+              "nullable": true,
+              "default": "ASC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "required": true,
+            "in": "query",
+            "description": "Doctor name",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPatientsSchema"
+                }
               }
             }
           }
@@ -196,7 +318,11 @@
   "servers": [],
   "components": {
     "securitySchemes": {
-      "bearer": { "scheme": "bearer", "bearerFormat": "JWT", "type": "http" }
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
     },
     "schemas": {
       "CreateUserDto": {
@@ -255,6 +381,22 @@
           "password",
           "role"
         ]
+      },
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email user",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "description": "Password user",
+            "nullable": false
+          }
+        },
+        "required": ["email", "password"]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -322,6 +464,42 @@
             "description": "Last name of the patient",
             "nullable": false
           },
+          "passport": {
+            "type": "string",
+            "description": "Patient passport id",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Patient country",
+            "nullable": false
+          },
+          "city": {
+            "type": "string",
+            "description": "Patient city",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Patient address",
+            "nullable": false
+          },
+          "passportIssuingAuthority": {
+            "type": "string",
+            "description": "passport issuing authority",
+            "nullable": false
+          },
+          "sex": {
+            "enum": ["man", "woman"],
+            "type": "string",
+            "description": "Patient sex",
+            "nullable": false
+          },
+          "tin": {
+            "type": "string",
+            "description": "Passport issued by",
+            "nullable": false
+          },
           "email": {
             "type": "string",
             "description": "Email of the patient",
@@ -352,19 +530,47 @@
           "firstName",
           "surname",
           "lastName",
+          "passport",
+          "country",
+          "city",
+          "address",
+          "passportIssuingAuthority",
+          "sex",
+          "tin",
           "email",
           "phone",
           "dateOfBirth"
         ]
       },
+      "FileSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "path", "mimetype"]
+      },
       "RoleEntity": {
         "type": "object",
         "properties": {
-          "id": { "type": "number" },
-          "name": { "type": "string" },
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
           "users": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/UserEntity" }
+            "items": {
+              "$ref": "#/components/schemas/UserEntity"
+            }
           }
         },
         "required": ["id", "name", "users"]
@@ -372,29 +578,92 @@
       "PatientEntity": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "firstName": { "type": "string" },
-          "surname": { "type": "string" },
-          "lastName": { "type": "string" },
-          "email": { "type": "string" },
-          "phone": { "type": "string" },
-          "image": { "type": "string" },
-          "dateOfBirth": { "format": "date-time", "type": "string" },
-          "notice": { "type": "string" },
-          "user": { "$ref": "#/components/schemas/UserEntity" },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" }
+          "files": {
+            "$ref": "#/components/schemas/FileSchema"
+          },
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "passport": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "passportIssuingAuthority": {
+            "type": "string"
+          },
+          "tin": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "notice": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
         },
         "required": [
+          "files",
           "id",
           "firstName",
           "surname",
           "lastName",
+          "passport",
+          "country",
+          "city",
+          "address",
+          "sex",
+          "status",
+          "passportIssuingAuthority",
+          "tin",
+          "dateOfBirth",
+          "notice",
           "email",
           "phone",
           "image",
-          "dateOfBirth",
-          "notice",
           "user",
           "createdAt",
           "updatedAt"
@@ -403,24 +672,56 @@
       "UserEntity": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
-          "firstName": { "type": "string" },
-          "surname": { "type": "string" },
-          "lastName": { "type": "string" },
-          "email": { "type": "string" },
-          "phone": { "type": "string" },
-          "image": { "type": "string" },
-          "password": { "type": "string" },
-          "role": { "$ref": "#/components/schemas/RoleEntity" },
-          "specialization": { "type": "string" },
-          "createdBy": { "type": "string" },
-          "status": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/RoleEntity"
+          },
+          "specialization": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
           "patients": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/PatientEntity" }
+            "items": {
+              "$ref": "#/components/schemas/PatientEntity"
+            }
           },
-          "createdAt": { "format": "date-time", "type": "string" },
-          "updatedAt": { "format": "date-time", "type": "string" }
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
         },
         "required": [
           "id",
@@ -438,6 +739,21 @@
           "createdAt",
           "updatedAt"
         ]
+      },
+      "GetPatientsSchema": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "number"
+          },
+          "patients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PatientEntity"
+            }
+          }
+        },
+        "required": ["totalCount", "patients"]
       }
     }
   }

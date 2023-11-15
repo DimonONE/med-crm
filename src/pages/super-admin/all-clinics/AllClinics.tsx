@@ -1,5 +1,6 @@
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
+import { superAdminApi } from '~entities/super-admin';
 import { SearchPersonnel } from '~features/personnel';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
@@ -9,27 +10,13 @@ import { AllClinicTable, SelectClinic } from '~widgets/super-admin/';
 export function AllClinics() {
   const params = useParams();
   const navigate = useNavigate();
+  const { data } = superAdminApi.useListOfUsers();
+  console.log('data', data);
 
   const items = [
     { id: '1', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 1' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
-    { id: '2', title: 'Арноль Качер Шварценегерович', subTitle: 'Код клиники: 2' },
   ];
+
 
   return (
     <div className="super-admin-page">

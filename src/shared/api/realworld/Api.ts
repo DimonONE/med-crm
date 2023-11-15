@@ -30,6 +30,13 @@ export interface CreateUserDtoDto {
   specialization?: string;
 }
 
+export interface LoginUserDtoDto {
+  /** Email user */
+  email: string;
+  /** Password user */
+  password: string;
+}
+
 export interface UpdateUserDtoDto {
   /** First name of the user */
   firstName?: string;
@@ -58,6 +65,20 @@ export interface CreatePatientDtoDto {
   surname: string;
   /** Last name of the patient */
   lastName: string;
+  /** Patient passport id */
+  passport: string;
+  /** Patient country */
+  country: string;
+  /** Patient city */
+  city: string;
+  /** Patient address */
+  address: string;
+  /** passport issuing authority */
+  passportIssuingAuthority: string;
+  /** Patient sex */
+  sex: 'man' | 'woman';
+  /** Passport issued by */
+  tin: string;
   /** Email of the patient */
   email: string;
   /** Phone of the patient */
@@ -73,6 +94,12 @@ export interface CreatePatientDtoDto {
   notice?: string | null;
 }
 
+export interface FileSchemaDto {
+  name: string;
+  path: string;
+  mimetype: string;
+}
+
 export interface RoleEntityDto {
   id: number;
   name: string;
@@ -80,16 +107,25 @@ export interface RoleEntityDto {
 }
 
 export interface PatientEntityDto {
+  files: FileSchemaDto;
   id: string;
   firstName: string;
   surname: string;
   lastName: string;
-  email: string;
-  phone: string;
-  image: string;
+  passport: string;
+  country: string;
+  city: string;
+  address: string;
+  sex: string;
+  status: string;
+  passportIssuingAuthority: string;
+  tin: string;
   /** @format date-time */
   dateOfBirth: string;
   notice: string;
+  email: string;
+  phone: string;
+  image: string;
   user: UserEntityDto;
   /** @format date-time */
   createdAt: string;
@@ -115,6 +151,11 @@ export interface UserEntityDto {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
+}
+
+export interface GetPatientsSchemaDto {
+  totalCount: number;
+  patients: PatientEntityDto[];
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -423,11 +464,13 @@ export class Api<
      * @name UsersControllerLogin
      * @request POST:/users/login
      */
-    usersControllerLogin: (params: RequestParams = {}) =>
+    usersControllerLogin: (data: LoginUserDtoDto, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/users/login`,
         method: 'POST',
-        format: 'json',
+        body: data,
+        type: ContentType.Json,
+        format: 'text',
         ...params,
       }),
 
@@ -521,7 +564,7 @@ export class Api<
       data: CreatePatientDtoDto,
       params: RequestParams = {},
     ) =>
-      this.request<string, any>({
+      this.request<object, any>({
         path: `/patients/create`,
         method: 'POST',
         body: data,
@@ -544,6 +587,37 @@ export class Api<
       this.request<PatientEntityDto, any>({
         path: `/patients/${id}`,
         method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Patients
+     * @name PatientsControllerGetPatients
+     * @request GET:/patients
+     */
+    patientsControllerGetPatients: (
+      query: {
+        /** Need count patients */
+        limit: number | null;
+        /** Page */
+        offset: number | null;
+        /**
+         * Sort by ASC or DESC
+         * @default "ASC"
+         */
+        sortBy: 'ASC' | 'DESC' | null;
+        /** Doctor name */
+        filter: string | null;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetPatientsSchemaDto, any>({
+        path: `/patients`,
+        method: 'GET',
+        query: query,
         format: 'json',
         ...params,
       }),
