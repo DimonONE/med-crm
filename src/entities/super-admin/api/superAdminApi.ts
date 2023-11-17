@@ -13,8 +13,7 @@ export function useListOfUsers() {
   return useQuery({
     queryKey: superAdminKeys.superAdmin.listofusers(),
     queryFn: async () => {
-      const response = await realworldApi.users.usersControllerGetListOfAviableUser();
-console.log('response', response);
+      const response = await realworldApi.users.usersControllerGetListOfAviableUser( );
 
       return response;
     },

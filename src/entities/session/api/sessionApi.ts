@@ -1,20 +1,7 @@
-// import { UserEntityDto } from '~shared/api/realworld';
-
-// export interface User {
-//   email: string;
-//   token: string;
-//   username: string;
-//   bio: string;
-//   image: string;
-// }
-
-// function mapUser(userDto: UserEntityDto): UserEntityDto {
-//   return userDto;
-// }
-
 export const sessionKeys = {
   session: {
     root: ['session'],
+    roles: () => [...sessionKeys.session.root, 'roles'],
     currentUser: () => [...sessionKeys.session.root, 'currentUser'],
   },
 

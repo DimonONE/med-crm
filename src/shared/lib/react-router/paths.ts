@@ -3,10 +3,10 @@ export const PATH_PAGE = {
   login: '/login',
   register: '/register',
   superAdmin: {
-    root: '/all-clinic',
-    addClinic: '/add-clinic',
-    editClinic: '/edit-clinic',
-    clinicApplications: '/clinic-applications',
+    root: '/clinic',
+    addClinic: '/clinic/add-clinic',
+    editClinic: '/clinic/edit-clinic',
+    clinicApplications: '/clinic/applications',
   },
   doctor: {
     root: '/doctor',
@@ -18,8 +18,8 @@ export const PATH_PAGE = {
     records: '/patients/records',
     editRecord: '/patients/edit-record',
     viewing: '/patients/viewing',
-    add: '/personnel/member',
-    edit: (personalId: string) => `/personnel/member/${personalId}`,
+    add: '/patients/member',
+    edit: (patientsId: string) => `/patients/member/${patientsId}`,
   },
   personnel: {
     root: '/personnel',

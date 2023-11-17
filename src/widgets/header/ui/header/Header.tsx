@@ -1,13 +1,13 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { NavigateButton } from '~entities/session';
+import { NavigateButton, sessionModel } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import HeartICO from '~shared/svg/heart-ico.svg';
 import FingerprintICO from '~shared/svg/settings-ico.svg';
+import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
 
 export function Header() {
   const statusLogo = 'Super';
-
   return (
     <>
       <div className={s.header}>
@@ -19,6 +19,8 @@ export function Header() {
             <HeartICO />
           </div>
         </NavLink>
+
+        <Button onClick={() => sessionModel.deleteToken()}>Вийти</Button>
 
         <nav className={s.navbar}>
           <NavigateButton />

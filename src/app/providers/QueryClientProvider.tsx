@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 import { QueryClientProvider as TanStackQueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ToastContainer } from 'react-toastify';
 import { queryClient } from '~shared/lib/react-query';
+import 'react-toastify/dist/ReactToastify.css';
 
 type QueryClientProviderProps = {
   children: ReactNode;
@@ -38,6 +40,7 @@ export function QueryClientProvider(props: QueryClientProviderProps) {
           },
         ]}
       />
+      <ToastContainer />
     </TanStackQueryClientProvider>
   );
 }

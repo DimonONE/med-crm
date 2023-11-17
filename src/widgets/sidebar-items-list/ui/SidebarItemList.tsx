@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import classNames from 'classnames';
+import { usePatientsList } from '~entities/patients';
 import ArrowRightICO from '~shared/svg/arrowRight.svg';
 import { ItemContainer } from '~shared/ui/item-container';
 import { Sidebar } from '~shared/ui/sidebar';
@@ -19,6 +20,9 @@ type Props = {
 };
 
 export function SidebarItemList({ selectId, items, children }: Props) {
+  const { data } = usePatientsList({});
+
+  console.log('data', data);
 
   return (
     <Sidebar>

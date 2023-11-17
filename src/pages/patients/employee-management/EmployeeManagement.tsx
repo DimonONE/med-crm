@@ -1,9 +1,11 @@
 
 import classNames from 'classnames';
-import { ErrorMessage, Field, FieldProps, Form, Formik } from 'formik';
+import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import { useParams } from 'react-router-dom';
-import { object, string } from 'yup';
+import { object } from 'yup';
+import { useCreatePatient } from '~entities/patients';
 import { LoadImage } from '~features/patients';
+import { Api } from '~shared/api/realworld';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
@@ -16,9 +18,25 @@ type Params = {
 };
 
 export function EmployeeManagement() {
+  const { mutate } = useCreatePatient();
   const params = useParams<Params>();
-
   const selectOptions = [{ value: '0', label: 'Пол' }, { value: '1', label: 'Мужской' }, { value: '2', label: 'Женский' }];
+
+  const onSubmit = (
+    values: Api.CreatePatientDtoDto,
+    { setSubmitting }: FormikHelpers<Api.CreatePatientDtoDto>,
+  ) => {
+    mutate(values, {
+      onSuccess: (response) => {
+        console.log('values', values);
+        console.log('response', response);
+
+      },
+      onSettled: () => {
+        setSubmitting(false);
+      },
+    });
+  };
 
   return (
     <div className={s.root}>
@@ -26,32 +44,25 @@ export function EmployeeManagement() {
       <div className={s.formContainer}>
         <Formik
           initialValues={{
-            fullName: '',
-            email: '',
-            phone: '',
-            passportNumber: '',
-            issuedBy: '',
-            inn: '',
-            country: '',
-            city: '',
-            address: '',
-            gender: '',
+            fullName: 'Dima MI',
+            address: 'address',
+            city: 'city',
+            country: ' country',
+            dateOfBirth: 'dateOfBirth',
+            email: 'email',
+            passport: 'passport',
+            passportIssuingAuthority: 'passportIssuingAuthority',
+            phone: '+380974275832',
+            sex: 'man',
+            tin: '',
+            notice: 'notice',
           }}
           validationSchema={object().shape({
-            fullName: string().min(5).required(),
-            email: string().email().required(),
+            // fullName: string().min(5).required(),
+            // email: string().email().required(),
           })}
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          onSubmit={() => {
-            // mutate(values, {
-            //   onSuccess: (response) => {
-            //     sessionModel.addUser(response.data.user);
-            //   },
-            //   onSettled: () => {
-            //     setSubmitting(false);
-            //   },
-            // });
-          }}
+          onSubmit={onSubmit}
+
         >
           {({ isSubmitting }) => (
             <Form className='full-width'>

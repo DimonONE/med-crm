@@ -11,11 +11,7 @@
 
 export interface CreateUserDtoDto {
   /** First name of the user */
-  firstName: string;
-  /** Surname of the user */
-  surname: string;
-  /** Last name of the user */
-  lastName: string;
+  fullName: string;
   /** Email of the user */
   email: string;
   /** Phone of the user */
@@ -37,81 +33,16 @@ export interface LoginUserDtoDto {
   password: string;
 }
 
-export interface UpdateUserDtoDto {
-  /** First name of the user */
-  firstName?: string;
-  /** Surname of the user */
-  surname?: string;
-  /** Last name of the user */
-  lastName?: string;
-  /** Email of the user */
-  email?: string;
-  /** Phone of the user */
-  phone?: string;
-  /** Image of the user */
-  image?: string | null;
-  /** Password of the user */
-  password?: string;
-  /** Role for user */
-  role?: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
-  /** Specialization for doctor */
-  specialization?: string;
-}
-
-export interface CreatePatientDtoDto {
-  /** First name of the patient */
-  firstName: string;
-  /** Surname of the patient */
-  surname: string;
-  /** Last name of the patient */
-  lastName: string;
-  /** Patient passport id */
-  passport: string;
-  /** Patient country */
-  country: string;
-  /** Patient city */
-  city: string;
-  /** Patient address */
-  address: string;
-  /** passport issuing authority */
-  passportIssuingAuthority: string;
-  /** Patient sex */
-  sex: 'man' | 'woman';
-  /** Passport issued by */
-  tin: string;
-  /** Email of the patient */
-  email: string;
-  /** Phone of the patient */
-  phone: string;
-  /** Image of the patient */
-  image?: string | null;
-  /**
-   * Date of birth of the patient
-   * @format date-time
-   */
-  dateOfBirth: string;
-  /** Notice about patient */
-  notice?: string | null;
-}
-
 export interface FileSchemaDto {
   name: string;
   path: string;
   mimetype: string;
 }
 
-export interface RoleEntityDto {
-  id: number;
-  name: string;
-  users: UserEntityDto[];
-}
-
 export interface PatientEntityDto {
   files: FileSchemaDto;
   id: string;
-  firstName: string;
-  surname: string;
-  lastName: string;
+  fullName: string;
   passport: string;
   country: string;
   city: string;
@@ -135,9 +66,7 @@ export interface PatientEntityDto {
 
 export interface UserEntityDto {
   id: string;
-  firstName: string;
-  surname: string;
-  lastName: string;
+  fullName: string;
   email: string;
   phone: string;
   image: string;
@@ -151,6 +80,86 @@ export interface UserEntityDto {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
+}
+
+export interface RoleEntityDto {
+  id: number;
+  name: string;
+  users: UserEntityDto[];
+}
+
+export interface UserResponseEntityDto {
+  status: 'approval' | 'notapproval';
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  image: string;
+  role: RoleEntityDto;
+  specialization?: string;
+  createdBy: string;
+  patients: PatientEntityDto[];
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface UpdateUserDtoDto {
+  /** First name of the user */
+  fullName?: string;
+  /** Email of the user */
+  email?: string;
+  /** Phone of the user */
+  phone?: string;
+  /** Image of the user */
+  image?: string | null;
+  /** Password of the user */
+  password?: string;
+  /** Role for user */
+  role?: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  /** Specialization for doctor */
+  specialization?: string;
+}
+
+export interface CreatePatientDtoDto {
+  /** Full name of the patient */
+  fullName: string;
+  /** Patient passport id */
+  passport: string;
+  /** Patient country */
+  country: string;
+  /** Patient city */
+  city: string;
+  /** Patient address */
+  address: string;
+  /** passport issuing authority */
+  passportIssuingAuthority: string;
+  /** Patient sex */
+  sex: 'man' | 'woman';
+  /** Passport issued by */
+  tin: string;
+  /** Email of the patient */
+  email: string;
+  /** Phone of the patient */
+  phone: string;
+  /**
+   * Date of birth of the patient
+   * @format date-time
+   */
+  dateOfBirth: string;
+  /** Notice about patient */
+  notice?: string | null;
+  /**
+   * Patient photo
+   * @format binary
+   */
+  image?: File;
+  /**
+   * Patient document scan
+   * @format binary
+   */
+  files?: File;
 }
 
 export interface GetPatientsSchemaDto {
@@ -423,6 +432,7 @@ export class Api<
      * @tags Users
      * @name UsersControllerCreateUser
      * @request POST:/users/create
+     * @secure
      */
     usersControllerCreateUser: (
       data: CreateUserDtoDto,
@@ -432,6 +442,7 @@ export class Api<
         path: `/users/create`,
         method: 'POST',
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,
@@ -443,6 +454,7 @@ export class Api<
      * @tags Users
      * @name UsersControllerMakeProposal
      * @request POST:/users/make_proposal
+     * @secure
      */
     usersControllerMakeProposal: (
       data: CreateUserDtoDto,
@@ -452,6 +464,7 @@ export class Api<
         path: `/users/make_proposal`,
         method: 'POST',
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,
@@ -478,13 +491,31 @@ export class Api<
      * No description
      *
      * @tags Users
+     * @name UsersControllerGetRoles
+     * @request GET:/users/roles
+     * @secure
+     */
+    usersControllerGetRoles: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/users/roles`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
      * @name UsersControllerGetсurentUser
      * @request GET:/users/currentuser
+     * @secure
      */
     usersControllerGetсurentUser: (params: RequestParams = {}) =>
-      this.request<object, any>({
+      this.request<UserResponseEntityDto, UserResponseEntityDto>({
         path: `/users/currentuser`,
         method: 'GET',
+        secure: true,
         format: 'json',
         ...params,
       }),
@@ -495,11 +526,14 @@ export class Api<
      * @tags Users
      * @name UsersControllerGetListOfAviableUser
      * @request GET:/users/listofusers
+     * @secure
      */
     usersControllerGetListOfAviableUser: (params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<object[], any>({
         path: `/users/listofusers`,
         method: 'GET',
+        secure: true,
+        format: 'json',
         ...params,
       }),
 
@@ -509,11 +543,13 @@ export class Api<
      * @tags Users
      * @name UsersControllerGetUserById
      * @request GET:/users/user/{id}
+     * @secure
      */
     usersControllerGetUserById: (id: string, params: RequestParams = {}) =>
       this.request<object, any>({
         path: `/users/user/${id}`,
         method: 'GET',
+        secure: true,
         format: 'json',
         ...params,
       }),
@@ -524,6 +560,7 @@ export class Api<
      * @tags Users
      * @name UsersControllerUpdate
      * @request PATCH:/users/update
+     * @secure
      */
     usersControllerUpdate: (
       data: UpdateUserDtoDto,
@@ -533,6 +570,7 @@ export class Api<
         path: `/users/update`,
         method: 'PATCH',
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,
@@ -544,11 +582,13 @@ export class Api<
      * @tags Users
      * @name UsersControllerRemoveCard
      * @request DELETE:/users/delete
+     * @secure
      */
     usersControllerRemoveCard: (params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/users/delete`,
         method: 'DELETE',
+        secure: true,
         ...params,
       }),
   };
@@ -564,7 +604,7 @@ export class Api<
       data: CreatePatientDtoDto,
       params: RequestParams = {},
     ) =>
-      this.request<object, any>({
+      this.request<PatientEntityDto, PatientEntityDto>({
         path: `/patients/create`,
         method: 'POST',
         body: data,

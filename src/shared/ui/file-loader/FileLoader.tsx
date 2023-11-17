@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import CloseICO from '../../close-gray-ico.svg';
+import CloseICO from '../../svg/close-gray-ico.svg';
 import s from './styles.module.scss';
 import DownloadICO from './svg/download-ico.svg';
 

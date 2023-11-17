@@ -1,27 +1,13 @@
 import { lazy } from 'react';
-import { Navigate, useLocation, useRoutes } from 'react-router-dom';
+import { Navigate, useRoutes } from 'react-router-dom';
+import { AuthGuard, PatientsGuard, SuperAdminGuard, sessionModel } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
 import { Header, HeaderLogin } from '~widgets/header';
 
-// SuperAdmin
-
-const AllClinicsPage = Loadable(lazy(() => import('~pages/super-admin/all-clinics')));
-const AddClinicPage = Loadable(lazy(() => import('~pages/super-admin/add-clinic')));
-const EditClinicPage = Loadable(lazy(() => import('~pages/super-admin/edit-clinic')));
-const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
-
 // Doctor
 
 const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
-
-// Patients
-
-const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
-const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
-const PatientsViewingPage = Loadable(lazy(() => import('~pages/patients/viewing-questionnaire')));
-const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
-const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-record')));
 
 // Personnel
 const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
@@ -45,52 +31,15 @@ const RegisterPage = Loadable(lazy(() => import('~pages/register')));
 // const SettingsPage = Loadable(lazy(() => import('~pages/settings')));
 
 export function Router() {
-  // const isAuth = sessionModel.useAuth();
-  const location = useLocation();
-  const isAuth = location.pathname !== PATH_PAGE.register && location.pathname !== PATH_PAGE.login;
+  const isAuth = sessionModel.useAuth();
+  console.log('isAuth', isAuth);
 
   return useRoutes([
     {
       element: isAuth ? <Header /> : <HeaderLogin />,
       children: [
-        {
-          path: 'all-clinic/:id?',
-          element: (
-            <AllClinicsPage />
-          ),
-        },
-        {
-          path: 'clinic-applications/:id?',
-          element: (
-            <ClinicApplicationsPage />
-          ),
-        },
-        {
-          path: 'add-clinic',
-          element: (
-            <AddClinicPage />
-          ),
-        },
-        {
-          path: 'edit-clinic',
-          element: (
-            // <AuthGuard isAuth={isAuth}>
-            <EditClinicPage />
-            // </AuthGuard>
-          ),
-        },
-        {
-          path: 'login',
-          element: (
-            <LoginPage />
-          ),
-        },
-        {
-          path: 'register',
-          element: (
-            <RegisterPage />
-          ),
-        },
+        SuperAdminGuard(),
+        PatientsGuard(),
         {
           path: 'doctor',
           children: [
@@ -100,19 +49,6 @@ export function Router() {
             },
             { path: ':patientId/record', element: <DoctorPage /> },
             { path: ':patientId', element: <DoctorPage /> },
-          ],
-        },
-        {
-          path: 'patients',
-          children: [
-            {
-              element: <PatientsHomePage />,
-              index: true,
-            },
-            { path: 'records', element: <PatientsRecordsPage /> },
-            { path: 'viewing', element: <PatientsViewingPage /> },
-            { path: 'edit-record?', element: <PatientEditRecord /> },
-            { path: 'member/:patientId?', element: <PatientManagementPage /> },
           ],
         },
         {
@@ -137,6 +73,22 @@ export function Router() {
           ],
         },
         { path: 'services', element: <ServicesPage /> },
+        {
+          path: 'login',
+          element: (
+            <AuthGuard isAuth={isAuth}>
+              <LoginPage />
+            </AuthGuard>
+          ),
+        },
+        {
+          path: 'register',
+          element: (
+            <AuthGuard isAuth={isAuth}>
+              <RegisterPage />
+            </AuthGuard>
+          ),
+        },
       ],
     },
     { path: '404', element: <Page404 /> },

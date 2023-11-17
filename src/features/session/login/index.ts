@@ -1,1 +1,1 @@
-export { useLoginUser, useCurrentUser } from './api/loginUser';
+export { useLoginUser, useCurrentUser, useGetRoles } from './api/loginUser';

@@ -16,13 +16,14 @@ export function RecordsPage() {
 
   return (
     <div>
+      test
       <div className='d-flex'>
         <SidebarItemList items={items} selectId={params.id} />
         <Records />
       </div>
-      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>
+      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.patients.add)}>
         <AiOutlinePlusCircle />
-        Добавить клинику
+        Добавить пациента
       </Button>
     </div>
   );
