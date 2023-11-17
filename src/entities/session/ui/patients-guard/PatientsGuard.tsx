@@ -1,7 +1,8 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
-import { useRoleUser, useRoles } from '../../model/sessionModel';
+import { useRoleUser } from '../../model/sessionModel';
 
 // Patients
 const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
@@ -11,14 +12,14 @@ const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employ
 const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-record')));
 
 export function PatientsGuard(): RouteObject {
-  const roles = useRoles();
-  const role = useRoleUser();
+  const { checkUserRole } = useRoleUser();
+  console.log('superAdmin', checkUserRole('superAdmin'));
 
-  if (!roles) return {};
-  if (role !== roles.superAdmin) return {};
+  // if (!checkUserRole('patient')) return {};
+  if (!checkUserRole('superAdmin')) return {};
 
   return {
-    path: 'patients',
+    path: PATH_PAGE.patients.root,
     children: [
       {
         element: <PatientsHomePage />,

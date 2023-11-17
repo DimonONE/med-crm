@@ -31,7 +31,7 @@ export function LoginPage() {
 
       if (rolesData?.data) {
         sessionModel.addRoles(rolesData.data as sessionModel.Roles);
-        navigate(PATH_PAGE.superAdmin.root);
+        navigate(PATH_PAGE.root);
       }
     }
   };

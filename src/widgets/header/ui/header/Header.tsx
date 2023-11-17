@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { NavigateButton, sessionModel } from '~entities/session';
+import { NavigateButton, sessionModel, useRoleUser } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import HeartICO from '~shared/svg/heart-ico.svg';
 import FingerprintICO from '~shared/svg/settings-ico.svg';
@@ -7,20 +7,31 @@ import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
 
 export function Header() {
-  const statusLogo = 'Super';
+  const { checkUserRole } = useRoleUser();
+
+  const statusLogo = () => {
+    switch (true) {
+      case checkUserRole('superAdmin'):
+        return 'Super';
+
+      case checkUserRole('patient'):
+        return 'LOGO';
+
+      default:
+        return 'LOGO';
+    }
+  };
   return (
     <>
       <div className={s.header}>
         <NavLink className={s.headerLogo} to={PATH_PAGE.root}>
           <span className={s.status}>
-            {statusLogo}
+            {statusLogo()}
           </span>
           <div className={s.ico}>
             <HeartICO />
           </div>
         </NavLink>
-
-        <Button onClick={() => sessionModel.deleteToken()}>Вийти</Button>
 
         <nav className={s.navbar}>
           <NavigateButton />
@@ -32,6 +43,7 @@ export function Header() {
             </span>
           </NavLink>
         </nav>
+        <Button onClick={() => sessionModel.deleteToken()}>Вийти</Button>
       </div>
       <Outlet />
     </>

@@ -599,6 +599,8 @@ export class Api<
      * @tags Patients
      * @name PatientsControllerCreatePatient
      * @request POST:/patients/create
+     * @secure
+     * 
      */
     patientsControllerCreatePatient: (
       data: CreatePatientDtoDto,
@@ -610,6 +612,7 @@ export class Api<
         body: data,
         type: ContentType.Json,
         format: 'json',
+        secure: true,
         ...params,
       }),
 

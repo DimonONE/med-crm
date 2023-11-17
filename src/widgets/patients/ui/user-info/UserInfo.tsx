@@ -1,7 +1,7 @@
 
 import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
-import { RoleEnum } from '~shared/lib/react-router';
+import { useRoleUser } from '~entities/session';
 import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
 import BackICO from './svg/back-ico.svg';
@@ -10,6 +10,7 @@ import EmailICO from './svg/email-ico.svg';
 import PhoneICO from './svg/phone-ico.svg';
 
 export function UserInfo() {
+  const role = useRoleUser();
 
   return (
     <div className={classNames(s.root, 'container')}>
@@ -19,7 +20,7 @@ export function UserInfo() {
         </NavLink>
         <span className={s.name}>Ганс Христиан Андерсон</span>
         {
-          RoleEnum.MedChief && (
+          role && (
             <Button color='primary-reverse'>
               <EditICO />
             </Button>

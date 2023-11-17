@@ -9,6 +9,12 @@ export type Roles = {
   patient : string
 };
 
+type RoleUser = {
+  role: keyof Roles, 
+  roles: Roles
+  checkUserRole: (role: keyof Roles) => boolean
+};
+
 type SessionState = {
   user: UserEntityDto | null;
   roles: Roles | null
@@ -81,7 +87,12 @@ export const saveTokenToStorage = (token: string) => {
   realworldApi.setSecurityData(token);
 };
 
-export const useRoleUser = () => useStore(sessionStore, (state) => state.user?.role.name);
+export const useRoleUser = (): RoleUser =>
+ useStore(sessionStore, (state) => {
+  const userRole = state.user?.role.name as keyof Roles ;
+  const checkUserRole = (role: keyof Roles) => state?.roles ? !!(state.user?.role.name === role) : false;
 
-export const useRoles = () => useStore(sessionStore, (state) => state.roles);
+  return { role: userRole, roles: state.roles as Roles, checkUserRole };
+});
+
 export const addRoles = (roles: Roles) => sessionStore.getState().addRoles(roles);

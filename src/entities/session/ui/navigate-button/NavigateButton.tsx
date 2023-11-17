@@ -1,30 +1,30 @@
-// import { useQueryClient } from '@tanstack/react-query';
-// import { Button } from '~shared/ui/button';
 import { useEffect, useState } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { RoleEnum } from '~shared/lib/react-router';
 import { SelectField } from '~shared/ui/select-field';
 import { getNavigateList } from '../../lib';
-
-
-// eslint-disable-next-line consistent-return
-
+import { useRoleUser } from '../../model/sessionModel';
 
 export function NavigateButton() {
+  const { checkUserRole } = useRoleUser();
   const location = useLocation();
   const navigate = useNavigate();
   const [value, setValue] = useState('');
-  const selectOptions = getNavigateList(RoleEnum.SuperAdmin);
+  const selectOptions = getNavigateList(checkUserRole);
+
 
   useEffect(() => {
-    const isOption = selectOptions.find((option) => option.value === location.pathname);
-    if (isOption !== undefined) {
-      setValue(isOption.value);
-    } else
-      setValue(selectOptions[0].value);
+    if (selectOptions) {
+      const isOption = selectOptions.find((option) => option.value === location.pathname);
+      if (isOption !== undefined) {
+        setValue(isOption.value);
+      } else
+        setValue(selectOptions[0].value);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  if (!selectOptions) return null;
 
   return (
     <SelectField
