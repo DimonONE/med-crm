@@ -1,6 +1,7 @@
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePatientsList } from '~entities/patients';
+import { SearchPersonnel } from '~features/personnel';
 import { useCurrentUser } from '~features/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
@@ -23,9 +24,10 @@ export function RecordsPage() {
 
   return (
     <div>
-      test
       <div className='d-flex'>
-        <SidebarItemList items={items} selectId={params.id} />
+        <SidebarItemList items={items} selectId={params.id} >
+          <SearchPersonnel />
+        </SidebarItemList>
         <Records />
       </div>
       <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.patients.add)}>

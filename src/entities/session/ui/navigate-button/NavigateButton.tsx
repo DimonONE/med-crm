@@ -14,7 +14,9 @@ export function NavigateButton() {
 
 
   useEffect(() => {
-    if (selectOptions) {
+    if (selectOptions.length) {
+      console.log('selectOptions', selectOptions);
+
       const isOption = selectOptions.find((option) => option.value === location.pathname);
       if (isOption !== undefined) {
         setValue(isOption.value);
@@ -24,7 +26,7 @@ export function NavigateButton() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  if (!selectOptions) return null;
+  if (!selectOptions.length) return null;
 
   return (
     <SelectField
