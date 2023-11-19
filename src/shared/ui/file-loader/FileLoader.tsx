@@ -4,7 +4,7 @@ import CloseICO from '../../svg/close-gray-ico.svg';
 import s from './styles.module.scss';
 import DownloadICO from './svg/download-ico.svg';
 
-type FileValues = File[] | null;
+export type FileValues = File[] | null;
 
 type FileLoaderProps = {
   id: string

@@ -10,8 +10,8 @@ type Props = {
 export function DatePickerCustom({ onChange, className, ...props }: Props) {
   return (
     <DatePicker
-      onChange={onChange}
       className={classNames('date-input', className)}
+      onChange={onChange}
       {...props}
     />
   );

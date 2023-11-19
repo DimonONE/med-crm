@@ -32,7 +32,6 @@ const RegisterPage = Loadable(lazy(() => import('~pages/register')));
 
 export function Router() {
   const isAuth = sessionModel.useAuth();
-  console.log('isAuth', isAuth);
 
   return useRoutes([
     {
@@ -92,6 +91,6 @@ export function Router() {
       ],
     },
     { path: '404', element: <Page404 /> },
-    { path: '*', element: <Navigate to={PATH_PAGE.page404} replace /> },
+    { path: '*', element: <Navigate to={!isAuth ? PATH_PAGE.login : PATH_PAGE.page404} replace /> },
   ]);
 }

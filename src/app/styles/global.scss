@@ -234,8 +234,9 @@ textarea {
 
 .error-message {
   color: var(--color-error);
-  text-align: center;
-  font-size: 18px;
+  margin-left: 20px;
+  padding-block: 5px;
+  font-size: 14px;
   font-weight: 500;
 }
 

@@ -640,6 +640,7 @@ export class Api<
      * @tags Patients
      * @name PatientsControllerGetPatients
      * @request GET:/patients
+     * @secure
      */
     patientsControllerGetPatients: (
       query: {
@@ -662,6 +663,7 @@ export class Api<
         method: 'GET',
         query: query,
         format: 'json',
+        secure: true,
         ...params,
       }),
   };

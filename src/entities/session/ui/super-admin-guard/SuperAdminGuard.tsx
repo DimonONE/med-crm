@@ -12,9 +12,8 @@ const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/cl
 export function SuperAdminGuard(): RouteObject {
   const { roles, checkUserRole } = useRoleUser();
 
-  if (!roles) return {};
-  // if (!checkUserRole('superAdmin')) return {};
-  if (checkUserRole('superAdmin')) return {};
+  // if (!roles || !checkUserRole('superAdmin')) return {};
+  if (!roles || checkUserRole('superAdmin')) return {};
 
   return {
     path: 'clinic/:id?',
