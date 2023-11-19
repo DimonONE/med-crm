@@ -42,7 +42,7 @@ export default defineConfig({
     port: 3000
 
    },
-  preview: { open: true },
+  preview: { open: true, host: true },
   resolve: {
     alias: {
       '~app': path.resolve('src/app'),
