@@ -15,7 +15,7 @@ export function PatientsGuard(): RouteObject {
   const { checkUserRole } = useRoleUser();
 
   // if (!checkUserRole('patient')) return {};
-  if (checkUserRole('patient')) return {};
+  if (!checkUserRole('superAdmin')) return {};
 
   return {
     path: PATH_PAGE.patients.root,
