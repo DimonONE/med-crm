@@ -15,8 +15,6 @@ export function NavigateButton() {
 
   useEffect(() => {
     if (selectOptions.length) {
-      console.log('selectOptions', selectOptions);
-
       const isOption = selectOptions.find((option) => option.value === location.pathname);
       if (isOption !== undefined) {
         setValue(isOption.value);

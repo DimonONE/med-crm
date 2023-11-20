@@ -7,10 +7,12 @@ import s from './styles.module.scss';
 import BackICO from './svg/back-ico.svg';
 import EditICO from './svg/edit-ico.svg';
 import EmailICO from './svg/email-ico.svg';
+import FiledICO from './svg/filed-img.svg';
 import PhoneICO from './svg/phone-ico.svg';
 
 export function UserInfo() {
   const role = useRoleUser();
+  const image = null;
 
   return (
     <div className={classNames(s.root, 'container')}>
@@ -31,7 +33,9 @@ export function UserInfo() {
 
       <div className={classNames('d-flex', s.blockInfo)}>
         <div className={s.image}>
-          <img src="" alt="user" />
+          {image ? (
+            <img src={URL.createObjectURL(image)} alt="user" />
+          ) : <FiledICO />}
 
           <Button className={classNames(s.button, s.buttonSuccess)} onClick={() => false}>
             Записать

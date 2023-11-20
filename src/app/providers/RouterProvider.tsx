@@ -32,8 +32,6 @@ const RegisterPage = Loadable(lazy(() => import('~pages/register')));
 
 export function Router() {
   const isAuth = sessionModel.useAuth();
-  console.log('!isAuth', !isAuth);
-
 
   return useRoutes([
     {
