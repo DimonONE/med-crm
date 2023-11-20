@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import classNames from 'classnames';
-import ArrowLeftICO from '~shared/svg/arrow-left-ico.svg';
-import ArrowRightICO from '~shared/svg/arrow-right-ico.svg';
 import CloseICO from '~shared/svg/close-gray-ico.svg';
 import { Button } from '~shared/ui/button';
 import { TimeScale, getTodayAtSpecificHour } from '~shared/ui/time-scale';
@@ -27,10 +25,8 @@ export function WorkTime(props: IProps) {
   const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
 
   const handleTime = (values: Values) => {
-    // Если режим редактирования активен, добавьте или удалите выбранный временной диапазон
     if (editTimes) {
       const index = selectedTimes.indexOf(values.id.toString());
-      console.log('index', index);
 
       if (index === -1) {
         setSelectedTimes([...selectedTimes, values.id.toString()]);
@@ -38,15 +34,11 @@ export function WorkTime(props: IProps) {
         setSelectedTimes(selectedTimes.filter(id => id !== values.id));
       }
     }
-    // Ваша логика обработки времени
     handleChange(values);
   };
 
   return (
     <div className={classNames(s.root, className)}>
-      <span tabIndex={0} role='button' onClick={() => { }} onKeyDown={() => { }} className={s.arrowLeft}>
-        <ArrowLeftICO />
-      </span>
       {
         editTimes ? (
           <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(21)} />
@@ -75,12 +67,7 @@ export function WorkTime(props: IProps) {
             ))}
           </div>
         )
-
       }
-
-      <span tabIndex={0} role='button' onClick={() => { }} onKeyDown={() => { }} className={s.arrowRight}>
-        <ArrowRightICO />
-      </span>
     </div>
   );
 }

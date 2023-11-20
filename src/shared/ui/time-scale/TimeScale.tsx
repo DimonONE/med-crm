@@ -9,13 +9,11 @@ import closeICO from './img/close-ico.png';
 import { createIntervals, createNewInterval, findChangedTime, getTodayAtSpecificHour, mergeIntervals } from './utils/fn';
 import { Interval } from './utils/type';
 
-
 type IProps = {
   startTime: Dayjs
   endTime: Dayjs
   width?: string | number
 };
-
 
 export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
   const defaultTime = dayjs().hour(9).minute(11).second(11).toDate();
@@ -104,10 +102,6 @@ export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
   };
 
   const deleteTime = (time: Dayjs, intervals: Interval[]) => {
-
-    console.log('intervals', intervals);
-    console.log('intervals', time);
-
     const updatedIntervals: Date[] = intervals.reduce(
       (result: Interval[], { start, end }: Interval) => {
         if (start.isSame(time) || end.isSame(time) || (time.isAfter(start) && time.isBefore(end))) {
@@ -134,8 +128,6 @@ export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
     // isClickToInterval = null;
     setSelectedIntervals(updatedIntervals);
   };
-
-
 
   useEffect(() => {
     const reactTimeRange = document.querySelectorAll('.react_time_range__time_range_container .react_time_range__track');
@@ -171,10 +163,8 @@ export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
         closeButton.style.width = `calc(100% / ${endTime.diff(startTime, 'hour')})`;
 
         const intervals: Interval[] = createIntervals(selectedIntervals);
-        console.log('intervalsONE', intervals);
 
         closeButton.onclick = () => deleteTime(dayjs(element.innerHTML, 'HH:mm'), intervals);
-
 
         const closeButtonICO = document.createElement('img');
         closeButtonICO.src = closeICO;
@@ -186,6 +176,9 @@ export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
     });
 
   }, [selectedIntervals]);
+
+  console.log('selectedIntervals', selectedIntervals);
+
 
   return (
     <Box
@@ -203,6 +196,7 @@ export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
       <div className='react_time_range__time_content'>
         <button type='button' onClick={skipLeft}> <ArrowLeftICO /></button>
         <TimeRange
+          step={1800000 / 2}
           mode={1}
           selectedInterval={selectedIntervals}
           timelineInterval={timelineInterval}
