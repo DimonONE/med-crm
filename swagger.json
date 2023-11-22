@@ -3,40 +3,6 @@
   "paths": {
     "/users/create": {
       "post": {
-        "operationId": "UsersController_createUser",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Users"],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/make_proposal": {
-      "post": {
         "operationId": "UsersController_makeProposal",
         "parameters": [],
         "requestBody": {
@@ -55,18 +21,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               }
             }
           }
         },
-        "tags": ["Users"],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
+        "tags": ["Users"]
       }
     },
     "/users/login": {
@@ -136,33 +97,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserResponseEntity"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Users"],
-        "security": [
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/users/listofusers": {
-      "get": {
-        "operationId": "UsersController_getListOfAviableUser",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
                 }
               }
             }
@@ -253,6 +187,303 @@
           }
         },
         "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/create-clinic": {
+      "post": {
+        "operationId": "UsersAdminController_createClinic",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClinicUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/update-clinic": {
+      "post": {
+        "operationId": "UsersAdminController_updateClinic",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClinicUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/add-type-clinic": {
+      "post": {
+        "operationId": "UsersAdminController_addTypeClinic",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTypeClinicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TypeClinicEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/all-type-clinic": {
+      "get": {
+        "operationId": "UsersAdminController_getAllTypeClinic",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TypeClinicEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/switch-status-clinic": {
+      "post": {
+        "operationId": "UsersAdminController_switchStatusClinic",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClinicEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/switch-status-user": {
+      "post": {
+        "operationId": "UsersAdminController_statusUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchStatusUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/listofusers": {
+      "get": {
+        "operationId": "UsersAdminController_getListOfAviableUser",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "Need count patients",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "description": "set Approve for get all clinics, set pending for get applications",
+            "schema": {
+              "enum": ["approval", "pending", "notapproval"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "description": "Page",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "description": "Sort by ASC or DESC",
+            "schema": {
+              "nullable": true,
+              "default": "ASC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "fieldSort",
+            "required": true,
+            "in": "query",
+            "description": "Field to sort by ",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": true,
+            "in": "query",
+            "description": "Type clinic",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "required": true,
+            "in": "query",
+            "description": "Doctor name",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
         "security": [
           {
             "bearer": []
@@ -446,6 +677,15 @@
         },
         "required": ["fullName", "email", "phone", "password", "role"]
       },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"]
+      },
       "LoginUserDto": {
         "type": "object",
         "properties": {
@@ -563,6 +803,89 @@
           "updatedAt"
         ]
       },
+      "TypeClinicEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "clinics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClinicEntity"
+            }
+          }
+        },
+        "required": ["id", "name", "clinics"]
+      },
+      "ClinicEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TypeClinicEntity"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserEntity"
+            }
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "endPaidDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "save": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "address",
+          "country",
+          "phone",
+          "type",
+          "users",
+          "status",
+          "endPaidDate",
+          "createdAt",
+          "updatedAt",
+          "save"
+        ]
+      },
       "UserEntity": {
         "type": "object",
         "properties": {
@@ -602,6 +925,9 @@
               "$ref": "#/components/schemas/PatientEntity"
             }
           },
+          "clinic": {
+            "$ref": "#/components/schemas/ClinicEntity"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -622,6 +948,7 @@
           "createdBy",
           "status",
           "patients",
+          "clinic",
           "createdAt",
           "updatedAt"
         ]
@@ -648,7 +975,7 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": ["approval", "notapproval"],
+            "enum": ["approval", "pending", "notapproval"],
             "type": "string"
           },
           "id": {
@@ -741,6 +1068,148 @@
             "description": "Specialization for doctor"
           }
         }
+      },
+      "CreateClinicUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name clinic",
+            "nullable": false
+          },
+          "description": {
+            "type": "string",
+            "description": "Short description clinic"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the clinic",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the clinic",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Country of the clinic",
+            "nullable": false
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the clinic (category)",
+            "nullable": false
+          },
+          "fullName": {
+            "type": "string",
+            "description": "First name of the user",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "nullable": false
+          }
+        },
+        "required": ["fullName", "password", "email"]
+      },
+      "UpdateClinicUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name clinic",
+            "nullable": false
+          },
+          "description": {
+            "type": "string",
+            "description": "Short description clinic"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the clinic",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the clinic",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Country of the clinic",
+            "nullable": false
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the clinic (category)",
+            "nullable": false
+          },
+          "userId": {
+            "type": "string",
+            "description": "First name of the user",
+            "nullable": false
+          },
+          "fullName": {
+            "type": "string",
+            "description": "First name of the user",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "description": "password",
+            "nullable": false
+          }
+        },
+        "required": ["userId", "fullName", "email", "password"]
+      },
+      "CreateTypeClinicDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type clinic",
+            "nullable": false
+          }
+        },
+        "required": ["type"]
+      },
+      "SwitchStatusDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Id clinic",
+            "nullable": false
+          }
+        },
+        "required": ["id"]
+      },
+      "SwitchStatusUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id user"
+          },
+          "status": {
+            "enum": ["approval", "pending", "notapproval"],
+            "type": "string",
+            "description": "Status",
+            "nullable": false
+          }
+        },
+        "required": ["id", "status"]
       },
       "CreatePatientDto": {
         "type": "object",

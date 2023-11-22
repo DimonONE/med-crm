@@ -26,6 +26,10 @@ export interface CreateUserDtoDto {
   specialization?: string;
 }
 
+export interface MessageResponseDto {
+  message: string;
+}
+
 export interface LoginUserDtoDto {
   /** Email user */
   email: string;
@@ -64,6 +68,31 @@ export interface PatientEntityDto {
   updatedAt: string;
 }
 
+export interface TypeClinicEntityDto {
+  id: number;
+  name: string;
+  clinics: ClinicEntityDto[];
+}
+
+export interface ClinicEntityDto {
+  id: number;
+  name: string;
+  description: string;
+  address: string;
+  country: string;
+  phone: string;
+  type: TypeClinicEntityDto;
+  users: UserEntityDto[];
+  status: boolean;
+  /** @format date-time */
+  endPaidDate: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  save: object;
+}
+
 export interface UserEntityDto {
   id: string;
   fullName: string;
@@ -76,6 +105,7 @@ export interface UserEntityDto {
   createdBy: string;
   status: string;
   patients: PatientEntityDto[];
+  clinic: ClinicEntityDto;
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
@@ -89,7 +119,7 @@ export interface RoleEntityDto {
 }
 
 export interface UserResponseEntityDto {
-  status: 'approval' | 'notapproval';
+  status: 'approval' | 'pending' | 'notapproval';
   id: string;
   fullName: string;
   email: string;
@@ -120,6 +150,67 @@ export interface UpdateUserDtoDto {
   role?: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
   /** Specialization for doctor */
   specialization?: string;
+}
+
+export interface CreateClinicUserDtoDto {
+  /** Name clinic */
+  name?: string;
+  /** Short description clinic */
+  description?: string;
+  /** Phone of the clinic */
+  phone?: string;
+  /** Address of the clinic */
+  address?: string;
+  /** Country of the clinic */
+  country?: string;
+  /** Type of the clinic (category) */
+  type?: string;
+  /** First name of the user */
+  fullName: string;
+  /** Password of the user */
+  password: string;
+  /** Email of the user */
+  email: string;
+}
+
+export interface UpdateClinicUserDtoDto {
+  /** Name clinic */
+  name?: string;
+  /** Short description clinic */
+  description?: string;
+  /** Phone of the clinic */
+  phone?: string;
+  /** Address of the clinic */
+  address?: string;
+  /** Country of the clinic */
+  country?: string;
+  /** Type of the clinic (category) */
+  type?: string;
+  /** First name of the user */
+  userId: string;
+  /** First name of the user */
+  fullName: string;
+  /** Email of the user */
+  email: string;
+  /** password */
+  password: string;
+}
+
+export interface CreateTypeClinicDtoDto {
+  /** Type clinic */
+  type: string;
+}
+
+export interface SwitchStatusDtoDto {
+  /** Id clinic */
+  id: number;
+}
+
+export interface SwitchStatusUserDtoDto {
+  /** id user */
+  id: string;
+  /** Status */
+  status: 'approval' | 'pending' | 'notapproval';
 }
 
 export interface CreatePatientDtoDto {
@@ -430,41 +521,17 @@ export class Api<
      * No description
      *
      * @tags Users
-     * @name UsersControllerCreateUser
-     * @request POST:/users/create
-     * @secure
-     */
-    usersControllerCreateUser: (
-      data: CreateUserDtoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<string, any>({
-        path: `/users/create`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
      * @name UsersControllerMakeProposal
-     * @request POST:/users/make_proposal
-     * @secure
+     * @request POST:/users/create
      */
     usersControllerMakeProposal: (
       data: CreateUserDtoDto,
       params: RequestParams = {},
     ) =>
-      this.request<string, any>({
-        path: `/users/make_proposal`,
+      this.request<MessageResponseDto, any>({
+        path: `/users/create`,
         method: 'POST',
         body: data,
-        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,
@@ -483,7 +550,7 @@ export class Api<
         method: 'POST',
         body: data,
         type: ContentType.Json,
-        format: 'text',
+        format: 'json',
         ...params,
       }),
 
@@ -514,23 +581,6 @@ export class Api<
     usersControllerGetсurentUser: (params: RequestParams = {}) =>
       this.request<UserResponseEntityDto, UserResponseEntityDto>({
         path: `/users/currentuser`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name UsersControllerGetListOfAviableUser
-     * @request GET:/users/listofusers
-     * @secure
-     */
-    usersControllerGetListOfAviableUser: (params: RequestParams = {}) =>
-      this.request<object[], any>({
-        path: `/users/listofusers`,
         method: 'GET',
         secure: true,
         format: 'json',
@@ -592,6 +642,173 @@ export class Api<
         ...params,
       }),
   };
+  admin = {
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerCreateClinic
+     * @request POST:/admin/create-clinic
+     * @secure
+     */
+    usersAdminControllerCreateClinic: (
+      data: CreateClinicUserDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserEntityDto, any>({
+        path: `/admin/create-clinic`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerUpdateClinic
+     * @request POST:/admin/update-clinic
+     * @secure
+     */
+    usersAdminControllerUpdateClinic: (
+      data: UpdateClinicUserDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserEntityDto, any>({
+        path: `/admin/update-clinic`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerAddTypeClinic
+     * @request POST:/admin/add-type-clinic
+     * @secure
+     */
+    usersAdminControllerAddTypeClinic: (
+      data: CreateTypeClinicDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TypeClinicEntityDto, any>({
+        path: `/admin/add-type-clinic`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerGetAllTypeClinic
+     * @request GET:/admin/all-type-clinic
+     * @secure
+     */
+    usersAdminControllerGetAllTypeClinic: (params: RequestParams = {}) =>
+      this.request<TypeClinicEntityDto[], any>({
+        path: `/admin/all-type-clinic`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerSwitchStatusClinic
+     * @request POST:/admin/switch-status-clinic
+     * @secure
+     */
+    usersAdminControllerSwitchStatusClinic: (
+      data: SwitchStatusDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ClinicEntityDto, any>({
+        path: `/admin/switch-status-clinic`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerStatusUser
+     * @request POST:/admin/switch-status-user
+     * @secure
+     */
+    usersAdminControllerStatusUser: (
+      data: SwitchStatusUserDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserResponseEntityDto, any>({
+        path: `/admin/switch-status-user`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerGetListOfAviableUser
+     * @request GET:/admin/listofusers
+     * @secure
+     */
+    usersAdminControllerGetListOfAviableUser: (
+      query: {
+        /** Need count patients */
+        limit: number | null;
+        /** set Approve for get all clinics, set pending for get applications */
+        status: 'approval' | 'pending' | 'notapproval';
+        /** Page */
+        offset: number | null;
+        /**
+         * Sort by ASC or DESC
+         * @default "ASC"
+         */
+        sortBy: 'ASC' | 'DESC' | null;
+        /** Field to sort by  */
+        fieldSort: string | null;
+        /** Type clinic */
+        category: string | null;
+        /** Doctor name */
+        filter: string | null;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserEntityDto[], any>({
+        path: `/admin/listofusers`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+  };
   patients = {
     /**
      * No description
@@ -599,8 +816,6 @@ export class Api<
      * @tags Patients
      * @name PatientsControllerCreatePatient
      * @request POST:/patients/create
-     * @secure
-     * 
      */
     patientsControllerCreatePatient: (
       data: CreatePatientDtoDto,
@@ -612,7 +827,6 @@ export class Api<
         body: data,
         type: ContentType.Json,
         format: 'json',
-        secure: true,
         ...params,
       }),
 
@@ -640,7 +854,6 @@ export class Api<
      * @tags Patients
      * @name PatientsControllerGetPatients
      * @request GET:/patients
-     * @secure
      */
     patientsControllerGetPatients: (
       query: {
@@ -663,7 +876,6 @@ export class Api<
         method: 'GET',
         query: query,
         format: 'json',
-        secure: true,
         ...params,
       }),
   };

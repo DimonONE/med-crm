@@ -10,7 +10,15 @@ import { AllClinicTable, SelectClinic } from '~widgets/super-admin/';
 export function AllClinics() {
   const params = useParams();
   const navigate = useNavigate();
-  const { data } = superAdminApi.useListOfUsers();
+  const { data } = superAdminApi.useListOfUsers({
+    limit: null,
+    status: 'pending',
+    offset: null,
+    sortBy: null,
+    fieldSort: null,
+    category: null,
+    filter: null,
+  });
   console.log('data', data);
 
   const items = [

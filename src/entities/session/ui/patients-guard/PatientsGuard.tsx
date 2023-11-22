@@ -14,8 +14,7 @@ const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-recor
 export function PatientsGuard(): RouteObject {
   const { checkUserRole } = useRoleUser();
 
-  // if (!checkUserRole('patient')) return {};
-  if (!checkUserRole('superAdmin')) return {};
+  if (!checkUserRole('patient')) return {};
 
   return {
     path: PATH_PAGE.patients.root,
