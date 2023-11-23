@@ -12,10 +12,7 @@ export function LoadImage({ onChange }: LoadImageProps) {
   const [image, setImage] = useState<File | null>(null);
 
   const handleChange = (files: FileValues) => {
-
     if (files && onChange) {
-      console.log('files', files);
-
       setImage(files[0]);
       onChange(files[0]);
     }

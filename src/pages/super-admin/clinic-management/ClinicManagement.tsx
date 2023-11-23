@@ -11,8 +11,6 @@ type Params = {
 export function ClinicManagement() {
   const params = useParams<Params>();
 
-  console.log('params', params);
-
   return (
     <div className={s.root}>
       <BackButton title={params?.clinicId ? 'Редактировать клинику' : 'Добавить клинику'} />

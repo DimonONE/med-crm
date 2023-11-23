@@ -55,11 +55,7 @@ export function useCreatePatient() {
   return useMutation({
     mutationKey: patientsKeys.patients.create(),
     mutationFn: async (patientInfo: CreatePatientDto) => {
-      console.log('patientInfo', patientInfo);
-      
- 
       const response = await realworldApi.patients.patientsControllerCreatePatient( patientInfo as Api.CreatePatientDtoDto );
-
       return response;
     },
   });

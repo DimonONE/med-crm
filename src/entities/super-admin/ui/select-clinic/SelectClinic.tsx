@@ -48,8 +48,6 @@ export function SelectClinic({ clinicId }: Props) {
     return null;
   }
 
-  console.log('clinicData', clinicData);
-
   return (
     <div className={s.container}>
       <BackButton title='' link={PATH_PAGE.superAdmin.root} />

@@ -175,9 +175,8 @@ export function TimeScale({ startTime, endTime, width = 650 }: IProps) {
       }
     });
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIntervals]);
-
-  console.log('selectedIntervals', selectedIntervals);
 
 
   return (

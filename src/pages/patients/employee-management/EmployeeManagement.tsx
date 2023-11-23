@@ -30,11 +30,8 @@ export function EmployeeManagement() {
   ) => {
 
     mutate(values, {
-      onSuccess: (response) => {
-        console.log('values', values);
-        console.log('response', response);
+      onSuccess: () => {
         toast('Success!');
-
       },
       onError: () => {
         toast('Error!', { type: 'error' });

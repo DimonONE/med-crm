@@ -18,8 +18,6 @@ type Params = {
 export function EmployeeManagement() {
   const params = useParams<Params>();
 
-  console.log('params', params);
-
   const selectOptions = [{ value: '0', label: 'Пол' }, { value: '1', label: 'Мужской' }, { value: '2', label: 'Женский' }];
   const positionsOptions = [{ value: '0', label: 'Должность' }, { value: '1', label: 'Медсестра' }, { value: '2', label: 'Медсестра' }];
 
