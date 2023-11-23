@@ -4,111 +4,29 @@ import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import s from './styles.module.scss';
 
 
-function createData(
+
+type DataTable = {
+  id: string | number,
   date: string,
   city: string,
   street: string,
   phone: string,
   fullName: string,
   dateOff: string,
-  status: string,
-) {
-  return { date, city, street, phone, fullName, dateOff, status };
-}
+  status: boolean,
+};
 
-export function AllClinicTable() {
-  const rows = [
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-    createData(
-      '03.02.2021',
-      'Сывтывкар',
-      'ул.Пушкина 23\\77',
-      '+7 095 518 58 36',
-      'Осипенко Владимир Николаевич',
-      'до 12.12.2023',
-      'Оплачено',
-    ),
-  ];
+type Props = {
+  tableList: DataTable[]
+};
+
+
+export function AllClinicTable({ tableList }: Props) {
+
+
+  if (!tableList.length) {
+    return null;
+  }
 
   return (
     <div className={classNames(s.root, 'container')}>
@@ -141,9 +59,9 @@ export function AllClinicTable() {
             </TableRow>
           </TableHead>
           <TableBody  >
-            {rows.map((row) => (
+            {tableList.map((row) => (
               <TableRow
-                key={row.date}
+                key={row.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 className={s.tableBody}
               >
@@ -159,7 +77,9 @@ export function AllClinicTable() {
                 <TableCell className='table-body-cell' align="left">{row.phone}</TableCell>
                 <TableCell className='table-body-cell' align="left">{row.fullName}</TableCell>
                 <TableCell className='table-body-cell'>{row.dateOff}</TableCell>
-                <TableCell className='table-body-cell'>{row.status}</TableCell>
+                <TableCell className={classNames('table-body-cell', s.status, { [s.error]: !row.status })}>
+                  {row.status ? 'Разблокировать' : 'Заблокировать'}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -5,8 +5,7 @@ import { useRoleUser } from '../../model/sessionModel';
 
 // SuperAdmin
 const AllClinicsPage = Loadable(lazy(() => import('~pages/super-admin/all-clinics')));
-const AddClinicPage = Loadable(lazy(() => import('~pages/super-admin/add-clinic')));
-const EditClinicPage = Loadable(lazy(() => import('~pages/super-admin/edit-clinic')));
+const EmployeeManagementPage = Loadable(lazy(() => import('~pages/super-admin/clinic-management')));
 const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
 export function SuperAdminGuard(): RouteObject {
@@ -15,15 +14,15 @@ export function SuperAdminGuard(): RouteObject {
   if (!roles || !checkUserRole('superAdmin')) return {};
 
   return {
-    path: 'clinic/:id?',
+    path: 'clinic/:clinicId?',
     children: [
       {
         element: <AllClinicsPage />,
         index: true,
       },
       { path: 'applications/:id?', element: <ClinicApplicationsPage /> },
-      { path: 'add-clinic', element: <AddClinicPage /> },
-      { path: 'edit-clinic', element: <EditClinicPage /> },
+      { path: 'member', element: <EmployeeManagementPage /> },
+      { path: 'member/:clinicId?', element: <EmployeeManagementPage /> },
     ],
   };
 }

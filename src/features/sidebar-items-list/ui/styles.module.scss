@@ -1,0 +1,31 @@
+.container {
+  margin-right: auto;
+}
+
+.item.active {
+  background: #876AFF;
+
+  .title,
+  .subTitle {
+    color: var(--color-white);
+  }
+
+  .arrow svg path {
+    fill: var(--color-white);
+  }
+}
+
+.title {
+  color: var(--color-base);
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.subTitle {
+  color: #A1B6C1;
+}
+
+.arrow{
+  min-width: 9px;
+}

@@ -2,3 +2,15 @@
 .tableBody {
   grid-template-columns: 170px 180px 250px 205px 265px 180px 90px;
 }
+
+.tableBody .status {
+  color: var(--color-success);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 123.9%; 
+  text-decoration-line: underline;
+
+  &.error {
+    color: var(--color-error);
+  }
+}

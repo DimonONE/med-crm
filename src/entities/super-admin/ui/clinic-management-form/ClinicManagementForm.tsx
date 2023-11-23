@@ -10,7 +10,11 @@ import { SelectField } from '~shared/ui/select-field';
 import { useAllTypeClinic, useCreateClinic } from '../../api/superAdminApi';
 import s from './styles.module.scss';
 
-export function AddClinicForm() {
+type Props = {
+  clinicId?: string
+};
+
+export function ClinicManagementForm({ clinicId }: Props) {
   const { data } = useAllTypeClinic();
   const { mutate } = useCreateClinic();
 
@@ -215,7 +219,8 @@ export function AddClinicForm() {
             color="primary"
             disabled={isSubmitting}
           >
-            Создать
+            {clinicId ? 'Сохранить' : 'Создать'}
+
           </Button>
         </Form>
       )}

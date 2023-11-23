@@ -4,8 +4,9 @@ export const PATH_PAGE = {
   register: '/register',
   superAdmin: {
     root: '/clinic',
-    addClinic: '/clinic/add-clinic',
-    editClinic: '/clinic/edit-clinic',
+    selectClinic: (clinicId: number) => `/clinic/${clinicId}`,
+    addClinic: '/clinic/member',
+    editClinic: (clinicId: string) => `/clinic/member/${clinicId}`,
     clinicApplications: '/clinic/applications',
   },
   doctor: {

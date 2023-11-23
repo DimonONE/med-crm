@@ -32,14 +32,13 @@
   right: 16px;
   background: none;
   border: none;
-  font-size: 20px;
   cursor: pointer;
 }
 
 .modalContent {
   padding: 20px;
   color: var(--color-font);
-  font-size: 22px;
+  font-size: var(--font-size);
   font-weight: 500;
   line-height: 140%;
 }

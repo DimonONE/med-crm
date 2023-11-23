@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Api, realworldApi } from '~shared/api/realworld';
 
-type Status = 'approval' | 'pending' | 'notapproval';
+export type Status = 'approval' | 'pending' | 'notapproval';
 
 export type ListOfUsersQuery = {
    limit: number | null;
    status: 'approval' | 'pending' | 'notapproval';
    offset: number | null;
-   sortBy: 'ASC' | 'DESC' | null;
+   sortBy: SortByType;
    fieldSort: string | null;
    category: string | null;
    filter: string | null;
@@ -31,21 +31,9 @@ export function useListOfUsers(query: ListOfUsersQuery) {
   return useQuery({
     queryKey: superAdminKeys.superAdmin.listofusers(),
     queryFn: async () => {
-      const params = {
-        limit:  null,
-        status: 'pending' as Status,
-        offset:  null,
-        sortBy: null,
-        fieldSort:  null,
-        category:  null,
-        filter:  null,
-      };
+      const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser(query);
 
-      console.log('query', query);
-
-      const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser(params);
-
-      return response;
+      return response.data;
     },
   });
 }
@@ -103,10 +91,8 @@ export function useSwitchStatusClinic() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.switchStatusClinic(),
     mutationFn: async (params: Api.SwitchStatusDtoDto) => {
-    
       const response = await realworldApi.admin.usersAdminControllerSwitchStatusClinic(params);
-
-      return response;
+      return response.data;
     },
   });
 }
