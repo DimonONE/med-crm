@@ -5,14 +5,26 @@ import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
 import { Header, HeaderLogin } from '~widgets/header';
 
-// Doctor
+// SuperAdmin
+const AllClinicsPage = Loadable(lazy(() => import('~pages/super-admin/all-clinics')));
+const EmployeeManagementPage = Loadable(lazy(() => import('~pages/super-admin/clinic-management')));
+const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
+
+// Doctor
 const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
 
 // Personnel
 const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
 const PersonnelDetailsPage = Loadable(lazy(() => import('~pages/personnel/details')));
 const PersonnelManagementPage = Loadable(lazy(() => import('~pages/personnel/employee-management')));
+
+// Patients
+const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
+const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
+const PatientsViewingPage = Loadable(lazy(() => import('~pages/patients/viewing-questionnaire')));
+const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
+const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-record')));
 
 // Services
 const ServicesPage = Loadable(lazy(() => import('~pages/services')));
@@ -23,22 +35,51 @@ const AttendanceSchedulePage = Loadable(lazy(() => import('~pages/staff-attendan
 
 
 // Auth
-
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
 const Page404 = Loadable(lazy(() => import('~pages/page-404')));
 // const ProfilePage = Loadable(lazy(() => import('~pages/profile')));
 const RegisterPage = Loadable(lazy(() => import('~pages/register')));
 // const SettingsPage = Loadable(lazy(() => import('~pages/settings')));
 
+
 export function Router() {
   const isAuth = sessionModel.useAuth();
+
+  const superAdmin = SuperAdminGuard(
+    {
+      path: 'clinic/:clinicId?',
+      children: [
+        {
+          element: <AllClinicsPage />,
+          index: true,
+        },
+        { path: 'applications/:id?', element: <ClinicApplicationsPage /> },
+        { path: 'member', element: <EmployeeManagementPage /> },
+        { path: 'member/:clinicId?', element: <EmployeeManagementPage /> },
+      ],
+    },
+  );
+
+  const patients = PatientsGuard({
+    path: PATH_PAGE.patients.root,
+    children: [
+      {
+        element: <PatientsHomePage />,
+        index: true,
+      },
+      { path: 'records', element: <PatientsRecordsPage /> },
+      { path: 'viewing', element: <PatientsViewingPage /> },
+      { path: 'edit-record?', element: <PatientEditRecord /> },
+      { path: 'member/:patientId?', element: <PatientManagementPage /> },
+    ],
+  });
 
   return useRoutes([
     {
       element: isAuth ? <Header /> : <HeaderLogin />,
       children: [
-        SuperAdminGuard(),
-        PatientsGuard(),
+        superAdmin,
+        patients,
         {
           path: 'doctor',
           children: [
