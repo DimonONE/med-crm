@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { NavigateButton, sessionModel, useRoleUser } from '~entities/session';
+import { sessionModel, useRoleUser } from '~entities/session';
+import { NavigateButton } from '~features/navigate';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import HeartICO from '~shared/svg/heart-ico.svg';
 import FingerprintICO from '~shared/svg/settings-ico.svg';
