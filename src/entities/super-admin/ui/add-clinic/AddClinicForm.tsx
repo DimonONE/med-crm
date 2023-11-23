@@ -14,12 +14,11 @@ export function AddClinicForm() {
   const { data } = useAllTypeClinic();
   const { mutate } = useCreateClinic();
 
-  const typePlaceholder = {
-    value: -1,
-    label: 'Выберите тип клиники',
-  };
   const typesClinic = useMemo(() => {
-
+    const typePlaceholder = {
+      value: -1,
+      label: 'Выберите тип клиники',
+    };
 
     if (data) {
       const types = data.map((type) => ({
@@ -37,11 +36,9 @@ export function AddClinicForm() {
     values: Api.CreateClinicUserDtoDto,
     { setSubmitting, resetForm }: FormikHelpers<Api.CreateClinicUserDtoDto>,
   ) => {
-    console.log('values', values);
 
     mutate(values, {
-      onSuccess: (response) => {
-        console.log('response', response);
+      onSuccess: () => {
         toast('Success!', { type: 'success' });
         resetForm();
       },
