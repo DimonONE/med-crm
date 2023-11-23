@@ -5,4 +5,4 @@ export { AuthGuard } from './ui/auth-guard/AuthGuard';
 export { GuestGuard } from './ui/guest-guard/GuestGuard';
 export { SuperAdminGuard } from './ui/super-admin-guard/SuperAdminGuard';
 export { PatientsGuard } from './ui/patients-guard/PatientsGuard';
-export { NavigateButton } from './ui/navigate-button/NavigateButton';
+export { NavigateButton } from '../../features/navigate-button/ui/navigate-button/NavigateButton';

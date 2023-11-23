@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useRoleUser } from '~entities/session';
 import { SelectField } from '~shared/ui/select-field';
 import { getNavigateList } from '../../lib';
-import { useRoleUser } from '../../model/sessionModel';
 
 export function NavigateButton() {
   const { checkUserRole } = useRoleUser();
