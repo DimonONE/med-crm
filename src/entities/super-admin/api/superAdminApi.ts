@@ -57,7 +57,7 @@ export function useAllTypeClinic() {
 
       const response = await realworldApi.admin.usersAdminControllerGetAllTypeClinic();
 
-      return response;
+      return response?.data;
     },
   });
 }

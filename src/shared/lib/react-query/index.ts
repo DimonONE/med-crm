@@ -1,2 +1,2 @@
 export { queryClient } from './queryClient';
-export { createWrapper, renderWithClient } from './utils';
+export { errorHandler } from './utils';

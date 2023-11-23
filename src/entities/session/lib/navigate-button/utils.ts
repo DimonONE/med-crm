@@ -8,6 +8,7 @@ export const getNavigateList = (
     case checkUserRole('superAdmin'):
       return [
         { value: PATH_PAGE.superAdmin.root, label: 'Все клиники' },
+        { value: PATH_PAGE.superAdmin.addClinic, label: 'Добавить' },
         { value: PATH_PAGE.superAdmin.clinicApplications, label: 'Заявки' },
       ];
 

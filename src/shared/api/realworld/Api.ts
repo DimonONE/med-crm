@@ -550,7 +550,7 @@ export class Api<
         method: 'POST',
         body: data,
         type: ContentType.Json,
-        format: 'json',
+        format: 'text',
         ...params,
       }),
 

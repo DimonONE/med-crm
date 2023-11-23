@@ -14,8 +14,7 @@ export function AuthGuard(props: AuthGuardProps) {
 
   if (isAuth && roles) {
     const redirectMap: Record<keyof Roles, string> = {
-      // superAdmin: PATH_PAGE.superAdmin.root,
-      superAdmin: PATH_PAGE.patients.records,
+      superAdmin: PATH_PAGE.superAdmin.root,
       doctor: PATH_PAGE.doctor.root,
       medChief: PATH_PAGE.personnel.root,
       patient: PATH_PAGE.patients.records,
