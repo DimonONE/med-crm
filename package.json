@@ -31,6 +31,7 @@
     "cookies-next": "^4.0.0",
     "dayjs": "^1.11.7",
     "formik": "^2.4.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.10",

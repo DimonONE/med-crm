@@ -1,9 +1,9 @@
+import { useEffect, useState } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import classNames from 'classnames';
+import { superAdminApi } from '~entities/super-admin';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import s from './styles.module.scss';
-
-
 
 type DataTable = {
   id: string | number,
@@ -18,10 +18,22 @@ type DataTable = {
 
 type Props = {
   tableList: DataTable[]
+  updateQueryParameters: (newQuery: Partial<superAdminApi.ListOfUsersQuery>) => void
 };
 
+export function AllClinicTable({ tableList, updateQueryParameters }: Props) {
+  const [fieldSort, setFieldSort] = useState<string | null>();
 
-export function AllClinicTable({ tableList }: Props) {
+  const sortHandler = (sortKey: 'createdAt' | 'country' | 'endPaidDate') => {
+    setFieldSort(prev => prev === sortKey ? '' : sortKey);
+  };
+
+  useEffect(() => {
+    if (fieldSort || fieldSort === '') {
+      updateQueryParameters({ fieldSort });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fieldSort]);
 
 
   if (!tableList.length) {
@@ -37,13 +49,13 @@ export function AllClinicTable({ tableList }: Props) {
               <TableCell sx={{ minWidth: 150 }} className='table-head-cell'>
                 <span className='d-flex'>
                   ДАТА РЕГ.
-                  <button type='button'> <ArrowBottomICO /> </button>
+                  <button type='button' onClick={() => sortHandler('createdAt')}> <ArrowBottomICO /> </button>
                 </span>
               </TableCell>
               <TableCell sx={{ minWidth: 150 }} className='table-head-cell'>
                 <span className='d-flex'>
                   ГОРОД
-                  <button type='button'> <ArrowBottomICO /> </button>
+                  <button type='button' onClick={() => sortHandler('country')}> <ArrowBottomICO /> </button>
                 </span>
               </TableCell>
               <TableCell sx={{ minWidth: 220 }} className='table-head-cell'>АДРЕС</TableCell>
@@ -52,7 +64,7 @@ export function AllClinicTable({ tableList }: Props) {
               <TableCell sx={{ minWidth: 180 }} className='table-head-cell'>
                 <span className='d-flex'>
                   ТАРИФ
-                  <button type='button'> <ArrowBottomICO /></button>
+                  <button type='button' onClick={() => sortHandler('endPaidDate')}> <ArrowBottomICO /></button>
                 </span>
               </TableCell>
               <TableCell className='table-head-cell'>СТАТУС</TableCell>

@@ -9,17 +9,17 @@
 }
 
 .name {
+  margin-right: 10px;
   color: #0E5F8C;
   font-size: 20px;
   font-weight: 600;
 }
 
 .search {
-  position: relative;
   width: 221.192px;
   height: 34.387px;
-  margin: 0 0 0 auto;
-  padding: 0;
+  margin: 0;
+  padding-left: 20px;
   padding-right: 7px;
   border-radius: 47px;
   border: 0.764px solid var(--color-base);
@@ -27,4 +27,10 @@
 
   font-size: 16px;
   font-weight: 400;
+  color: #A1B6C1;
+
+  input {
+    padding: 0;
+    padding-right: 10px;
+  }
 }

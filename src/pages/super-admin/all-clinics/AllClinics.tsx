@@ -3,9 +3,9 @@ import dayjs from 'dayjs';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SelectClinic, useListOfUsers } from '~entities/super-admin';
-import { SearchPersonnel } from '~features/personnel';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
+import { Search } from '~shared/ui/search';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
 import { AllClinicTable } from '~widgets/super-admin/';
 
@@ -28,22 +28,13 @@ type Params = {
 
 export function AllClinics() {
   const params = useParams<Params>();
-
   const navigate = useNavigate();
-  // @ts-ignore
-  const { data } = useListOfUsers({
-    limit: 10,
-    status: 'approval',
-    sortBy: 'ASC',
-    // fieldSort: null,
-    // category: null,
-    // filter: null,
-  });
+  const { data, updateQueryParameters } = useListOfUsers({});
 
   const sidebarItemList = useMemo(() => data
     ? data.map((user) => user.clinic && ({
       id: user.clinic.id.toString(),
-      title: `Клиника ${user.clinic.name}`,
+      title: user.clinic.name,
       subTitle: `Код клиники: ${user.clinic?.id}`,
       link: PATH_PAGE.superAdmin.selectClinic(user.clinic.id),
     })).filter(Boolean)
@@ -70,13 +61,13 @@ export function AllClinics() {
           items={sidebarItemList}
           selectId={params?.clinicId}
         >
-          <SearchPersonnel />
+          <Search filters='Ф.И.О.' handleChange={(value) => updateQueryParameters({ filter: value })} />
         </SidebarItemList>
         <div className='container'>
           {
             params.clinicId
               ? <SelectClinic clinicId={Number(params.clinicId)} />
-              : <AllClinicTable tableList={clinicTableList} />
+              : <AllClinicTable tableList={clinicTableList} updateQueryParameters={updateQueryParameters} />
           }
         </div>
         <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>

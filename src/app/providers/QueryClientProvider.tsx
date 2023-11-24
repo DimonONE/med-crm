@@ -11,6 +11,7 @@ type QueryClientProviderProps = {
 
 export function QueryClientProvider(props: QueryClientProviderProps) {
   const { children } = props;
+
   return (
     <TanStackQueryClientProvider client={queryClient}>
       {children}

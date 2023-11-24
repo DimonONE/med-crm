@@ -8,7 +8,7 @@ import { Header, HeaderLogin } from '~widgets/header';
 // SuperAdmin
 const AllClinicsPage = Loadable(lazy(() => import('~pages/super-admin/all-clinics')));
 const EmployeeManagementPage = Loadable(lazy(() => import('~pages/super-admin/clinic-management')));
-const ClinicApplicationsPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
+const ClinicApplicationPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
 
 // Doctor
@@ -53,7 +53,7 @@ export function Router() {
           element: <AllClinicsPage />,
           index: true,
         },
-        { path: 'applications/:id?', element: <ClinicApplicationsPage /> },
+        { path: 'applications/:id?', element: <ClinicApplicationPage /> },
         { path: 'member', element: <EmployeeManagementPage /> },
         { path: 'member/:clinicId?', element: <EmployeeManagementPage /> },
       ],

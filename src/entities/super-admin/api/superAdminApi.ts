@@ -1,11 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Api, realworldApi } from '~shared/api/realworld';
 
-export type Status = 'approval' | 'pending' | 'notapproval';
-
 export type ListOfUsersQuery = {
    limit: number | null;
-   status: 'approval' | 'pending' | 'notapproval';
+   status: UserStatus;
    offset: number | null;
    sortBy: SortByType;
    fieldSort: string | null;
@@ -27,15 +25,31 @@ export const superAdminKeys = {
   },
 };
 
-export function useListOfUsers(query: ListOfUsersQuery) {
-  return useQuery({
-    queryKey: superAdminKeys.superAdmin.listofusers(),
-    queryFn: async () => {
-      const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser(query);
 
+export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
+  let sortQuery: ListOfUsersQuery = {
+    limit: 10,
+    status: 'approval',
+    sortBy: 'ASC',
+    ...query,
+  } as ListOfUsersQuery;
+
+  const { data, refetch } = useQuery({
+    queryKey: [superAdminKeys.superAdmin.listofusers(), query],
+    queryFn: async () => {
+      const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser(sortQuery);
       return response.data;
     },
   });
+
+  const updateQueryParameters = (newQuery: Partial<ListOfUsersQuery>) => {
+    sortQuery = { ...sortQuery, ...newQuery };
+    refetch({ 
+      queryKey: [superAdminKeys.superAdmin.listofusers(), newQuery],
+    });
+  };
+
+  return { data, updateQueryParameters };
 }
 
 export function useAllTypeClinic() {

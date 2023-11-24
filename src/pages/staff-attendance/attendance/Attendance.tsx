@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { SearchPersonnel } from '~features/personnel';
+import { Search } from '~shared/ui/search';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
 import { AttendanceTable } from '~widgets/staff-attendance';
 import s from './styles.module.scss';
@@ -17,7 +17,7 @@ export function Attendance() {
   return (
     <div className={s.root}>
       <SidebarItemList items={items} selectId={params.id} >
-        <SearchPersonnel />
+        <Search filters='Ф.И.О.' />
       </SidebarItemList>
       <AttendanceTable />
     </div>

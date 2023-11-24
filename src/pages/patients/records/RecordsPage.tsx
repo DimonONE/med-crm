@@ -1,8 +1,8 @@
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SearchPersonnel } from '~features/personnel';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
+import { Search } from '~shared/ui/search';
 import { Records } from '~widgets/patients';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
 
@@ -19,7 +19,7 @@ export function RecordsPage() {
     <div>
       <div className='d-flex'>
         <SidebarItemList items={items} selectId={params.id} >
-          <SearchPersonnel />
+          <Search filters='Ф.И.О.' />
         </SidebarItemList>
         <Records />
       </div>
