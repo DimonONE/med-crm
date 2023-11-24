@@ -10,7 +10,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
+                "$ref": "#/components/schemas/CreateClinicUserDto"
               }
             }
           }
@@ -638,44 +638,54 @@
       }
     },
     "schemas": {
-      "CreateUserDto": {
+      "CreateClinicUserDto": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name clinic",
+            "nullable": false
+          },
+          "description": {
+            "type": "string",
+            "description": "Short description clinic"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the clinic",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the clinic",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Country of the clinic",
+            "nullable": false
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the clinic (category)",
+            "nullable": false
+          },
           "fullName": {
             "type": "string",
             "description": "First name of the user",
             "nullable": false
           },
-          "email": {
-            "type": "string",
-            "description": "Email of the user",
-            "nullable": false
-          },
-          "phone": {
-            "type": "string",
-            "description": "Phone of the user",
-            "nullable": false
-          },
-          "image": {
-            "type": "string",
-            "description": "Image of the user",
-            "nullable": true
-          },
           "password": {
             "type": "string",
             "description": "Password of the user"
           },
-          "role": {
+          "email": {
             "type": "string",
-            "enum": ["superAdmin", "medChief", "doctor", "patient"],
-            "description": "Role for user"
-          },
-          "specialization": {
-            "type": "string",
-            "description": "Specialization for doctor"
+            "description": "Email of the user",
+            "nullable": false
           }
         },
-        "required": ["fullName", "email", "phone", "password", "role"]
+        "required": ["fullName", "password", "email"]
       },
       "MessageResponse": {
         "type": "object",
@@ -1068,55 +1078,6 @@
             "description": "Specialization for doctor"
           }
         }
-      },
-      "CreateClinicUserDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name clinic",
-            "nullable": false
-          },
-          "description": {
-            "type": "string",
-            "description": "Short description clinic"
-          },
-          "phone": {
-            "type": "string",
-            "description": "Phone of the clinic",
-            "nullable": false
-          },
-          "address": {
-            "type": "string",
-            "description": "Address of the clinic",
-            "nullable": false
-          },
-          "country": {
-            "type": "string",
-            "description": "Country of the clinic",
-            "nullable": false
-          },
-          "type": {
-            "type": "string",
-            "description": "Type of the clinic (category)",
-            "nullable": false
-          },
-          "fullName": {
-            "type": "string",
-            "description": "First name of the user",
-            "nullable": false
-          },
-          "password": {
-            "type": "string",
-            "description": "Password of the user"
-          },
-          "email": {
-            "type": "string",
-            "description": "Email of the user",
-            "nullable": false
-          }
-        },
-        "required": ["fullName", "password", "email"]
       },
       "UpdateClinicUserDto": {
         "type": "object",

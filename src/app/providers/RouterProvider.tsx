@@ -38,7 +38,7 @@ const AttendanceSchedulePage = Loadable(lazy(() => import('~pages/staff-attendan
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
 const Page404 = Loadable(lazy(() => import('~pages/page-404')));
 // const ProfilePage = Loadable(lazy(() => import('~pages/profile')));
-const RegisterPage = Loadable(lazy(() => import('~pages/register')));
+const RegisterPage = Loadable(lazy(() => import('~pages/registration')));
 // const SettingsPage = Loadable(lazy(() => import('~pages/settings')));
 
 

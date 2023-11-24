@@ -9,21 +9,25 @@
  * ---------------------------------------------------------------
  */
 
-export interface CreateUserDtoDto {
+export interface CreateClinicUserDtoDto {
+  /** Name clinic */
+  name?: string;
+  /** Short description clinic */
+  description?: string;
+  /** Phone of the clinic */
+  phone?: string;
+  /** Address of the clinic */
+  address?: string;
+  /** Country of the clinic */
+  country?: string;
+  /** Type of the clinic (category) */
+  type?: string;
   /** First name of the user */
   fullName: string;
-  /** Email of the user */
-  email: string;
-  /** Phone of the user */
-  phone: string;
-  /** Image of the user */
-  image?: string | null;
   /** Password of the user */
   password: string;
-  /** Role for user */
-  role: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
-  /** Specialization for doctor */
-  specialization?: string;
+  /** Email of the user */
+  email: string;
 }
 
 export interface MessageResponseDto {
@@ -150,27 +154,6 @@ export interface UpdateUserDtoDto {
   role?: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
   /** Specialization for doctor */
   specialization?: string;
-}
-
-export interface CreateClinicUserDtoDto {
-  /** Name clinic */
-  name?: string;
-  /** Short description clinic */
-  description?: string;
-  /** Phone of the clinic */
-  phone?: string;
-  /** Address of the clinic */
-  address?: string;
-  /** Country of the clinic */
-  country?: string;
-  /** Type of the clinic (category) */
-  type?: string;
-  /** First name of the user */
-  fullName: string;
-  /** Password of the user */
-  password: string;
-  /** Email of the user */
-  email: string;
 }
 
 export interface UpdateClinicUserDtoDto {
@@ -525,7 +508,7 @@ export class Api<
      * @request POST:/users/create
      */
     usersControllerMakeProposal: (
-      data: CreateUserDtoDto,
+      data: CreateClinicUserDtoDto,
       params: RequestParams = {},
     ) =>
       this.request<MessageResponseDto, any>({

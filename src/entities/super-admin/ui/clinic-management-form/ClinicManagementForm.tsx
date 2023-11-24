@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
-import { Api } from '~shared/api/realworld';
+import { Api, HttpResponse } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { Button } from '~shared/ui/button';
 import { SelectField } from '~shared/ui/select-field';
@@ -46,8 +46,8 @@ export function ClinicManagementForm({ clinicId }: Props) {
         toast('Success!', { type: 'success' });
         resetForm();
       },
-      onError: (error: any) => {
-        toast(errorHandler(error), { type: 'error' });
+      onError: (error) => {
+        toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
       },
       onSettled: () => {
         setSubmitting(false);

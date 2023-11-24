@@ -3,7 +3,6 @@ import type {
   HttpResponse,
   RequestParams,
   UserEntityDto,
-  CreateUserDtoDto,
 } from './Api';
 
 
@@ -22,6 +21,5 @@ export type {
   HttpResponse,
   RequestParams,
   UserEntityDto,
-  CreateUserDtoDto,
 };
 export * as Api from './Api';
