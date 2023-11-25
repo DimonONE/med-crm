@@ -30,7 +30,7 @@ export function LoginPage() {
       sessionModel.addUser(data.data as UserEntityDto, token);
 
       if (rolesData?.data) {
-        sessionModel.addRoles(rolesData.data as sessionModel.Roles);
+        sessionModel.addRoles(rolesData.data as Roles);
         navigate(PATH_PAGE.root);
       }
     }

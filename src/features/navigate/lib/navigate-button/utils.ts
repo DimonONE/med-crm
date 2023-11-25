@@ -1,8 +1,7 @@
-import { sessionModel } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 
 export const getNavigateList = (
-    checkUserRole: (role: keyof sessionModel.Roles) => boolean,
+    checkUserRole: (role: keyof Roles) => boolean,
   ) => {
   switch (true) {
     case checkUserRole('superAdmin'):

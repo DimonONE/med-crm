@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { sessionApi, sessionModel } from '~entities/session';
+import { sessionApi } from '~entities/session';
 import {
   Api,
   HttpResponse,
@@ -17,7 +17,7 @@ export const useCurrentUser = () =>
 export const useGetRoles = () =>
   useQuery({
     queryKey: sessionApi.sessionKeys.session.roles(),
-    queryFn: () => realworldApi.users.usersControllerGetRoles() as Promise<HttpResponse<void, sessionModel.Roles>>,
+    queryFn: () => realworldApi.users.usersControllerGetRoles() as Promise<HttpResponse<void, Roles>>,
   },
 );
 

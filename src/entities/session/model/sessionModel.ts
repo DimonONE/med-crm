@@ -2,12 +2,6 @@ import { StateCreator, createStore, useStore } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { UserEntityDto, realworldApi } from '~shared/api/realworld';
 
-export type Roles = {
-  superAdmin: string
-  doctor: string 
-  medChief: string
-  patient : string
-};
 
 type RoleUser = {
   role: keyof Roles, 
