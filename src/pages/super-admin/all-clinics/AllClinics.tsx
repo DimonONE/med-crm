@@ -40,7 +40,7 @@ export function AllClinics() {
     })).filter(Boolean)
     : [], [data]);
 
-  const clinicTableList = useMemo(() => data
+  const clinicList = useMemo(() => data
     ? data.map((user) => user.clinic &&
       createData(
         user.clinic.id,
@@ -61,13 +61,13 @@ export function AllClinics() {
           items={sidebarItemList}
           selectId={params?.clinicId}
         >
-          <Search filters='Ф.И.О.' handleChange={(value) => updateQueryParameters({ filter: value })} />
+          <Search isSearch filters='Все категории' handleChange={(value) => updateQueryParameters({ filter: value })} />
         </SidebarItemList>
         <div className='container'>
           {
             params.clinicId
-              ? <SelectClinic clinicId={Number(params.clinicId)} />
-              : <AllClinicTable tableList={clinicTableList} updateQueryParameters={updateQueryParameters} />
+              ? <SelectClinic clinicList={data} clinicId={Number(params.clinicId)} />
+              : <AllClinicTable tableList={clinicList} updateQueryParameters={updateQueryParameters} />
           }
         </div>
         <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>
