@@ -50,15 +50,27 @@ export function ClinicManagementForm({ clinicId }: Props) {
   ) => {
     try {
       if (clinicId && clinicInfo?.id) {
-        await update({ ...values, userId: clinicInfo.id });
+        await update({ ...values, userId: clinicInfo.id }, {
+          onSuccess: () => {
+            toast('Success!', { type: 'success' });
+            resetForm();
+          },
+          onError: (error) => {
+            toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
+          },
+        });
       } else {
-        await create(values);
+        await create(values, {
+          onSuccess: () => {
+            toast('Success!', { type: 'success' });
+            resetForm();
+          },
+          onError: (error) => {
+            toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
+          },
+        });
       }
 
-      // toast('Success!', { type: 'success' });
-      resetForm();
-    } catch (errors) {
-      toast(errorHandler(errors as HttpResponse<any, any>), { type: 'error' });
     } finally {
       setSubmitting(false);
     }
