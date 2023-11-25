@@ -142,9 +142,10 @@ textarea {
 
 // Scrollbar
 
+
 ::-webkit-scrollbar {
   display: block;
-  width: 0.2em;
+  width: var(--width-scrollbar);
   overflow: auto;
   height: 0.2em;
   background-color: #A1B6C1;
@@ -154,6 +155,7 @@ textarea {
   background: #0E5F8C;
   border-radius: 50%;
 }
+
 
 // remove all animations, transitions and smooth scroll for people that prefer not to see them
 @media (prefers-reduced-motion: reduce) {
@@ -172,7 +174,7 @@ textarea {
 }
 
 .container {
-  width: calc(100vw - var(--sidebar-width));
+  width: calc(100vw - var(--sidebar-width) - var(--width-scrollbar));
   height: calc(100vh - var(--header-height));
 }
 
