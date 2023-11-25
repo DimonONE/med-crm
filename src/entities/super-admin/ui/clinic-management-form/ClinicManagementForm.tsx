@@ -88,10 +88,10 @@ export function ClinicManagementForm({ clinicId }: Props) {
           <fieldset disabled={isSubmitting}>
             <fieldset className='full-width'>
               <div className='error-message'>
-                <ErrorMessage name="fullName" />
+                <ErrorMessage name="name" />
               </div>
               <Field
-                name="fullName"
+                name="name"
                 className='form-input'
                 type="text"
                 placeholder="Название клиники"
@@ -189,10 +189,10 @@ export function ClinicManagementForm({ clinicId }: Props) {
             </fieldset>
             <fieldset>
               <div className='error-message'>
-                <ErrorMessage name="name" />
+                <ErrorMessage name="fullName" />
               </div>
               <Field
-                name="name"
+                name="fullName"
                 className='form-input'
                 type="text"
                 placeholder="Имя главврача"
