@@ -1,22 +1,30 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import classNames from 'classnames';
 import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { Api, HttpResponse } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import { SelectField } from '~shared/ui/select-field';
-import { useAllTypeClinic, useCreateClinic } from '../../api/superAdminApi';
+import { useAllTypeClinic, useCreateClinic, useUpdateClinic } from '../../api/superAdminApi';
+import { deleteClinicInfo, useClinicInfo } from '../../model/superAdminModel';
 import s from './styles.module.scss';
 
 type Props = {
-  clinicId?: string
+  clinicId?: number
 };
 
+type ClinicUserDtoDto = Api.CreateClinicUserDtoDto | Api.UpdateClinicUserDtoDto;
+
 export function ClinicManagementForm({ clinicId }: Props) {
+  const navigate = useNavigate();
   const { data } = useAllTypeClinic();
-  const { mutate } = useCreateClinic();
+  const { mutate: create } = useCreateClinic();
+  const { mutate: update } = useUpdateClinic();
+  const clinicInfo = useClinicInfo();
 
   const typesClinic = useMemo(() => {
     const typePlaceholder = {
@@ -36,36 +44,55 @@ export function ClinicManagementForm({ clinicId }: Props) {
     return [typePlaceholder];
   }, [data]);
 
-  const onSubmit = (
-    values: Api.CreateClinicUserDtoDto,
-    { setSubmitting, resetForm }: FormikHelpers<Api.CreateClinicUserDtoDto>,
+  const onSubmit = async (
+    values: ClinicUserDtoDto,
+    { setSubmitting, resetForm }: FormikHelpers<ClinicUserDtoDto>,
   ) => {
+    try {
+      if (clinicId && clinicInfo?.id) {
+        await update({ ...values, userId: clinicInfo.id });
+      } else {
+        await create(values);
+      }
 
-    mutate(values, {
-      onSuccess: () => {
-        toast('Success!', { type: 'success' });
-        resetForm();
-      },
-      onError: (error) => {
-        toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
-      },
-      onSettled: () => {
-        setSubmitting(false);
-      },
-    });
+      // toast('Success!', { type: 'success' });
+      resetForm();
+    } catch (errors) {
+      toast(errorHandler(errors as HttpResponse<any, any>), { type: 'error' });
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  useEffect(() => {
+    if (!clinicId && clinicInfo) {
+      navigate(0);
+    }
+
+    // eslint-disable-next-line func-names
+    return function () {
+      deleteClinicInfo();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clinicInfo, clinicId]);
+
+
+  if (clinicId && !clinicInfo) {
+    return <Navigate to={PATH_PAGE.superAdmin.selectClinic(clinicId)} />;
+  }
 
   return (
     <Formik
       initialValues={{
-        email: '',
-        fullName: '',
-        password: '',
-        address: '',
-        country: '',
-        description: '',
-        name: '',
-        phone: '',
+        email: clinicInfo?.email ?? '',
+        fullName: clinicInfo?.fullName ?? '',
+        password: clinicInfo?.password ?? '',
+        address: clinicInfo?.clinic.address ?? '',
+        country: clinicInfo?.clinic.country ?? '',
+        description: clinicInfo?.clinic.description ?? '',
+        name: clinicInfo?.clinic.name ?? '',
+        phone: clinicInfo?.phone ?? '',
+        type: clinicInfo?.clinic.type?.name,
       }}
       validationSchema={object().shape({
         fullName: string().min(3).required(),
@@ -81,7 +108,7 @@ export function ClinicManagementForm({ clinicId }: Props) {
         }),
         phone: string().required(),
       })}
-      onSubmit={onSubmit}
+      onSubmit={(event, options) => onSubmit(event, options as FormikHelpers<ClinicUserDtoDto>)}
     >
       {({ isSubmitting }) => (
         <Form className={s.form}>
@@ -183,7 +210,7 @@ export function ClinicManagementForm({ clinicId }: Props) {
               <Field
                 name="password"
                 className='form-input'
-                type="text"
+                type={clinicInfo ? 'password' : 'text'}
                 placeholder="Пароль"
               />
             </fieldset>

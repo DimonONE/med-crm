@@ -8,6 +8,7 @@ import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
 import { Modal } from '~shared/ui/modal';
+import { addClinicInfo } from '../../model/superAdminModel';
 import s from './styles.module.scss';
 
 type Props = {
@@ -23,13 +24,18 @@ export function SelectClinic({ clinicId, clinicList }: Props) {
 
   const selectClinic = clinicList?.find(user => user.clinic?.id === clinicId);
 
-  const deleteClinic = () => {
-    setOpen(false);
-  };
-
   if (!selectClinic) {
     return null;
   }
+
+  const editClinic = () => {
+    addClinicInfo(selectClinic);
+    navigate(PATH_PAGE.superAdmin.editClinic(selectClinic.clinic.id));
+  };
+
+  const deleteClinic = () => {
+    setOpen(false);
+  };
 
   return (
     <div className={s.container}>
@@ -102,7 +108,7 @@ export function SelectClinic({ clinicId, clinicList }: Props) {
       <Button
         color='secondary'
         className={s.editButton}
-        onClick={() => navigate(PATH_PAGE.superAdmin.editClinic(selectClinic.id))}
+        onClick={editClinic}
       >
         Редактировать
       </Button>

@@ -80,10 +80,8 @@ export function useUpdateClinic() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.updateClinic(),
     mutationFn: async (clinic: Api.UpdateClinicUserDtoDto) => {
-    
       const response = await realworldApi.admin.usersAdminControllerUpdateClinic(clinic);
-
-      return response;
+      return response.data;
     },
   });
 }
