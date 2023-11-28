@@ -1,6 +1,7 @@
 export const PATH_PAGE = {
   root: '/',
   login: '/login',
+  logout: '/logout',
   register: '/register',
   superAdmin: {
     root: '/clinic',

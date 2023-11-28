@@ -58,23 +58,25 @@ export const sessionStore = createStore<SessionState>()(
     {
       name: 'session',
       onRehydrateStorage: () => (state) => {
-        if (state?.token) realworldApi.setSecurityData(state.token);
-        if (!state?.token) realworldApi.setSecurityData(null);
+        if (state?.token) {
+          realworldApi.setSecurityData(state.token);
+        } else
+          realworldApi.setSecurityData(null);
       },
     },
   ),
 );
 
 export const useAuth = () =>
-  useStore(sessionStore, (state) => !!state.user?.fullName);
+useStore(sessionStore, (state) => !!state.user?.fullName);
 
-  
+
 export const useCurrentUser = () =>
-  useStore(sessionStore, (state) => state.user);
-  
+useStore(sessionStore, (state) => state.user);
+
 export const addUser = (user: UserEntityDto, token: string) => sessionStore.getState().addUser(user, token);
 
-export const deleteToken = () => sessionStore.getState().deleteUser();
+export const logout = () => sessionStore.getState().deleteUser();
 
 export const saveTokenToStorage = (token: string) => {
   sessionStore.getState().addToken(token);

@@ -36,6 +36,7 @@ const AttendanceSchedulePage = Loadable(lazy(() => import('~pages/staff-attendan
 
 // Auth
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
+const LogoutPage = Loadable(lazy(() => import('~pages/logout')));
 const Page404 = Loadable(lazy(() => import('~pages/page-404')));
 // const ProfilePage = Loadable(lazy(() => import('~pages/profile')));
 const RegisterPage = Loadable(lazy(() => import('~pages/registration')));
@@ -124,13 +125,12 @@ export function Router() {
         {
           path: 'register',
           element: (
-            <AuthGuard isAuth={isAuth}>
-              <RegisterPage />
-            </AuthGuard>
+            <RegisterPage />
           ),
         },
       ],
     },
+    { path: '/logout', element: <LogoutPage /> },
     { path: '404', element: <Page404 /> },
     { path: '*', element: <Navigate to={!isAuth ? PATH_PAGE.login : PATH_PAGE.page404} replace /> },
   ]);

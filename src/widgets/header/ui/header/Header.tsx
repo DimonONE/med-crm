@@ -47,7 +47,7 @@ export function Header() {
             </span>
           </NavLink>
         </nav>
-        <Button onClick={() => sessionModel.deleteToken()}>Вийти</Button>
+        <Button onClick={() => sessionModel.logout()}>Вийти</Button>
       </div>
       <Outlet />
     </>
