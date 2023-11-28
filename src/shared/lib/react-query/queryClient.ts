@@ -7,7 +7,9 @@ export const queryClient = new QueryClient({
       retry: false,
       refetchOnWindowFocus: false,
       onError: (error: any) => {
-        if (window.location.pathname !== PATH_PAGE.login && error.status === 401  ) {
+        const isException = [PATH_PAGE.login, PATH_PAGE.register].includes(window.location.pathname);
+        
+        if ( !isException  && error.status === 401  ) {
           window.location.pathname = PATH_PAGE.logout;
         }
       },
