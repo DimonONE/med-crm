@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { useListOfUsers } from '~entities/super-admin';
 import { PATH_PAGE } from '~shared/lib/react-router';
+import { Search } from '~shared/ui/search';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
 import { ClinicApplications, ViewClinicApplication } from '~widgets/super-admin/';
 // eslint-disable-next-line no-restricted-imports
@@ -36,7 +37,9 @@ export function ClinicApplicationPage() {
   return (
     <div className="super-admin-page">
       <div className='d-flex'>
-        <SidebarItemList items={sidebarItemList} selectId={params.clinicId} />
+        <SidebarItemList items={sidebarItemList} selectId={params.clinicId} >
+          <Search filters='Заявки' />
+        </SidebarItemList>
         <div className='container'>
           {params.clinicId
             ? <ViewClinicApplication clinicList={data} clinicId={Number(params.clinicId)} />
