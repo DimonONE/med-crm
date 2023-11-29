@@ -157,10 +157,8 @@ export function ClinicManagementForm({ clinicId, isCreate }: Props) {
                   <div className='error-message'>
                     {props.form.errors?.type as string}
                   </div>
-                  {props.field.value}
                   <SelectField
                     {...props}
-                    value={props.field.value}
                     className='form-input'
                     selectOptions={typesClinic}
                   />
