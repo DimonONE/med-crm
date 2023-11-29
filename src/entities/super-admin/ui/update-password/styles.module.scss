@@ -1,0 +1,12 @@
+.editPassword {
+  display: flex;
+  align-items: center;
+}
+
+.submitPassword {
+  width: auto;
+  padding: 10px ;
+  margin: 0 0 0 10px;
+  background: var(--color-success);
+  font-size: 16px;
+}

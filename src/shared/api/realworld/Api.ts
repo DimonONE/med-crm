@@ -98,6 +98,7 @@ export interface ClinicEntityDto {
 }
 
 export interface UserEntityDto {
+  files: FileSchemaDto;
   id: string;
   fullName: string;
   email: string;
@@ -107,7 +108,17 @@ export interface UserEntityDto {
   role: RoleEntityDto;
   specialization?: string;
   createdBy: string;
+  /** @format date-time */
+  dateOfBirth: string;
+  tin: string;
+  passportIssuingAuthority: string;
+  passport: string;
+  notice: string;
+  sex: string;
   status: string;
+  country: string;
+  city: string;
+  address: string;
   patients: PatientEntityDto[];
   clinic: ClinicEntityDto;
   /** @format date-time */
@@ -175,8 +186,6 @@ export interface UpdateClinicUserDtoDto {
   fullName: string;
   /** Email of the user */
   email: string;
-  /** password */
-  password: string;
 }
 
 export interface CreateTypeClinicDtoDto {
@@ -194,6 +203,103 @@ export interface SwitchStatusUserDtoDto {
   id: string;
   /** Status */
   status: 'approval' | 'pending' | 'notapproval';
+}
+
+export interface SetNewPasswordDtoDto {
+  userId: string;
+  password: string;
+}
+
+export interface CreatePersonalDtoDto {
+  /** Full name of the patient */
+  fullName: string;
+  /** Patient passport id */
+  passport: string;
+  /** Patient country */
+  country: string;
+  /** Role for user */
+  role: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  /** Patient city */
+  city: string;
+  /** Patient address */
+  address: string;
+  /** Password of the user */
+  password: string;
+  /** passport issuing authority */
+  passportIssuingAuthority: string;
+  /** Personal sex */
+  sex: 'man' | 'woman';
+  /** Passport issued by */
+  tin: string;
+  /** Email of the patient */
+  email: string;
+  /** Phone of the patient */
+  phone: string;
+  /**
+   * Date of birth of the patient
+   * @format date-time
+   */
+  dateOfBirth: string;
+  /** Notice about patient */
+  notice?: string | null;
+  /**
+   * Patient photo
+   * @format binary
+   */
+  image?: File;
+  /**
+   * Patient document scan
+   * @format binary
+   */
+  files?: File;
+}
+
+export interface UpdatePersonalDtoDto {
+  /** id user */
+  id: string;
+  /** Full name of the personal */
+  fullName: string;
+  /** Personal passport id */
+  passport: string;
+  /** Personal country */
+  country: string;
+  /** Role for user */
+  role: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  /** Personal city */
+  city: string;
+  /** Personal address */
+  address: string;
+  /** passport issuing authority */
+  passportIssuingAuthority: string;
+  /** Personal sex */
+  sex: 'man' | 'woman';
+  /** Passport issued by */
+  tin: string;
+  /** Email of the personal */
+  email: string;
+  /** Phone of the personal */
+  phone: string;
+  /**
+   * Date of birth of the personal
+   * @format date-time
+   */
+  dateOfBirth: string;
+  /** Notice about personal */
+  notice?: string | null;
+  /** Notice about personal */
+  files: object[] | null;
+  /** Notice about personal */
+  image?: string | null;
+  /**
+   * Personal photo
+   * @format binary
+   */
+  newImage?: File;
+  /**
+   * Personal document scan
+   * @format binary
+   */
+  newFiles?: File;
 }
 
 export interface CreatePatientDtoDto {
@@ -757,6 +863,28 @@ export class Api<
      * No description
      *
      * @tags Admin
+     * @name UsersAdminControllerSetNewPassword
+     * @request POST:/admin/set-new-password
+     * @secure
+     */
+    usersAdminControllerSetNewPassword: (
+      data: SetNewPasswordDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<MessageResponseDto, any>({
+        path: `/admin/set-new-password`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
      * @name UsersAdminControllerGetListOfAviableUser
      * @request GET:/admin/listofusers
      * @secure
@@ -785,6 +913,83 @@ export class Api<
     ) =>
       this.request<UserEntityDto[], any>({
         path: `/admin/listofusers`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerCreatePersonal
+     * @request POST:/admin/create-personal
+     */
+    usersAdminControllerCreatePersonal: (
+      data: CreatePersonalDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserResponseEntityDto, PatientEntityDto>({
+        path: `/admin/create-personal`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerUpdatePersonal
+     * @request POST:/admin/update-personal
+     */
+    usersAdminControllerUpdatePersonal: (
+      data: UpdatePersonalDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserResponseEntityDto, PatientEntityDto>({
+        path: `/admin/update-personal`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Admin
+     * @name UsersAdminControllerGetAllPersonal
+     * @request GET:/admin/all-personal
+     * @secure
+     */
+    usersAdminControllerGetAllPersonal: (
+      query: {
+        /** Need count patients */
+        limit: number | null;
+        /** Page */
+        offset: number | null;
+        /**
+         * Sort by ASC or DESC
+         * @default "ASC"
+         */
+        sortBy: 'ASC' | 'DESC' | null;
+        /** Field to sort by  */
+        fieldSort: string | null;
+        /** Role user */
+        role: string | null;
+        /** Doctor name */
+        filter: string | null;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserEntityDto[], any>({
+        path: `/admin/all-personal`,
         method: 'GET',
         query: query,
         secure: true,

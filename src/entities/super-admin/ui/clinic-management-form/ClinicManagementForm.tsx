@@ -10,16 +10,18 @@ import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import { SelectField } from '~shared/ui/select-field';
 import { useAllTypeClinic, useCreateClinic, useUpdateClinic } from '../../api/superAdminApi';
-import { deleteClinicInfo, useClinicInfo } from '../../model/superAdminModel';
+import { addClinicInfo, deleteClinicInfo, useClinicInfo } from '../../model/superAdminModel';
+import { UpdatePasswordForm } from '../update-password/UpdatePasswordForm';
 import s from './styles.module.scss';
 
 type Props = {
   clinicId?: number
+  isCreate: boolean
 };
 
 type ClinicUserDtoDto = Api.CreateClinicUserDtoDto | Api.UpdateClinicUserDtoDto;
 
-export function ClinicManagementForm({ clinicId }: Props) {
+export function ClinicManagementForm({ clinicId, isCreate }: Props) {
   const navigate = useNavigate();
   const { data } = useAllTypeClinic();
   const { mutate: create } = useCreateClinic();
@@ -49,9 +51,10 @@ export function ClinicManagementForm({ clinicId }: Props) {
     { setSubmitting, resetForm }: FormikHelpers<ClinicUserDtoDto>,
   ) => {
     try {
-      if (clinicId && clinicInfo?.id) {
+      if (!isCreate && clinicInfo?.id) {
         await update({ ...values, userId: clinicInfo.id }, {
-          onSuccess: () => {
+          onSuccess: (updateData) => {
+            addClinicInfo(updateData);
             toast('Success!', { type: 'success' });
             resetForm();
           },
@@ -59,7 +62,7 @@ export function ClinicManagementForm({ clinicId }: Props) {
             toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
           },
         });
-      } else {
+      } else if ('password' in values) {
         await create(values, {
           onSuccess: () => {
             toast('Success!', { type: 'success' });
@@ -77,8 +80,9 @@ export function ClinicManagementForm({ clinicId }: Props) {
   };
 
   useEffect(() => {
-    if (!clinicId && clinicInfo) {
+    if (isCreate && clinicInfo) {
       navigate(0);
+      deleteClinicInfo();
     }
 
     // eslint-disable-next-line func-names
@@ -86,7 +90,7 @@ export function ClinicManagementForm({ clinicId }: Props) {
       deleteClinicInfo();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clinicInfo, clinicId]);
+  }, [clinicInfo, isCreate]);
 
 
   if (clinicId && !clinicInfo) {
@@ -98,7 +102,7 @@ export function ClinicManagementForm({ clinicId }: Props) {
       initialValues={{
         email: clinicInfo?.email ?? '',
         fullName: clinicInfo?.fullName ?? '',
-        password: clinicInfo?.password ?? '',
+        password: '',
         address: clinicInfo?.clinic.address ?? '',
         country: clinicInfo?.clinic.country ?? '',
         description: clinicInfo?.clinic.description ?? '',
@@ -110,7 +114,13 @@ export function ClinicManagementForm({ clinicId }: Props) {
         fullName: string().min(3).required(),
         name: string().min(3).required(),
         email: string().email().required(),
-        password: string().min(8).required(),
+        password: string().test({
+          name: 'password',
+          message: 'Password is required for creating',
+          test(value) {
+            return isCreate ? !!value : true;
+          },
+        }).min(8),
         type: string().test({
           name: 'type',
           message: 'Selected type',
@@ -147,8 +157,10 @@ export function ClinicManagementForm({ clinicId }: Props) {
                   <div className='error-message'>
                     {props.form.errors?.type as string}
                   </div>
+                  {props.field.value}
                   <SelectField
                     {...props}
+                    value={props.field.value}
                     className='form-input'
                     selectOptions={typesClinic}
                   />
@@ -215,17 +227,21 @@ export function ClinicManagementForm({ clinicId }: Props) {
                 placeholder="Почта"
               />
             </fieldset>
-            <fieldset>
-              <div className='error-message'>
-                <ErrorMessage name="password" />
-              </div>
-              <Field
-                name="password"
-                className='form-input'
-                type={clinicInfo ? 'password' : 'text'}
-                placeholder="Пароль"
-              />
-            </fieldset>
+            {
+              isCreate && (
+                <fieldset>
+                  <div className='error-message'>
+                    <ErrorMessage name="password" />
+                  </div>
+                  <Field
+                    name="password"
+                    className='form-input'
+                    type="text"
+                    placeholder="Пароль"
+                  />
+                </fieldset>
+              )
+            }
             <fieldset>
               <div className='error-message'>
                 <ErrorMessage name="fullName" />
@@ -252,6 +268,9 @@ export function ClinicManagementForm({ clinicId }: Props) {
               </div>
             </fieldset>
           </fieldset>
+
+          {clinicInfo?.id && <UpdatePasswordForm userId={clinicInfo.id} />}
+
           <Button
             className={classNames(s.submit, 'form-submit')}
             type="submit"

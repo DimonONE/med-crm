@@ -391,6 +391,40 @@
         ]
       }
     },
+    "/admin/set-new-password": {
+      "post": {
+        "operationId": "UsersAdminController_setNewPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetNewPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/admin/listofusers": {
       "get": {
         "operationId": "UsersAdminController_getListOfAviableUser",
@@ -452,6 +486,174 @@
             "required": true,
             "in": "query",
             "description": "Type clinic",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "required": true,
+            "in": "query",
+            "description": "Doctor name",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/admin/create-personal": {
+      "post": {
+        "operationId": "UsersAdminController_createPersonal",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePersonalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseEntity"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"]
+      }
+    },
+    "/admin/update-personal": {
+      "post": {
+        "operationId": "UsersAdminController_updatePersonal",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePersonalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseEntity"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Admin"]
+      }
+    },
+    "/admin/all-personal": {
+      "get": {
+        "operationId": "UsersAdminController_getAllPersonal",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "Need count patients",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "description": "Page",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "description": "Sort by ASC or DESC",
+            "schema": {
+              "nullable": true,
+              "default": "ASC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "fieldSort",
+            "required": true,
+            "in": "query",
+            "description": "Field to sort by ",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": true,
+            "in": "query",
+            "description": "Role user",
             "schema": {
               "nullable": true,
               "type": "string"
@@ -899,6 +1101,9 @@
       "UserEntity": {
         "type": "object",
         "properties": {
+          "files": {
+            "$ref": "#/components/schemas/FileSchema"
+          },
           "id": {
             "type": "string"
           },
@@ -926,7 +1131,35 @@
           "createdBy": {
             "type": "string"
           },
+          "dateOfBirth": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "tin": {
+            "type": "string"
+          },
+          "passportIssuingAuthority": {
+            "type": "string"
+          },
+          "passport": {
+            "type": "string"
+          },
+          "notice": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
           "status": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "address": {
             "type": "string"
           },
           "patients": {
@@ -948,6 +1181,7 @@
           }
         },
         "required": [
+          "files",
           "id",
           "fullName",
           "email",
@@ -956,7 +1190,16 @@
           "password",
           "role",
           "createdBy",
+          "dateOfBirth",
+          "tin",
+          "passportIssuingAuthority",
+          "passport",
+          "notice",
+          "sex",
           "status",
+          "country",
+          "city",
+          "address",
           "patients",
           "clinic",
           "createdAt",
@@ -1125,14 +1368,9 @@
             "type": "string",
             "description": "Email of the user",
             "nullable": false
-          },
-          "password": {
-            "type": "string",
-            "description": "password",
-            "nullable": false
           }
         },
-        "required": ["userId", "fullName", "email", "password"]
+        "required": ["userId", "fullName", "email"]
       },
       "CreateTypeClinicDto": {
         "type": "object",
@@ -1171,6 +1409,232 @@
           }
         },
         "required": ["id", "status"]
+      },
+      "SetNewPasswordDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["userId", "password"]
+      },
+      "CreatePersonalDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "description": "Full name of the patient",
+            "nullable": false
+          },
+          "passport": {
+            "type": "string",
+            "description": "Patient passport id",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Patient country",
+            "nullable": false
+          },
+          "role": {
+            "type": "string",
+            "enum": ["superAdmin", "medChief", "doctor", "patient"],
+            "description": "Role for user"
+          },
+          "city": {
+            "type": "string",
+            "description": "Patient city",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Patient address",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user"
+          },
+          "passportIssuingAuthority": {
+            "type": "string",
+            "description": "passport issuing authority",
+            "nullable": false
+          },
+          "sex": {
+            "enum": ["man", "woman"],
+            "type": "string",
+            "description": "Personal sex",
+            "nullable": false
+          },
+          "tin": {
+            "type": "string",
+            "description": "Passport issued by",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the patient",
+            "nullable": false
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the patient",
+            "nullable": false
+          },
+          "dateOfBirth": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of birth of the patient"
+          },
+          "notice": {
+            "type": "string",
+            "description": "Notice about patient",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "Patient photo"
+          },
+          "files": {
+            "type": "string",
+            "format": "binary",
+            "description": "Patient document scan"
+          }
+        },
+        "required": [
+          "fullName",
+          "passport",
+          "country",
+          "role",
+          "city",
+          "address",
+          "password",
+          "passportIssuingAuthority",
+          "sex",
+          "tin",
+          "email",
+          "phone",
+          "dateOfBirth"
+        ]
+      },
+      "UpdatePersonalDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id user"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "Full name of the personal",
+            "nullable": false
+          },
+          "passport": {
+            "type": "string",
+            "description": "Personal passport id",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Personal country",
+            "nullable": false
+          },
+          "role": {
+            "type": "string",
+            "enum": ["superAdmin", "medChief", "doctor", "patient"],
+            "description": "Role for user"
+          },
+          "city": {
+            "type": "string",
+            "description": "Personal city",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Personal address",
+            "nullable": false
+          },
+          "passportIssuingAuthority": {
+            "type": "string",
+            "description": "passport issuing authority",
+            "nullable": false
+          },
+          "sex": {
+            "enum": ["man", "woman"],
+            "type": "string",
+            "description": "Personal sex",
+            "nullable": false
+          },
+          "tin": {
+            "type": "string",
+            "description": "Passport issued by",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the personal",
+            "nullable": false
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the personal",
+            "nullable": false
+          },
+          "dateOfBirth": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of birth of the personal"
+          },
+          "notice": {
+            "type": "string",
+            "description": "Notice about personal",
+            "nullable": true
+          },
+          "files": {
+            "description": "Notice about personal",
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "image": {
+            "type": "string",
+            "description": "Notice about personal",
+            "nullable": true
+          },
+          "newImage": {
+            "type": "string",
+            "format": "binary",
+            "description": "Personal photo"
+          },
+          "newFiles": {
+            "type": "string",
+            "format": "binary",
+            "description": "Personal document scan"
+          }
+        },
+        "required": [
+          "id",
+          "fullName",
+          "passport",
+          "country",
+          "role",
+          "city",
+          "address",
+          "passportIssuingAuthority",
+          "sex",
+          "tin",
+          "email",
+          "phone",
+          "dateOfBirth",
+          "files"
+        ]
       },
       "CreatePatientDto": {
         "type": "object",

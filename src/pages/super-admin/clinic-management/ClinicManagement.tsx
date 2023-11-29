@@ -15,7 +15,10 @@ export function ClinicManagement() {
     <div className={s.root}>
       <BackButton title={params?.clinicId ? 'Редактировать клинику' : 'Добавить клинику'} />
       <div className={s.formContainer}>
-        <ClinicManagementForm clinicId={params?.clinicId ? Number(params.clinicId) : undefined} />
+        <ClinicManagementForm
+          clinicId={params?.clinicId ? Number(params.clinicId) : undefined}
+          isCreate={!params?.clinicId}
+        />
       </div>
     </div>
   );

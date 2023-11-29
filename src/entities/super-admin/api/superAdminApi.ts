@@ -22,6 +22,7 @@ export const superAdminKeys = {
     switchStatusClinic: () => [...superAdminKeys.superAdmin.root, 'switch-status-clinic'],
     listofusers: () => [...superAdminKeys.superAdmin.root, 'listofusers'],
     statusUser: () => [...superAdminKeys.superAdmin.root, 'status-user'],
+    newPassword: () => [...superAdminKeys.superAdmin.root, 'new-password'],
   },
 };
 
@@ -113,9 +114,17 @@ export function useStatusUser() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.statusUser(),
     mutationFn: async (params: Api.SwitchStatusUserDtoDto) => {
-    
       const response = await realworldApi.admin.usersAdminControllerStatusUser(params);
+      return response;
+    },
+  });
+}
 
+export function useNewPassword() {
+  return useMutation({
+    mutationKey: superAdminKeys.superAdmin.newPassword(),
+    mutationFn: async (params: Api.SetNewPasswordDtoDto) => {
+      const response = await realworldApi.admin.usersAdminControllerSetNewPassword(params);
       return response;
     },
   });
