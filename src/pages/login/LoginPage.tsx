@@ -19,18 +19,20 @@ interface LoginFormValues {
 
 export function LoginPage() {
   const { mutate } = useLoginUser();
-  const { refetch: refetchCurrentUser } = useCurrentUser();
-  const { data: rolesData } = useGetRoles();
+  const { refetch: refetchCurrentUser } = useCurrentUser({ enabled: false });
+  const { refetch: refetchGetRoles } = useGetRoles({ enabled: false });
   const navigate = useNavigate();
 
   const handleLoginSuccess = async (token: string) => {
     const { data } = await refetchCurrentUser();
 
     if (data?.data) {
+      const rolesData = await refetchGetRoles();
       sessionModel.addUser(data.data as UserEntityDto, token);
 
       if (rolesData?.data) {
-        sessionModel.addRoles(rolesData.data as Roles);
+        const roles: Roles = rolesData.data as unknown as Roles;
+        sessionModel.addRoles(roles);
         navigate(PATH_PAGE.root);
       }
     }

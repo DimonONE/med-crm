@@ -6,18 +6,23 @@ import {
   realworldApi,
 } from '~shared/api/realworld';
 
+type Options = {
+  enabled? : boolean
+};
 
-export const useCurrentUser = () =>
+export const useCurrentUser = (options?: Options) =>
   useQuery({
     queryKey: sessionApi.sessionKeys.session.currentUser(),
     queryFn: () => realworldApi.users.usersControllerGetсurentUser(),
+    enabled: options?.enabled,
   },
 );
 
-export const useGetRoles = () =>
+export const useGetRoles = (options?: Options) =>
   useQuery({
     queryKey: sessionApi.sessionKeys.session.roles(),
     queryFn: () => realworldApi.users.usersControllerGetRoles() as Promise<HttpResponse<void, Roles>>,
+    enabled: options?.enabled,
   },
 );
 
