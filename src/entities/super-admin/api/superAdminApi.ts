@@ -110,7 +110,7 @@ export function useSwitchStatusClinic() {
   });
 }
 
-export function useStatusUser() {
+export function useSwitchStatusUser() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.statusUser(),
     mutationFn: async (params: Api.SwitchStatusUserDtoDto) => {

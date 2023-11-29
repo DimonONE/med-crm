@@ -12,7 +12,7 @@ interface ModalProps {
   onSuccess: () => void;
   onClose: () => void;
   children: ReactNode;
-  type: 'info' | 'warn'
+  type: 'info' | 'warn' | 'warn-info'
 }
 
 export function Modal({ isOpen, onSuccess, onClose, type, children }: ModalProps) {
@@ -25,14 +25,14 @@ export function Modal({ isOpen, onSuccess, onClose, type, children }: ModalProps
           <CloseICO />
         </button>
         {type === 'info' && <InfoICO />}
-        {type === 'warn' && <WarnICO />}
+        {type === 'warn' || type === 'warn-info' && <WarnICO />}
         <div className={s.modalContent}>{children}</div>
         {
-          type === 'info'
+          type === 'info' || type === 'warn-info'
             ? <Button onClick={onSuccess} >Ок</Button>
             :
             <div className='d-flex'>
-              <Button className={s.button} onClick={onSuccess} >Да</Button>
+              <Button className={s.button} onClick={onSuccess}>Да</Button>
               <Button className={s.button} onClick={onClose}>Нет</Button>
             </div>
         }

@@ -9,6 +9,7 @@ export const PATH_PAGE = {
     addClinic: '/clinic/member',
     editClinic: (clinicId: number) => `/clinic/member/${clinicId}`,
     clinicApplications: '/clinic/applications',
+    selectApplications:(clinicId: number) => `/clinic/applications/${clinicId}`,
   },
   doctor: {
     root: '/doctor',

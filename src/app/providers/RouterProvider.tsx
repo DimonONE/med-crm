@@ -54,7 +54,7 @@ export function Router() {
           element: <AllClinicsPage />,
           index: true,
         },
-        { path: 'applications/:id?', element: <ClinicApplicationPage /> },
+        { path: 'applications/:clinicId?', element: <ClinicApplicationPage /> },
         { path: 'member', element: <EmployeeManagementPage /> },
         { path: 'member/:clinicId?', element: <EmployeeManagementPage /> },
       ],
