@@ -105,6 +105,7 @@ export function ClinicManagementForm({ clinicId, isCreate }: Props) {
         password: '',
         address: clinicInfo?.clinic.address ?? '',
         country: clinicInfo?.clinic.country ?? '',
+        city: clinicInfo?.clinic.city ?? '',
         description: clinicInfo?.clinic.description ?? '',
         name: clinicInfo?.clinic.name ?? '',
         phone: clinicInfo?.phone ?? '',
