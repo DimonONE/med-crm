@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { superAdminApi } from '~entities/super-admin';
-import { Api, HttpResponse } from '~shared/api/realworld';
+import { HttpResponse, UserEntityDto } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { Modal } from '~shared/ui/modal';
+import { useSwitchStatusUser } from '../../api/superAdminApi';
 import s from './styles.module.scss';
 
 type Props = {
-  clinicId: number
-  clinicList: Api.UserEntityDto[] | undefined
+  selectClinic: UserEntityDto | undefined
+  refetch: () => void
 };
 
 type ModalState = {
@@ -20,16 +21,17 @@ type ModalState = {
   type: 'close' | 'success' | null,
 };
 
-export function ViewClinicApplication({ clinicId, clinicList }: Props) {
-  const { mutate } = superAdminApi.useSwitchStatusUser();
+export function ViewClinicApplication({ selectClinic, refetch }: Props) {
+  const navigate = useNavigate();
+  const { mutate } = useSwitchStatusUser();
 
   const [isOpen, setOpen] = useState<ModalState>({
     open: false,
     type: null,
   });
-  const selectClinic = clinicList?.find(user => user.clinic?.id === clinicId);
 
   if (!selectClinic) {
+    navigate(PATH_PAGE.superAdmin.clinicApplications);
     return null;
   }
 
@@ -42,6 +44,11 @@ export function ViewClinicApplication({ clinicId, clinicList }: Props) {
         toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
       },
     });
+  };
+
+  const onSuccessModal = () => {
+    setOpen({ open: false, type: null });
+    refetch();
   };
 
   return (
@@ -89,7 +96,7 @@ export function ViewClinicApplication({ clinicId, clinicList }: Props) {
         </div>
         <div className={s.column}>
           <div className={s.title}>Город</div>
-          <span className={s.subTitle}>{null}</span>
+          <span className={s.subTitle}>{selectClinic.clinic.city}</span>
         </div>
       </div>
       <div className={s.row}>
@@ -118,8 +125,8 @@ export function ViewClinicApplication({ clinicId, clinicList }: Props) {
 
       <Modal
         isOpen={isOpen.open}
-        onSuccess={() => setOpen({ open: false, type: null })}
-        onClose={() => setOpen({ open: false, type: null })}
+        onSuccess={onSuccessModal}
+        onClose={onSuccessModal}
         type={isOpen.type === 'success' ? 'info' : 'warn-info'} >
         <div>
           {

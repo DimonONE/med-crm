@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 import s from './styles.module.scss';
 
@@ -8,10 +8,8 @@ interface SidebarProps {
   className?: string
 }
 
-export function Sidebar({ children, className }: SidebarProps) {
-  return (
-    <div className={classNames(s.sideBar, className)}>
-      {children}
-    </div>
-  );
-}
+export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(({ children, className, ...props }, ref) => (
+  <div ref={ref} className={classNames(s.sideBar, className)} {...props}>
+    {children}
+  </div>
+));
