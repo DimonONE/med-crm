@@ -1,3 +1,3 @@
-import { ClinicApplicationPage } from './ClinicApplications';
+import { ClinicApplicationPage } from './ui/ClinicApplications';
 
 export default ClinicApplicationPage;

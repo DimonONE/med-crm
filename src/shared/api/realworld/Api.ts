@@ -20,6 +20,8 @@ export interface CreateClinicUserDtoDto {
   address?: string;
   /** Country of the clinic */
   country?: string;
+  /** Country of the clinic */
+  city?: string;
   /** Type of the clinic (category) */
   type?: string;
   /** First name of the user */
@@ -84,6 +86,7 @@ export interface ClinicEntityDto {
   description: string;
   address: string;
   country: string;
+  city: string;
   phone: string;
   type: TypeClinicEntityDto;
   users: UserEntityDto[];
@@ -178,6 +181,8 @@ export interface UpdateClinicUserDtoDto {
   address?: string;
   /** Country of the clinic */
   country?: string;
+  /** Country of the clinic */
+  city?: string;
   /** Type of the clinic (category) */
   type?: string;
   /** First name of the user */

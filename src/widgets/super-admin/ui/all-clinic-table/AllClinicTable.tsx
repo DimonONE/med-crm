@@ -24,9 +24,9 @@ type ClinicRow = {
 type AllClinicTableProps = {
   clinicList: ClinicRow[]
   hasNextPage: boolean | undefined
-  handleFetchNextPage: (options?: FetchNextPageOptions | undefined) => Promise<InfiniteQueryObserverResult<UserEntityDto[]>>
   dataLength: number
   onScroll: () => void
+  handleFetchNextPage: (options?: FetchNextPageOptions | undefined) => Promise<InfiniteQueryObserverResult<UserEntityDto[]>>
   handleUpdateFilters: (newQuery: Partial<superAdminApi.ListOfUsersQuery>) => void
 };
 

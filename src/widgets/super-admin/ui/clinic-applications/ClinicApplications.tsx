@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { FetchNextPageOptions, InfiniteQueryObserverResult } from '@tanstack/react-query';
 import classNames from 'classnames';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useNavigate } from 'react-router-dom';
+import { superAdminApi } from '~entities/super-admin';
+import { UserEntityDto } from '~shared/api/realworld';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
-
 
 export type DataTable = {
   id: number,
@@ -14,36 +16,27 @@ export type DataTable = {
   link: string,
 };
 
-export function createData(
-  { id, createdAt, link }: DataTable,
-) {
-  return { id, createdAt, link };
-}
-
 type ClinicApplicationsProps = {
   applicationsList: DataTable[]
+  hasNextPage: boolean | undefined
+  dataLength: number
+  handleFetchNextPage: (options?: FetchNextPageOptions | undefined) => Promise<InfiniteQueryObserverResult<UserEntityDto[]>>
+  handleUpdateFilters: (newQuery: Partial<superAdminApi.ListOfUsersQuery>) => void
   onScroll: () => void
 };
-
 
 export const ClinicApplications = React.forwardRef<HTMLDivElement, ClinicApplicationsProps>((props, ref) => {
   const navigaete = useNavigate();
   const [fieldSort, setFieldSort] = useState<string | null>();
 
-  const { applicationsList, onScroll } = props;
-
+  const { applicationsList, hasNextPage, dataLength, handleUpdateFilters, handleFetchNextPage, onScroll } = props;
 
   const sortHandler = (sortKey: 'createdAt') => {
     setFieldSort(prev => prev === sortKey ? null : sortKey);
   };
 
-
-  const handleNext = () => {
-    // handleFetchNextPage({ pageParam: { fieldSort } });
-  };
-
   useEffect(() => {
-    // handleUpdateFilters({ fieldSort });
+    handleUpdateFilters({ fieldSort });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldSort]);
 
@@ -53,23 +46,24 @@ export const ClinicApplications = React.forwardRef<HTMLDivElement, ClinicApplica
         <Table sx={{ minWidth: 850 }} aria-label="simple table">
           <InfiniteScroll
             scrollableTarget="all-clinic-applications"
-            next={handleNext}
-            hasMore={false} // hasNextPage ||
+            next={handleFetchNextPage}
+            hasMore={hasNextPage || false}
             loader={<div>Loading...</div>}
-            dataLength={2} // dataLength
+            dataLength={dataLength}
           >
             <TableHead  >
               <TableRow className={s.tableHead} >
-                <TableCell sx={{ width: 200 }} className='table-head-cell'>
+                <TableCell sx={{ width: 300 }} className='table-head-cell'>
                   <span className='d-flex'>
                     ДАТА ПОДАЧИ
                     <button type='button' onClick={() => sortHandler('createdAt')}> <ArrowBottomICO /> </button>
                   </span>
                 </TableCell>
-                <TableCell sx={{ minWidth: 150 }} className='table-head-cell' />
+                <TableCell sx={{ width: '70%' }} className='table-head-cell' />
               </TableRow>
             </TableHead>
             <TableBody>
+              {!applicationsList.length ? 'List empty' : null}
               {applicationsList.map((row) => (
                 <TableRow
                   key={row.id}
@@ -87,7 +81,6 @@ export const ClinicApplications = React.forwardRef<HTMLDivElement, ClinicApplica
               ))}
             </TableBody>
           </InfiniteScroll>
-
         </Table>
       </TableContainer>
     </div>

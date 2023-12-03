@@ -26,7 +26,7 @@ export const superAdminKeys = {
   },
 };
 
-
+// Out of date version. Use the test useListOfUsersInfinity
 export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
   let sortQuery: ListOfUsersQuery = {
     limit: 10,
@@ -53,7 +53,6 @@ export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
   return { data, updateQueryParameters };
 }
 
-
 const fetchPage = async (query: ListOfUsersQuery) => {
   const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser({
     ...query,
@@ -61,12 +60,13 @@ const fetchPage = async (query: ListOfUsersQuery) => {
   return response.data;
 };
 
-export function useListOfUsersInfinity() {
+export function useListOfUsersInfinity(initialQuery?: Partial<ListOfUsersQuery>) {
   let defaultQuery: ListOfUsersQuery = {
-    offset: 1,
+    offset: 0,
     limit: 10,
     status: 'approval',
     sortBy: 'ASC',
+    ...initialQuery,
   } as ListOfUsersQuery;
 
   const { data, refetch, ...props } = useInfiniteQuery({

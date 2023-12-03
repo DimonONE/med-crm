@@ -867,6 +867,11 @@
             "description": "Country of the clinic",
             "nullable": false
           },
+          "city": {
+            "type": "string",
+            "description": "Country of the clinic",
+            "nullable": false
+          },
           "type": {
             "type": "string",
             "description": "Type of the clinic (category)",
@@ -1051,6 +1056,9 @@
           "country": {
             "type": "string"
           },
+          "city": {
+            "type": "string"
+          },
           "phone": {
             "type": "string"
           },
@@ -1088,6 +1096,7 @@
           "description",
           "address",
           "country",
+          "city",
           "phone",
           "type",
           "users",
@@ -1345,6 +1354,11 @@
             "nullable": false
           },
           "country": {
+            "type": "string",
+            "description": "Country of the clinic",
+            "nullable": false
+          },
+          "city": {
             "type": "string",
             "description": "Country of the clinic",
             "nullable": false

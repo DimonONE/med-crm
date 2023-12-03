@@ -1,18 +1,18 @@
 import { InfiniteData } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { UserEntityDto } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
 
-function createData(
-  id: string | number,
+export type DataTable = {
+  id: number,
   createdAt: string,
-  city: string,
-  address: string,
-  phone: string,
-  fullName: string,
-  dateOfBirth: string,
-  status: boolean,
+  link: string,
+};
+
+export function createData(
+  { id, createdAt, link }: DataTable,
 ) {
-  return { id, createdAt, city, address, phone, fullName, dateOfBirth, status };
+  return { id, createdAt, link };
 }
 
 export function generateClinicList(data: InfiniteData<UserEntityDto[]> | undefined): any[] {
@@ -21,16 +21,11 @@ export function generateClinicList(data: InfiniteData<UserEntityDto[]> | undefin
   return data.pages
     .flatMap((page) =>
       page.map((user) => user.clinic &&
-        createData(
-          user.clinic.id,
-          user.clinic.createdAt,
-          user.clinic.country,
-          user.clinic.address,
-          user.clinic.phone,
-          user.clinic.name,
-          user.clinic.endPaidDate,
-          user.clinic.status,
-        ),
+      createData({
+        id: user.clinic.id,
+        createdAt: dayjs(user.clinic.createdAt).format('DD.MM.YYYY'),
+        link: `${PATH_PAGE.superAdmin.selectApplications(user.clinic.id)}`,
+      }),
       ),
     )
     .filter(Boolean);
@@ -46,9 +41,10 @@ export function generateSidebarItemList(data: InfiniteData<UserEntityDto[]> | un
           id: user.clinic.id.toString(),
           title: user.clinic.name,
           subTitle: `Код клиники: ${user.clinic?.id}`,
-          link: PATH_PAGE.superAdmin.selectClinic(user.clinic.id),
+          link:  PATH_PAGE.superAdmin.selectApplications(user.clinic.id),
         },
       ),
     )
     .filter(Boolean);
 }
+

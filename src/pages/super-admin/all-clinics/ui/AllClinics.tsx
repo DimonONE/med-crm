@@ -7,8 +7,8 @@ import { Button } from '~shared/ui/button';
 import { Search } from '~shared/ui/search';
 import { handleScroll } from '~shared/utils';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
-import { AllClinicTable } from '~widgets/super-admin/';
-import { filterObject, generateClinicList, generateSidebarItemList, selectClinic } from './lib/utils';
+import { AllClinicTable, dataLength, filterObject, selectClinic } from '~widgets/super-admin/';
+import { generateClinicList, generateSidebarItemList } from '../lib/utils';
 
 type Params = {
   clinicId?: string
@@ -21,8 +21,6 @@ export function AllClinics() {
   const navigate = useNavigate();
   const { data, fetchNextPage, updateQueryParameters, hasNextPage } = superAdminApi.useListOfUsersInfinity();
   const [filters, setFilters] = useState<Partial<superAdminApi.ListOfUsersQuery> | null>(null);
-
-  const dataLength = data?.pages.reduce((total, page) => total + page.length, 0) || 0;
 
   const sidebarItemList = useMemo(() => generateSidebarItemList(data), [data]);
   const clinicList = useMemo(() => generateClinicList(data), [data]);
@@ -63,7 +61,7 @@ export function AllClinics() {
                 handleUpdateFilters={(filter) => {
                   setFilters(prev => ({ ...prev, ...filter }));
                 }}
-                dataLength={dataLength}
+                dataLength={dataLength(data)}
                 onScroll={handleScroll(block2Ref, block1Ref)}
               />
               : <SelectClinic selectClinic={selectedClinic} />

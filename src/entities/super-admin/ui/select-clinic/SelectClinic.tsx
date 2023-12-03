@@ -89,7 +89,7 @@ export function SelectClinic({ selectClinic }: Props) {
         </div>
         <div className={s.column}>
           <div className={s.title}>Город</div>
-          <span className={s.subTitle}>{null}</span>
+          <span className={s.subTitle}>{selectClinic.clinic.city}</span>
         </div>
       </div>
       <div className={s.row}>
