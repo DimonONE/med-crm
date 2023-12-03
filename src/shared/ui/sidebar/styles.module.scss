@@ -1,7 +1,10 @@
 .sideBar {
   position: relative;
   width: var(--sidebar-width);
-  min-height: calc(100vh - var(--header-height));
+
+  max-height: calc(100vh - var(--header-height));
+  overflow-y: auto; 
+
   border-right: 1px solid #A1B6C1;
 }
 

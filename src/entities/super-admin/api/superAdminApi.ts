@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { QueryFunctionContext, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { Api, realworldApi } from '~shared/api/realworld';
 
 export type ListOfUsersQuery = {
@@ -51,6 +51,45 @@ export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
   };
 
   return { data, updateQueryParameters };
+}
+
+export function useListOfUsersInfinity(query: Partial<ListOfUsersQuery>) {
+  let defaultQuery: ListOfUsersQuery = {
+    limit: 10,
+    status: 'approval',
+    sortBy: 'ASC',
+    offset: 1,
+    ...query,
+  } as ListOfUsersQuery;
+
+  const { data, refetch, ...props } = useInfiniteQuery({
+    queryKey: [superAdminKeys.superAdmin.listofusers(), defaultQuery ],
+    queryFn: async ({ pageParam }: QueryFunctionContext) => {
+      const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser({
+        ...defaultQuery,
+        ...pageParam,
+      });
+      return response.data;
+    },
+    getNextPageParam: async (lastPage, pages) => {
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+     
+      console.log('pages', pages);
+      
+      return { offset: pages.length + 1 };
+    },
+  });
+
+  const updateQueryParameters = async (newQuery: Partial<ListOfUsersQuery>) => {
+    defaultQuery = { ...defaultQuery, ...newQuery };
+    refetch({
+      queryKey: [superAdminKeys.superAdmin.listofusers(), defaultQuery],
+    });
+  };
+
+  return { data,  updateQueryParameters, refetch,  ...props };
 }
 
 export function useAllTypeClinic() {

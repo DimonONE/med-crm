@@ -141,19 +141,8 @@ textarea {
 }
 
 // Scrollbar
-
-
 ::-webkit-scrollbar {
-  display: block;
-  width: var(--width-scrollbar);
-  overflow: auto;
-  height: 0.2em;
-  background-color: #A1B6C1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #0E5F8C;
-  border-radius: 50%;
+  display: none;
 }
 
 
@@ -174,8 +163,31 @@ textarea {
 }
 
 .container {
-  width: calc(100vw - var(--sidebar-width) - var(--width-scrollbar));
-  height: calc(100vh - var(--header-height));
+  width: calc(100vw - var(--sidebar-width));
+  // height: calc(100vh - var(--header-height));
+  // overflow-x: scroll;
+
+  max-height: calc(100vh - var(--header-height));
+  overflow-x: scroll;
+  overflow-y: auto; 
+
+  ::-webkit-scrollbar {
+    display: block;
+    width: var(--width-scrollbar);
+    overflow: auto;
+    height: 0;
+    background-color: #A1B6C1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #0E5F8C;
+    border-radius: 50%;
+  }
+
+  .scrollable-content {
+    max-height: 100%;
+    overflow-y: auto;
+  }
 }
 
 .btn-primary {

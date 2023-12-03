@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import { Api } from '~shared/api/realworld';
+import { UserEntityDto } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
@@ -12,19 +12,17 @@ import { addClinicInfo } from '../../model/superAdminModel';
 import s from './styles.module.scss';
 
 type Props = {
-  clinicId: number
-  clinicList: Api.UserEntityDto[] | undefined
+  selectClinic: UserEntityDto | undefined
 };
 
-export function SelectClinic({ clinicId, clinicList }: Props) {
+export function SelectClinic({ selectClinic }: Props) {
   const navigate = useNavigate();
 
   const [isOpen, setOpen] = useState(false);
   const [, setPaidTo] = useState('');
 
-  const selectClinic = clinicList?.find(user => user.clinic?.id === clinicId);
-
   if (!selectClinic) {
+    navigate(PATH_PAGE.superAdmin.root);
     return null;
   }
 

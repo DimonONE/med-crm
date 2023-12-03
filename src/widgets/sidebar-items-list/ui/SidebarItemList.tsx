@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import classNames from 'classnames';
 import ArrowRightICO from '~shared/svg/arrowRight.svg';
 import { ItemContainer } from '~shared/ui/item-container';
@@ -12,16 +12,25 @@ type ItemList = {
   link?: string
 };
 
-type Props = {
-  selectId: string | undefined
-  items: ItemList[]
+// type Props = {
+//   selectId: string | undefined
+//   items: ItemList[]
+//   children?: ReactElement
+
+//   ref?: React.RefObject<HTMLInputElement>
+//   onScroll?: () => void
+// };
+
+interface SidebarItemListProps {
   children?: ReactElement
-};
+  selectId: string | undefined;
+  items: ItemList[];
+  onScroll?: () => void;
+}
 
-export function SidebarItemList({ selectId, items, children }: Props) {
-
-  return (
-    <Sidebar>
+export const SidebarItemList = React.forwardRef<HTMLDivElement, SidebarItemListProps>(
+  ({ selectId, items, children, onScroll }, ref) => (
+    <Sidebar {...{ ref, onScroll }}>
       {children}
       {
         items.map(({ id, title, subTitle, link }) => (
@@ -41,5 +50,5 @@ export function SidebarItemList({ selectId, items, children }: Props) {
         ))
       }
     </Sidebar>
-  );
-}
+  ),
+);

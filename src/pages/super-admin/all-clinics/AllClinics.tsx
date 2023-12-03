@@ -1,25 +1,27 @@
-import { useMemo } from 'react';
-import dayjs from 'dayjs';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { FetchNextPageOptions, InfiniteData } from '@tanstack/react-query';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SelectClinic, useListOfUsers } from '~entities/super-admin';
+import { SelectClinic, superAdminApi } from '~entities/super-admin';
+import { UserEntityDto } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import { Search } from '~shared/ui/search';
+import { handleScroll } from '~shared/utils';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
 import { AllClinicTable } from '~widgets/super-admin/';
 
 function createData(
   id: string | number,
-  date: string,
+  createdAt: string,
   city: string,
-  street: string,
+  address: string,
   phone: string,
   fullName: string,
-  dateOff: string,
+  dateOfBirth: string,
   status: boolean,
 ) {
-  return { id, date, city, street, phone, fullName, dateOff, status };
+  return { id, createdAt, city, address, phone, fullName, dateOfBirth, status };
 }
 
 type Params = {
@@ -29,45 +31,131 @@ type Params = {
 export function AllClinics() {
   const params = useParams<Params>();
   const navigate = useNavigate();
-  const { data, updateQueryParameters } = useListOfUsers({});
+  const { data, fetchNextPage, hasNextPage, updateQueryParameters } = superAdminApi.useListOfUsersInfinity({});
+  const [filters, setFilters] = useState<Partial<superAdminApi.ListOfUsersQuery> | null>(null);
 
-  const sidebarItemList = useMemo(() => data
-    ? data.map((user) => user.clinic && ({
-      id: user.clinic.id.toString(),
-      title: user.clinic.name,
-      subTitle: `Код клиники: ${user.clinic?.id}`,
-      link: PATH_PAGE.superAdmin.selectClinic(user.clinic.id),
-    })).filter(Boolean)
-    : [], [data]);
+  const block1Ref = useRef<HTMLInputElement>(null);
+  const block2Ref = useRef<HTMLInputElement>(null);
 
-  const clinicList = useMemo(() => data
-    ? data.map((user) => user.clinic &&
-      createData(
-        user.clinic.id,
-        dayjs(user.clinic.createdAt).format('DD.MM.YYYY'),
-        user.clinic.country,
-        user.clinic.address,
-        user.clinic.phone,
-        user.clinic.name,
-        user.clinic.endPaidDate,
-        user.clinic.status,
-      )).filter(Boolean)
-    : [], [data]);
+  const dataLength = data?.pages.reduce((total, page) => total + page.length, 0) || 0;
+
+  const sidebarItemList = useMemo(() => {
+    if (!data?.pages.length) return [];
+
+    return data.pages
+      .flatMap((page) =>
+        page.map((user) =>
+          user.clinic && {
+            id: user.clinic.id.toString(),
+            title: user.clinic.name,
+            subTitle: `Код клиники: ${user.clinic?.id}`,
+            link: PATH_PAGE.superAdmin.selectClinic(user.clinic.id),
+          },
+        ),
+      )
+      .filter(Boolean);
+  }, [data]);
+
+  const clinicList = useMemo(() => {
+    if (!data?.pages.length) return [];
+
+    return data.pages
+      .flatMap((page) =>
+        page.map((user) => user.clinic &&
+          createData(
+            user.clinic.id,
+            user.clinic.createdAt,
+            user.clinic.country,
+            user.clinic.address,
+            user.clinic.phone,
+            user.clinic.name,
+            user.clinic.endPaidDate,
+            user.clinic.status,
+          ),
+        ),
+      )
+      .filter(Boolean);
+  }, [data]);
+
+
+  const selectClinic = (
+    dataUser: InfiniteData<UserEntityDto[]> | undefined,
+    clinicId: number,
+  ): UserEntityDto | undefined => dataUser?.pages
+    .flatMap((page) =>
+      page.map((user) => user),
+    ).find(user => user.clinic?.id === clinicId);
+
+
+
+  const filterObject = (obj: Partial<superAdminApi.ListOfUsersQuery>) => Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => ![undefined, null, ''].includes(value?.toString())),
+  ) as superAdminApi.ListOfUsersQuery;
+
+  const handleNext = async (options?: FetchNextPageOptions | undefined) => {
+    const newQuery = filters ? filterObject(filters) : {};
+    const newOptions = options?.pageParam ? filterObject({ ...options.pageParam }) : {};
+
+    console.log('test', {
+      pageParam: {
+        ...newQuery, offset: dataLength,
+        ...newOptions,
+      },
+    });
+
+
+    return fetchNextPage({
+      pageParam: {
+        ...newQuery, offset: dataLength,
+        ...newOptions,
+      },
+    });
+  };
+
+
+  useEffect(() => {
+    const newQuery = filters ? filterObject(filters) : {};
+
+    updateQueryParameters({ ...newQuery, offset: 1 });
+  }, [filters]);
+
+  useEffect(() => {
+    handleScroll(block1Ref, block2Ref)();
+  }, [params]);
+
+
+  console.log('data', data);
+  // console.log('clinicList', clinicList);
 
   return (
-    <div className="super-admin-page">
+    (<div className="super-admin-page">
       <div className='d-flex'>
         <SidebarItemList
+          ref={block1Ref}
           items={sidebarItemList}
           selectId={params?.clinicId}
+          onScroll={handleScroll(block1Ref, block2Ref)}
         >
-          <Search isSearch filters='Все категории' handleChange={(value) => updateQueryParameters({ filter: value })} />
+          <Search isSearch filters='Все категории' handleChange={(value) => {
+            setFilters(prev => ({ ...prev, filter: value }));
+          }}
+          />
         </SidebarItemList>
         <div className='container'>
           {
-            params.clinicId
-              ? <SelectClinic clinicList={data} clinicId={Number(params.clinicId)} />
-              : <AllClinicTable tableList={clinicList} updateQueryParameters={updateQueryParameters} />
+            !params.clinicId
+              ? <AllClinicTable
+                ref={block2Ref}
+                clinicList={clinicList}
+                hasNextPage={hasNextPage}
+                handleFetchNextPage={handleNext}
+                handleUpdateFilters={(filter) => {
+                  setFilters(prev => ({ ...prev, ...filter }));
+                }}
+                dataLength={dataLength}
+                onScroll={handleScroll(block2Ref, block1Ref)}
+              />
+              : <SelectClinic selectClinic={selectClinic(data, Number(params.clinicId))} />
           }
         </div>
         <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.superAdmin.addClinic)}>
@@ -75,6 +163,6 @@ export function AllClinics() {
           Добавить клинику
         </Button>
       </div>
-    </div>
+    </div>)
   );
 }
