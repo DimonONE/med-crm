@@ -31,23 +31,17 @@ type AllClinicTableProps = {
 };
 
 export const AllClinicTable = React.forwardRef<HTMLDivElement, AllClinicTableProps>((props, ref) => {
-  const { clinicList, dataLength, hasNextPage, handleUpdateFilters, handleFetchNextPage, onScroll } = props;
-
   const [fieldSort, setFieldSort] = useState<string | null>();
+  const { clinicList, dataLength, hasNextPage, handleUpdateFilters, handleFetchNextPage, onScroll } = props;
 
   const sortHandler = (sortKey: 'createdAt' | 'country' | 'endPaidDate') => {
     setFieldSort(prev => prev === sortKey ? null : sortKey);
   };
 
-  const handleNext = () => {
-    handleFetchNextPage({ pageParam: { fieldSort } });
-  };
-
   useEffect(() => {
-    handleUpdateFilters({ fieldSort, offset: 0 });
+    handleUpdateFilters({ fieldSort });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldSort]);
-
 
   if (!clinicList.length) {
     return null;
@@ -59,7 +53,7 @@ export const AllClinicTable = React.forwardRef<HTMLDivElement, AllClinicTablePro
         <Table sx={{ minWidth: 850 }} aria-label="simple table" >
           <InfiniteScroll
             scrollableTarget="all-clinic-table"
-            next={handleNext}
+            next={handleFetchNextPage}
             hasMore={hasNextPage || false}
             loader={<div>Loading...</div>}
             dataLength={dataLength}

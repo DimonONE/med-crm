@@ -53,82 +53,44 @@ export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
   return { data, updateQueryParameters };
 }
 
-// export function useListOfUsersInfinity(query: Partial<ListOfUsersQuery>) {
-//   let defaultQuery: ListOfUsersQuery = {
-//     limit: 10,
-//     status: 'approval',
-//     sortBy: 'ASC',
-//     offset: 1,
-//     ...query,
-//   } as ListOfUsersQuery;
 
-//   const { data, refetch, ...props } = useInfiniteQuery({
-//     queryKey: [superAdminKeys.superAdmin.listofusers(), defaultQuery ],
-//     queryFn: async ({ pageParam }: QueryFunctionContext) => {
-//       const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser({
-//         ...defaultQuery,
-//         ...pageParam,
-//       });
-//       return response.data;
-//     },
-//     getNextPageParam: async (lastPage, pages) => {
-//       if (lastPage.length === 0) {
-//         return undefined;
-//       }
-     
-//       return { offset: pages.length + 1 };
-//     },
-//   });
+const fetchPage = async (query: ListOfUsersQuery) => {
+  const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser({
+    ...query,
+  });
+  return response.data;
+};
 
-//   const updateQueryParameters = async (newQuery: Partial<ListOfUsersQuery>) => {
-//     defaultQuery = { ...defaultQuery, ...newQuery  };
-   
-//     refetch({
-//       queryKey: [superAdminKeys.superAdmin.listofusers(), defaultQuery],
-//     });
-//   };
-
-//   return { data,  updateQueryParameters, refetch,  ...props };
-// }
-
-
-export function useListOfUsersInfinity(query: Partial<ListOfUsersQuery>) {
+export function useListOfUsersInfinity() {
   let defaultQuery: ListOfUsersQuery = {
+    offset: 1,
     limit: 10,
     status: 'approval',
     sortBy: 'ASC',
-    offset: 1,
-    ...query,
   } as ListOfUsersQuery;
 
   const { data, refetch, ...props } = useInfiniteQuery({
-    queryKey: [superAdminKeys.superAdmin.listofusers(), defaultQuery ],
-    queryFn: async ({ pageParam }: QueryFunctionContext) => {
-      const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser({
-        ...defaultQuery,
-        ...pageParam,
-      });
-      return response.data;
-    },
-    getNextPageParam: async (lastPage, pages) => {
+    queryKey: superAdminKeys.superAdmin.listofusers(),
+    queryFn: ({ pageParam }: QueryFunctionContext) => fetchPage({ ...defaultQuery, ...pageParam  }),
+    getNextPageParam: (lastPage, allPages) => {
+      const dataLength = allPages.reduce((total, page) => total + page.length, 0) || 0;
+
       if (lastPage.length === 0) {
         return undefined;
       }
-     
-      return { offset: pages.length + 1 };
+            
+      return { offset: dataLength + 1 };
     },
-  });
+ });
 
-  const updateQueryParameters = async (newQuery: Partial<ListOfUsersQuery>) => {
+   const updateQueryParameters = async (newQuery: Partial<ListOfUsersQuery>) => {
     defaultQuery = { ...defaultQuery, ...newQuery  };
    
     refetch({
       queryKey: [superAdminKeys.superAdmin.listofusers(), defaultQuery],
-      exact: true,
     });
   };
-
-  return { data,  updateQueryParameters, refetch,  ...props };
+ return { data, refetch, updateQueryParameters, ...props };
 }
 
 
