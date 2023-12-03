@@ -30,7 +30,6 @@ export function ClinicApplicationPage() {
     handleScroll(block1Ref, block2Ref)();
   }, [params]);
 
-
   return (
     <div className="super-admin-page">
       <div className='d-flex'>
