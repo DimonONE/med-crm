@@ -561,7 +561,12 @@
             }
           }
         },
-        "tags": ["Admin"]
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/admin/update-personal": {
@@ -600,7 +605,12 @@
             }
           }
         },
-        "tags": ["Admin"]
+        "tags": ["Admin"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     },
     "/admin/all-personal": {

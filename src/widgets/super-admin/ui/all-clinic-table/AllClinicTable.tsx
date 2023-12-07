@@ -20,7 +20,6 @@ type ClinicRow = {
   status: boolean;
 };
 
-
 type AllClinicTableProps = {
   clinicList: ClinicRow[]
   hasNextPage: boolean | undefined

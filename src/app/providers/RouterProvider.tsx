@@ -99,8 +99,8 @@ export function Router() {
               element: <PersonnelHomePage />,
               index: true,
             },
-            { path: 'details/:userId', element: <PersonnelDetailsPage /> },
-            { path: 'member/:personalId?', element: <PersonnelManagementPage /> },
+            { path: 'details/:personnelId', element: <PersonnelDetailsPage /> },
+            { path: 'member/:personnelId?', element: <PersonnelManagementPage /> },
           ],
         },
         {

@@ -6,8 +6,9 @@ import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import { Search } from '~shared/ui/search';
 import { handleScroll } from '~shared/utils';
+import { dataLength, filterObject } from '~shared/utils/helpers';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
-import { AllClinicTable, dataLength, filterObject, selectClinic } from '~widgets/super-admin/';
+import { AllClinicTable, selectClinic } from '~widgets/super-admin/';
 import { generateClinicList, generateSidebarItemList } from '../lib/utils';
 
 type Params = {

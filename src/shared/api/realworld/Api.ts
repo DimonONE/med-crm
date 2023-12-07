@@ -931,6 +931,7 @@ export class Api<
      * @tags Admin
      * @name UsersAdminControllerCreatePersonal
      * @request POST:/admin/create-personal
+     * @secure
      */
     usersAdminControllerCreatePersonal: (
       data: CreatePersonalDtoDto,
@@ -940,6 +941,7 @@ export class Api<
         path: `/admin/create-personal`,
         method: 'POST',
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,
@@ -951,6 +953,7 @@ export class Api<
      * @tags Admin
      * @name UsersAdminControllerUpdatePersonal
      * @request POST:/admin/update-personal
+     * @secure
      */
     usersAdminControllerUpdatePersonal: (
       data: UpdatePersonalDtoDto,
@@ -960,6 +963,7 @@ export class Api<
         path: `/admin/update-personal`,
         method: 'POST',
         body: data,
+        secure: true,
         type: ContentType.Json,
         format: 'json',
         ...params,

@@ -5,10 +5,13 @@ import s from './styles.module.scss';
 import FiledICO from './svg/filed-img.svg';
 
 type LoadImageProps = {
+  defaultImage?: string
+  className?: string
   onChange?: (file: File) => void
+  isLoad?: boolean
 };
 
-export function LoadImage({ onChange }: LoadImageProps) {
+export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadImageProps) {
   const [image, setImage] = useState<File | null>(null);
 
   const handleChange = (files: FileValues) => {
@@ -19,19 +22,23 @@ export function LoadImage({ onChange }: LoadImageProps) {
   };
 
   return (
-    <div className={classNames(s.root)}>
-      {image ? (
-        <img src={URL.createObjectURL(image)} alt="user" />
+    <div className={classNames(s.root, className)}>
+      {image || defaultImage ? (
+        <img src={image ? URL.createObjectURL(image) : defaultImage} alt="user" />
       ) : <FiledICO />}
-      <FileLoader
-        id="button-file-img"
-        className={s.button}
-        title='Загрузить фото'
-        onChange={handleChange}
-        accept='png'
-        multiple={false}
-        hiddenFileInfo
-      />
+      {
+        isLoad && (
+          <FileLoader
+            id="button-file-img"
+            className={s.button}
+            title='Загрузить фото'
+            onChange={handleChange}
+            accept='png'
+            multiple={false}
+            hiddenFileInfo
+          />
+        )
+      }
     </div>
   );
 }

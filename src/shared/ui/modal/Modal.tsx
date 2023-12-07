@@ -25,7 +25,7 @@ export function Modal({ isOpen, onSuccess, onClose, type, children }: ModalProps
           <CloseICO />
         </button>
         {type === 'info' && <InfoICO />}
-        {type === 'warn' || type === 'warn-info' && <WarnICO />}
+        {(type === 'warn' || type === 'warn-info') && <WarnICO />}
         <div className={s.modalContent}>{children}</div>
         {
           type === 'info' || type === 'warn-info'

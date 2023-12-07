@@ -53,7 +53,7 @@ export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
   return { data, updateQueryParameters };
 }
 
-const fetchPage = async (query: ListOfUsersQuery) => {
+const fetchListOfUsersPage = async (query: ListOfUsersQuery) => {
   const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser({
     ...query,
   });
@@ -71,7 +71,7 @@ export function useListOfUsersInfinity(initialQuery?: Partial<ListOfUsersQuery>)
 
   const { data, refetch, ...props } = useInfiniteQuery({
     queryKey: superAdminKeys.superAdmin.listofusers(),
-    queryFn: ({ pageParam }: QueryFunctionContext) => fetchPage({ ...defaultQuery, ...pageParam  }),
+    queryFn: ({ pageParam }: QueryFunctionContext) => fetchListOfUsersPage({ ...defaultQuery, ...pageParam  }),
     getNextPageParam: (lastPage, allPages) => {
       const dataLength = allPages.reduce((total, page) => total + page.length, 0) || 0;
 
@@ -139,7 +139,6 @@ export function useAddTypeClinic() {
     },
   });
 }
-
 
 export function useSwitchStatusClinic() {
   return useMutation({

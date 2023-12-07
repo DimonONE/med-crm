@@ -3,8 +3,9 @@ import { useParams } from 'react-router-dom';
 import { ViewClinicApplication, superAdminApi } from '~entities/super-admin';
 import { Search } from '~shared/ui/search';
 import { handleScroll } from '~shared/utils';
+import { dataLength, filterObject } from '~shared/utils/helpers';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
-import { ClinicApplications, dataLength, filterObject, selectClinic } from '~widgets/super-admin/';
+import { ClinicApplications, selectClinic } from '~widgets/super-admin/';
 import { generateClinicList, generateSidebarItemList } from '../lib/utils';
 
 export function ClinicApplicationPage() {

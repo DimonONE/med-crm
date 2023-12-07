@@ -11,6 +11,12 @@ export const getNavigateList = (
         { value: PATH_PAGE.superAdmin.clinicApplications, label: 'Заявки' },
       ];
 
+    case checkUserRole('medChief'):
+      return [
+      { value: PATH_PAGE.personnel.root, label: 'Персонал' },
+      { value: PATH_PAGE.personnel.add, label: 'Добавить' },
+      ];
+
     case checkUserRole('patient'):
       return [
       { value: PATH_PAGE.patients.records, label: 'Пациенты' },
