@@ -19,16 +19,17 @@ export const sessionKeys = {
   },
 };
 
-export const useGetUserId = (userId: string): UseQueryResult<UserEntityDto, unknown> =>
+type Options = {
+  enabled?: boolean
+};
+
+export const useGetUserId = (userId: string, options?: Options | undefined): UseQueryResult<UserEntityDto, unknown> =>
   useQuery({
     queryKey: [sessionKeys.users.getUserId()],
     queryFn: async () => {
-      try {
-        const response = await realworldApi.users.usersControllerGetUserById(userId);
-        return response.data;
-      } catch (error) {
-        return error;
-      }
+      const response = await realworldApi.users.usersControllerGetUserById(userId);
+      return response.data;
     }, 
+    enabled: options?.enabled,
   },
 );

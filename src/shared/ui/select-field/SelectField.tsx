@@ -21,19 +21,20 @@ type SelectFieldProps = {
   children?: JSX.Element[]
   className?: string
   selectNavigate?: boolean
+  defaultOption?: string | number
 } & DataProps;
 
 export function SelectField(props: SelectFieldProps) {
   const [isOpen, setOpen] = useState(false);
   const [selectValue, setValue] = useState<number | string>('');
-  const { children, selectOptions, selectNavigate, className, ...propsSpread } = props;
+  const { children, selectOptions, defaultOption, selectNavigate, className, ...propsSpread } = props;
   const fieldValue = 'field' in propsSpread ? propsSpread.field : propsSpread;
 
   useEffect(() => {
     if (selectValue) {
       setValue(fieldValue.value);
     } else if (selectValue !== selectOptions[0].value)
-      setValue(selectOptions[0].value);
+      setValue(defaultOption || selectOptions[0].value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, ['field' in propsSpread ? propsSpread.field.value : propsSpread.value]);
 

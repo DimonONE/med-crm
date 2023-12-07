@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { sessionApi } from '~entities/session';
 import { LoadImage } from '~features/patients';
 import { Api, HttpResponse } from '~shared/api/realworld';
-import { errorHandler, queryClient } from '~shared/lib/react-query';
+import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
+import { sexOptions } from '~shared/lib/utils';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
 import { FileLoader } from '~shared/ui/file-loader';
@@ -25,13 +25,53 @@ type Props = {
 type ManagementPersonalDto = Api.CreatePersonalDtoDto | Api.UpdatePersonalDtoDto;
 
 export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
-  const { data, isLoading } = sessionApi.useGetUserId(personnelId || '');
+  const { data, isLoading } = sessionApi.useGetUserId(personnelId || '', { enabled: !!personnelId });
   const { mutate: create } = useCreatePersonal();
   const { mutate: update } = useUpdatePersonnel();
 
-  const navigate = useNavigate();
-  const selectOptions = [{ value: '0', label: 'Пол' }, { value: 'man', label: 'Мужской' }, { value: 'woman', label: 'Женский' }];
   const roleOptions = [{ value: '0', label: 'Должность' }, { value: 'doctor', label: 'doctor' }];
+
+  const getInitialValue = <K extends keyof ManagementPersonalDto>(key: K): ManagementPersonalDto[K] | string =>
+    personnelId ? (data?.[key] as ManagementPersonalDto[K]) : '';
+
+  const initialValues: ManagementPersonalDto = {
+    fullName: getInitialValue('fullName'),
+    passport: getInitialValue('passport'),
+    country: getInitialValue('country'),
+    role: getInitialValue('role') as keyof Roles,
+    city: getInitialValue('city'),
+    address: getInitialValue('address'),
+    password: data?.password ?? '',
+    passportIssuingAuthority: getInitialValue('passportIssuingAuthority'),
+    sex: getInitialValue('sex') as 'man',
+    tin: getInitialValue('tin'),
+    email: getInitialValue('email'),
+    phone: getInitialValue('phone'),
+    dateOfBirth: getInitialValue('dateOfBirth'),
+    notice: getInitialValue('notice'),
+    newFiles: undefined,
+  };
+
+
+  // const initialValues = {
+  //   fullName: personnelId ? data?.fullName ?? '' : '',
+  //   passport: data?.passport ?? '',
+  //   country: data?.country ?? '',
+  //   role: (data?.role?.name ?? '') as keyof Roles,
+  //   city: data?.city ?? '',
+  //   address: data?.address ?? '',
+  //   password: data?.password ?? '',
+  //   passportIssuingAuthority: data?.passportIssuingAuthority ?? '',
+  //   sex: (data?.sex ?? '') as 'man',
+  //   tin: data?.tin ?? '',
+  //   email: data?.email ?? '',
+  //   phone: data?.phone ?? '',
+  //   dateOfBirth: data?.dateOfBirth ?? '',
+  //   notice: data?.notice ?? '',
+  //   newFiles: null,
+  // };
+
+
 
   const onSubmit = async (
     values: ManagementPersonalDto,
@@ -66,13 +106,6 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     }
   };
 
-  useEffect(() => () => {
-    queryClient.removeQueries(sessionApi.sessionKeys.users.getUserId());
-    navigate(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [personnelId]);
-
-
   if (personnelId && (!data && !isLoading)) {
     return <Navigate to={PATH_PAGE.personnel.details(personnelId)} />;
   }
@@ -83,23 +116,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
 
   return (
     <Formik
-      initialValues={{
-        fullName: data?.fullName ?? '',
-        passport: data?.passport ?? '',
-        country: data?.country ?? '',
-        role: (data?.role?.name ?? '') as keyof Roles,
-        city: data?.city ?? '',
-        address: data?.address ?? '',
-        password: data?.password ?? '',
-        passportIssuingAuthority: data?.passportIssuingAuthority ?? '',
-        sex: (data?.sex ?? '') as 'man',
-        tin: data?.tin ?? '',
-        email: data?.email ?? '',
-        phone: data?.phone ?? '',
-        dateOfBirth: data?.dateOfBirth ?? '',
-        notice: data?.notice ?? '',
-        newFiles: null,
-      }}
+      initialValues={initialValues}
       validationSchema={object().shape({
         fullName: string().required(),
         email: string().email().required(),
@@ -308,8 +325,9 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                   {(props: FieldProps) =>
                     <SelectField
                       {...props}
+                      defaultOption={props.field.value}
                       className={classNames(s.select, 'form-input')}
-                      selectOptions={selectOptions}
+                      selectOptions={sexOptions}
                     />}
                 </Field>
                 <div className='error-message'>

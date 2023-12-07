@@ -2,8 +2,10 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { sessionApi } from '~entities/session';
 import { LoadImage } from '~features/patients';
+import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
@@ -18,13 +20,18 @@ type Params = {
 export function PersonnelDetailsPage() {
   const params = useParams<Params>();
   const navigate = useNavigate();
-  const { data, isLoading } = sessionApi.useGetUserId(params.personnelId || '');
+  const { data, error, isLoading } = sessionApi.useGetUserId(params.personnelId || '', { enabled: !!params.personnelId });
   const [isOpen, setOpen] = useState(false);
 
   const onSuccessModal = () => {
     setOpen(false);
     navigate(PATH_PAGE.personnel.root);
   };
+
+  if (error) {
+    toast(errorHandler(error), { type: 'error' });
+    return <Navigate to={PATH_PAGE.personnel.root} />;
+  }
 
   if (!data && !isLoading) {
     return <Navigate to={PATH_PAGE.personnel.root} />;

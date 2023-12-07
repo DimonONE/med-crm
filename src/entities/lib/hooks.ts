@@ -36,7 +36,6 @@ export function useListOfInfinity({ queryKey, queryFn }: Keys, initialQuery?: Pa
 
   const updateQueryParameters = async (newQuery: Partial<QueryListOfUsers>) => {
     defaultQuery = { ...defaultQuery, ...newQuery  };
-    console.log('defaultQuery', defaultQuery);
     
     refetch({
       queryKey: [queryKey, defaultQuery],
