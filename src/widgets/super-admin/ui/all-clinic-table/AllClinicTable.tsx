@@ -47,7 +47,7 @@ export const AllClinicTable = React.forwardRef<HTMLDivElement, AllClinicTablePro
   }
 
   return (
-    <div id="all-clinic-table" className={classNames(s.root, 'container')} ref={ref} onScroll={onScroll}>
+    <div id="all-clinic-table" ref={ref} onScroll={onScroll} className={classNames(s.root, 'container')} >
       <TableContainer className='table-container' component={Paper}>
         <Table sx={{ minWidth: 850 }} aria-label="simple table" >
           <InfiniteScroll

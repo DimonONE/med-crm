@@ -1,6 +1,6 @@
 import { InfiniteData } from '@tanstack/react-query';
 
-type FilterObject = {
+export type FilterObject = {
   [key: string]: boolean | string | number | null;
 };
 
@@ -23,6 +23,6 @@ export function dataLength<T>(data: InfiniteData<T[]> | undefined) {
 
 export function filterObject(obj: FilterObject) {
   return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => ![undefined, null, ''].includes(value?.toString())),
+    Object.entries(obj).filter(([, value]) => ![undefined, null,  ''].includes(value?.toString())),
   );
 }

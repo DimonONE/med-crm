@@ -47,17 +47,19 @@ export function PersonnelHomePage() {
           }}
           />
         </SidebarItemList>
-        <PersonnelList
-          ref={block2Ref}
-          personnelList={personnelList}
-          hasNextPage={hasNextPage}
-          handleFetchNextPage={fetchNextPage}
-          handleUpdateFilters={(filter) => {
-            setFilters(prev => ({ ...prev, ...filter }));
-          }}
-          dataLength={dataLength(data)}
-          onScroll={handleScroll(block2Ref, block1Ref)}
-        />
+        <div className='container'>
+          <PersonnelList
+            ref={block2Ref}
+            personnelList={personnelList}
+            hasNextPage={hasNextPage}
+            handleFetchNextPage={fetchNextPage}
+            handleUpdateFilters={(filter) => {
+              setFilters(prev => ({ ...prev, ...filter }));
+            }}
+            dataLength={dataLength(data)}
+            onScroll={handleScroll(block2Ref, block1Ref)}
+          />
+        </div>
       </div>
       <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.personnel.add)}>
         <AiOutlinePlusCircle />

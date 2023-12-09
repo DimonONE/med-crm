@@ -1,5 +1,5 @@
-import { QueryFunctionContext, useMutation } from '@tanstack/react-query';
-import { Api, realworldApi } from '~shared/api/realworld';
+import {  useMutation } from '@tanstack/react-query';
+import { API_URL, Api, realworldApi } from '~shared/api/realworld';
 import { useListOfInfinity } from '../../lib/hooks';
 
 export type QueryListOfUsers = {
@@ -25,14 +25,29 @@ export function useCreatePersonal() {
   return useMutation({
     mutationKey: personnelKeys.createPersonnel(),
     mutationFn: async (personal: Api.CreatePersonalDtoDto) => {
-      const response = await realworldApi.admin.usersAdminControllerCreatePersonal(personal, {
+      const formData = new FormData();
+
+      Object.entries(personal).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      
+      await realworldApi.admin.usersAdminControllerCreatePersonal(formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Accept: 'application/json',
         },
       });
-    
-      return response;
+
+        const response = await fetch(`${API_URL}/admin/create-personal`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+        console.log('response2', response);
+        
+        return response;
     },
   });
 }
@@ -41,11 +56,7 @@ export function useUpdatePersonnel() {
   return useMutation({
     mutationKey: personnelKeys.updatePersonnel(),
     mutationFn: async (personnel: Api.UpdatePersonalDtoDto) => {
-      const image = personnel.image ? new Blob([personnel.image], { type: 'image/png' }) : null ;
-
-      console.log('personnel', personnel);
-      // @ts-ignore
-      const response = await realworldApi.admin.usersAdminControllerUpdatePersonal({ ...personnel, image });
+      const response = await realworldApi.admin.usersAdminControllerUpdatePersonal(personnel);
       return response.data;
     },
   });
@@ -59,17 +70,10 @@ const fetchListOfPersonnelPage = async (query: QueryListOfUsers) => {
 };
 
 export function useListOfPersonnelInfinity(initialQuery?: Partial<QueryListOfUsers>) {
-  const defaultQuery: QueryListOfUsers = {
-    offset: 0,
-    limit: 10,
-    status: 'approval',
-    sortBy: 'ASC',
-    ...initialQuery,
-  } as QueryListOfUsers;
 
   return useListOfInfinity({
     queryKey: personnelKeys.listOfPersonnel(),
-    queryFn: ({ pageParam }: QueryFunctionContext) => fetchListOfPersonnelPage({ ...defaultQuery, ...pageParam  }),
-    defaultQuery,
-  }, initialQuery);
+    fetchPage: fetchListOfPersonnelPage,
+    initialQuery,
+  } );
 }

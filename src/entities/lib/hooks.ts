@@ -1,45 +1,42 @@
-import { QueryFunction, QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+import {  QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+import { Api } from '~shared/api/realworld';
 
-export type QueryListOfUsers = {
-  limit: number | null;
-  offset: number | null;
-  sortBy: SortByType;
-  fieldSort: string | null;
-  category: string | null;
-  filter: string | null;
-  role: string | null;
-};
 
-export type Keys = {
+type UseListOfInfinityProps<T> = {
   queryKey: QueryKey,
-  queryFn: QueryFunction<any>
-  defaultQuery?: Partial<QueryListOfUsers> 
+  fetchPage: (query: T) => Promise<Api.UserEntityDto[]>
+  initialQuery?: Partial<T>,
 };
 
-export function useListOfInfinity({ queryKey, queryFn }: Keys, initialQuery?: Partial<QueryListOfUsers>) {
-  let defaultQuery: QueryListOfUsers = {
-    ...initialQuery,
-  } as QueryListOfUsers;
+export function useListOfInfinity<T>({ queryKey, fetchPage, initialQuery }: UseListOfInfinityProps<T>) {
+  let defaultQuery: T = {
+    offset: 0,
+    limit: 10,
+    status: 'approval',
+    sortBy: 'ASC',
+    ...(initialQuery as T),
+  };
 
   const { data, refetch, ...props } = useInfiniteQuery({
     queryKey,
-    queryFn,
+    queryFn: ({ pageParam }: QueryFunctionContext) => fetchPage({ ...defaultQuery, ...pageParam }),
     getNextPageParam: (lastPage, allPages) => {
       const dataLength = allPages.reduce((total, page) => total + page.length, 0) || 0;
-      
+
       if (lastPage.length === 0) {
         return undefined;
       }
       return { offset: dataLength + 1 };
     },
- });
+  });
 
-  const updateQueryParameters = async (newQuery: Partial<QueryListOfUsers>) => {
-    defaultQuery = { ...defaultQuery, ...newQuery  };
-    
+  const updateQueryParameters = async (newQuery: Partial<T>) => {
+    defaultQuery = { ...defaultQuery, ...newQuery };
+
     refetch({
       queryKey: [queryKey, defaultQuery],
     });
   };
- return { data, refetch, updateQueryParameters, ...props };
+
+  return { data, refetch, updateQueryParameters, ...props };
 }

@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { personnelApi } from '~entities/personnel';
 import { Api } from '~shared/api/realworld';
+import { roleOptions } from '~shared/lib/utils';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import s from './styles.module.scss';
 
@@ -25,29 +26,42 @@ type PersonnelListProps = {
   handleUpdateFilters: (newQuery: Partial<personnelApi.QueryListOfUsers>) => void
 };
 
+type RoleFilter = {
+  isOpen: boolean,
+  value: string | null,
+};
+
 export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps>((props, ref) => {
-  const [fieldSort, setFieldSort] = useState<string | null>();
+  const [fieldSort, setFieldSort] = useState<string | null>(null);
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>({
+    isOpen: false,
+    value: null,
+  });
   const { personnelList, dataLength, hasNextPage, handleUpdateFilters, handleFetchNextPage, onScroll } = props;
 
   const sortHandler = (sortKey: 'createdAt' | 'role') => {
+    if (sortKey === 'role') {
+      setRoleFilter(prev => ({ ...prev, isOpen: !prev.isOpen }));
+      return;
+    }
     setFieldSort(prev => prev === sortKey ? null : sortKey);
   };
 
   useEffect(() => {
-    handleUpdateFilters({ fieldSort });
+    handleUpdateFilters({ fieldSort, role: roleFilter.value });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fieldSort]);
+  }, [fieldSort, roleFilter.value]);
 
   if (!personnelList.length) {
     return null;
   }
 
   return (
-    <div ref={ref} className={classNames(s.root, 'container')} onScroll={onScroll}>
+    <div id='all-personnel-table' ref={ref} className={classNames(s.root, 'container')} onScroll={onScroll}>
       <TableContainer className='table-container' component={Paper}>
         <Table sx={{ minWidth: 850 }} aria-label="simple table">
           <InfiniteScroll
-            scrollableTarget="all-clinic-table"
+            scrollableTarget="all-personnel-table"
             next={handleFetchNextPage}
             hasMore={hasNextPage || false}
             loader={<div>Loading...</div>}
@@ -55,16 +69,40 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
           >
             <TableHead >
               <TableRow >
-                <TableCell width='auto' sx={{ minWidth: 220 }} className='table-head-cell' onClick={() => sortHandler('createdAt')}>
-                  <span className='d-flex '>
+                <TableCell width='auto' sx={{ minWidth: 220 }} className='table-head-cell'
+                  onClick={() => sortHandler('createdAt')}>
+                  <span className={s.tableCellItem}>
                     ДАТА РЕГ.
-                    <button type='button'><ArrowBottomICO /> </button>
+                    <ArrowBottomICO />
                   </span>
                 </TableCell>
-                <TableCell width='auto' sx={{ minWidth: 220 }} className='table-head-cell' onClick={() => sortHandler('role')}>
-                  <span className='d-flex'>
-                    ДОЛЖНОСТЬ
-                    <button type='button'><ArrowBottomICO /> </button>
+                <TableCell
+                  width='auto' sx={{ minWidth: 220 }}
+                  className='table-head-cell'
+                  onClick={() => sortHandler('role')} >
+                  <span className={s.tableCellItem}>
+                    ДАТА РЕГ.
+                    <ArrowBottomICO />
+                    <div className={classNames(s.roles, { [s.active]: roleFilter.isOpen })}>
+                      {
+                        roleOptions.map(({ label, value: link }) => (
+                          <option value={link}
+                            className={s.optionRole}
+                            onClick={(event) => {
+                              setRoleFilter((prev) => ({
+                                ...prev, value:
+                                  'value' in event.target &&
+                                    event.target.value !== roleOptions[0].value.toString()
+                                    ? event.target.value as string
+                                    : null,
+                              }));
+                            }}
+                          >
+                            {label}
+                          </option>
+                        ))
+                      }
+                    </div>
                   </span>
                 </TableCell>
                 <TableCell width='100%' className='table-head-cell'>ТЕЛЕФОН</TableCell>
@@ -91,6 +129,6 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
           </InfiniteScroll>
         </Table>
       </TableContainer>
-    </div>
+    </div >
   );
 });
