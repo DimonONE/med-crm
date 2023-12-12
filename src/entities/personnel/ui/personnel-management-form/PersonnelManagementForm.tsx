@@ -6,10 +6,10 @@ import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { sessionApi } from '~entities/session';
 import { LoadImage } from '~features/patients';
-import { Api, HttpResponse } from '~shared/api/realworld';
+import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
-import { sexOptions } from '~shared/lib/utils';
+import { roleOptions, sexOptions } from '~shared/lib/utils';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
 import { FileLoader } from '~shared/ui/file-loader';
@@ -29,8 +29,6 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
   const { mutate: create } = useCreatePersonal();
   const { mutate: update } = useUpdatePersonnel();
 
-  const roleOptions = [{ value: '0', label: 'Должность' }, { value: 'doctor', label: 'doctor' }];
-
   const getInitialValue = <K extends keyof ManagementPersonalDto>(key: K): ManagementPersonalDto[K] | string =>
     personnelId ? (data?.[key] as ManagementPersonalDto[K]) : '';
 
@@ -38,38 +36,23 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     fullName: getInitialValue('fullName'),
     passport: getInitialValue('passport'),
     country: getInitialValue('country'),
-    role: getInitialValue('role') as keyof Roles,
+    role: (getInitialValue('role') || roleOptions[0].value) as keyof Roles,
     city: getInitialValue('city'),
     address: getInitialValue('address'),
-    password: data?.password ?? '',
     passportIssuingAuthority: getInitialValue('passportIssuingAuthority'),
-    sex: getInitialValue('sex') as 'man',
+    sex: (getInitialValue('sex') || sexOptions[0].value) as 'man',
     tin: getInitialValue('tin'),
     email: getInitialValue('email'),
     phone: getInitialValue('phone'),
     dateOfBirth: getInitialValue('dateOfBirth'),
     notice: getInitialValue('notice'),
-    newFiles: undefined,
-  };
-
-
-  // const initialValues = {
-  //   fullName: personnelId ? data?.fullName ?? '' : '',
-  //   passport: data?.passport ?? '',
-  //   country: data?.country ?? '',
-  //   role: (data?.role?.name ?? '') as keyof Roles,
-  //   city: data?.city ?? '',
-  //   address: data?.address ?? '',
-  //   password: data?.password ?? '',
-  //   passportIssuingAuthority: data?.passportIssuingAuthority ?? '',
-  //   sex: (data?.sex ?? '') as 'man',
-  //   tin: data?.tin ?? '',
-  //   email: data?.email ?? '',
-  //   phone: data?.phone ?? '',
-  //   dateOfBirth: data?.dateOfBirth ?? '',
-  //   notice: data?.notice ?? '',
-  //   newFiles: null,
-  // };
+    ...(personnelId ? {
+      id: personnelId.toString(),
+      newFiles: undefined,
+      files: null,
+    } : {}),
+    ...(isCreate ? { password: data?.password ?? '' } : {}),
+  } as ManagementPersonalDto;
 
 
 
@@ -79,14 +62,15 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
   ) => {
     try {
       // Update personnel
-      if (!isCreate && personnelId && (('newImage' in values) || ('newFiles' in values))) {
-        await update({ ...values, id: personnelId.toString() }, {
+      if (personnelId && (('newImage' in values) || ('newFiles' in values))) {
+        const { image, ...filterValue } = values;
+        await update({ ...filterValue, newImage: image as any }, {
           onSuccess: () => {
             toast('Success!', { type: 'success' });
             resetForm();
           },
           onError: (error) => {
-            toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
+            toast(errorHandler(error), { type: 'error' });
           },
         });
       } else if ('password' in values) {
@@ -96,11 +80,10 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
             resetForm();
           },
           onError: (error) => {
-            toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
+            toast(errorHandler(error), { type: 'error' });
           },
         });
       }
-
     } finally {
       setSubmitting(false);
     }
@@ -110,7 +93,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     return <Navigate to={PATH_PAGE.personnel.details(personnelId)} />;
   }
 
-  if (!data && isLoading) {
+  if (!isCreate && (!data && isLoading)) {
     return null;
   }
 
@@ -121,8 +104,8 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
         fullName: string().required(),
         email: string().email().required(),
         dateOfBirth: string().required(),
-        role: string().required(),
-        sex: string().required(),
+        role: string().test((value) => Number(value) !== -1),
+        sex: string().test((value) => Number(value) !== -1),
       })}
       onSubmit={onSubmit}
     >

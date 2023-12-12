@@ -1,9 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { sessionApi } from '~entities/session';
-import {
+import axiosInstance, {
   Api,
-  HttpResponse,
-  realworldApi,
 } from '~shared/api/realworld';
 
 type Options = {
@@ -13,7 +11,10 @@ type Options = {
 export const useCurrentUser = (options?: Options) =>
   useQuery({
     queryKey: sessionApi.sessionKeys.session.currentUser(),
-    queryFn: () => realworldApi.users.usersControllerGetсurentUser(),
+    queryFn: async () => {
+      const response =  await axiosInstance({ url: '/users/currentuser' });
+      return response.data;
+    },
     enabled: options?.enabled,
   },
 );
@@ -21,7 +22,10 @@ export const useCurrentUser = (options?: Options) =>
 export const useGetRoles = (options?: Options) =>
   useQuery({
     queryKey: sessionApi.sessionKeys.session.roles(),
-    queryFn: () => realworldApi.users.usersControllerGetRoles() as Promise<HttpResponse<void, Roles>>,
+    queryFn: async () => {
+     const response = await axiosInstance({ url: '/users/roles' });
+     return response.data;
+    },
     enabled: options?.enabled,
   },
 );
@@ -29,5 +33,5 @@ export const useGetRoles = (options?: Options) =>
 export const useLoginUser = () =>
   useMutation({
     mutationKey: sessionApi.sessionKeys.mutation.login(),
-    mutationFn: (user: Api.LoginUserDtoDto) => realworldApi.users.usersControllerLogin( user ),
+    mutationFn: (user: Api.LoginUserDtoDto) => axiosInstance({ url: '/users/login', method: 'POST', data: user }),
   });

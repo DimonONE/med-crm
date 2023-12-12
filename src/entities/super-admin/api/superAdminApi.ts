@@ -1,5 +1,6 @@
 import {  useMutation, useQuery } from '@tanstack/react-query';
-import { Api, realworldApi } from '~shared/api/realworld';
+import { AxiosResponse } from 'axios';
+import axiosInstance, { Api } from '~shared/api/realworld';
 import { useListOfInfinity } from '../../lib/hooks';
 
 export type ListOfUsersQuery = {
@@ -39,7 +40,8 @@ export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
   const { data, refetch } = useQuery({
     queryKey: [superAdminKeys.superAdmin.listofusers(), query],
     queryFn: async () => {
-      const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser(sortQuery);
+      const response = await axiosInstance({ url: '/admin/listofusers', method: 'GET', params: sortQuery }); 
+
       return response.data;
     },
   });
@@ -55,10 +57,8 @@ export function useListOfUsers(query: Partial<ListOfUsersQuery>) {
 }
 
 // Example usage with different query types
-const fetchListOfUsersPage = async (query: ListOfUsersQuery) => {
-  const response = await realworldApi.admin.usersAdminControllerGetListOfAviableUser({
-    ...query,
-  });
+const fetchListOfUsersPage = async (params: ListOfUsersQuery) => {
+  const response = await axiosInstance({ url: '/admin/listofusers', method: 'GET', params }); 
   return response.data;
 };
 
@@ -74,10 +74,11 @@ export function useAllTypeClinic() {
   return useQuery({
     queryKey: superAdminKeys.superAdmin.allTypeClinic(),
     queryFn: async () => {
-
-      const response = await realworldApi.admin.usersAdminControllerGetAllTypeClinic();
-
-      return response?.data;
+      const response: AxiosResponse<Api.TypeClinicEntityDto[]> = await axiosInstance({ 
+        url: '/admin/all-type-clinic',
+        method: 'GET', 
+      }); 
+      return response.data;
     },
   });
 }
@@ -86,9 +87,7 @@ export function useCreateClinic() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.createClinic(),
     mutationFn: async (clinic: Api.CreateClinicUserDtoDto) => {
-    
-      const response = await realworldApi.admin.usersAdminControllerCreateClinic(clinic);
-
+      const response = await axiosInstance({ url: '/admin/create-clinic', method: 'POST', data: clinic }); 
       return response;
     },
   });
@@ -98,7 +97,7 @@ export function useUpdateClinic() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.updateClinic(),
     mutationFn: async (clinic: Api.UpdateClinicUserDtoDto) => {
-      const response = await realworldApi.admin.usersAdminControllerUpdateClinic(clinic);
+      const response = await axiosInstance({ url: '/admin/update-clinic', method: 'POST', data: clinic }); 
       return response.data;
     },
   });
@@ -108,9 +107,7 @@ export function useAddTypeClinic() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.addTypeClinic(),
     mutationFn: async (type: Api.CreateTypeClinicDtoDto) => {
-    
-      const response = await realworldApi.admin.usersAdminControllerAddTypeClinic(type);
-
+      const response = await axiosInstance({ url: '/admin/add-type-clinic', method: 'POST', data: type }); 
       return response;
     },
   });
@@ -119,8 +116,8 @@ export function useAddTypeClinic() {
 export function useSwitchStatusClinic() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.switchStatusClinic(),
-    mutationFn: async (params: Api.SwitchStatusDtoDto) => {
-      const response = await realworldApi.admin.usersAdminControllerSwitchStatusClinic(params);
+    mutationFn: async (data: Api.SwitchStatusDtoDto) => {
+      const response = await axiosInstance({ url: '/admin/switch-status-clinic', method: 'POST', data }); 
       return response.data;
     },
   });
@@ -129,8 +126,8 @@ export function useSwitchStatusClinic() {
 export function useSwitchStatusUser() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.statusUser(),
-    mutationFn: async (params: Api.SwitchStatusUserDtoDto) => {
-      const response = await realworldApi.admin.usersAdminControllerStatusUser(params);
+    mutationFn: async (data: Api.SwitchStatusUserDtoDto) => {
+      const response = await axiosInstance({ url: '/admin/switch-status-user', method: 'POST', data }); 
       return response;
     },
   });
@@ -139,8 +136,8 @@ export function useSwitchStatusUser() {
 export function useNewPassword() {
   return useMutation({
     mutationKey: superAdminKeys.superAdmin.newPassword(),
-    mutationFn: async (params: Api.SetNewPasswordDtoDto) => {
-      const response = await realworldApi.admin.usersAdminControllerSetNewPassword(params);
+    mutationFn: async (data: Api.SetNewPasswordDtoDto) => {
+      const response = await axiosInstance({ url: '/admin/set-new-password', method: 'POST', data }); 
       return response;
     },
   });

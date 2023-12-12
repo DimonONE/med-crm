@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Api, realworldApi } from '~shared/api/realworld';
+import axiosInstance, { Api } from '~shared/api/realworld';
 
 
 type QueryParams = {
@@ -32,7 +32,7 @@ export function usePatientsList(params: QueryParams) {
         filter: params.filter || null,
       };
 
-      const response = await realworldApi.patients.patientsControllerGetPatients( paramsData );
+      const response = await axiosInstance({ url: '/patients', method: 'GET', params: paramsData }); 
 
       return response;
     },
@@ -43,9 +43,7 @@ export function usePatientId(patientId: string) {
   return useQuery({
     queryKey: patientsKeys.patients.patientId(),
     queryFn: async () => {
-
-      const response = await realworldApi.patients.patientsControllerGetPatientById( patientId );
-
+      const response = await axiosInstance({ url: `/patients/${patientId}`, method: 'GET' }); 
       return response;
     },
   });
@@ -55,7 +53,7 @@ export function useCreatePatient() {
   return useMutation({
     mutationKey: patientsKeys.patients.create(),
     mutationFn: async (patientInfo: CreatePatientDto) => {
-      const response = await realworldApi.patients.patientsControllerCreatePatient( patientInfo as Api.CreatePatientDtoDto );
+      const response = await axiosInstance({ url: '/patients/create', method: 'POST', data: patientInfo }); 
       return response;
     },
   });

@@ -472,6 +472,7 @@ export class HttpClient<SecurityDataType = unknown> {
         : input,
     [ContentType.FormData]: (input: any) =>
       Object.keys(input || {}).reduce((formData, key) => {
+        
         const property = input[key];
         formData.append(
           key,
@@ -480,7 +481,14 @@ export class HttpClient<SecurityDataType = unknown> {
             : typeof property === 'object' && property !== null
             ? JSON.stringify(property)
             : `${property}`,
-        );
+            );
+        
+            
+      Object.entries(formData).forEach(([key, ]) => {
+        console.log('formData1', key);
+      });
+
+
         return formData;
       }, new FormData()),
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
@@ -942,7 +950,7 @@ export class Api<
         method: 'POST',
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.FormData,
         format: 'json',
         ...params,
       }),
@@ -964,7 +972,7 @@ export class Api<
         method: 'POST',
         body: data,
         secure: true,
-        type: ContentType.Json,
+        type: ContentType.FormData,
         format: 'json',
         ...params,
       }),
@@ -1022,7 +1030,7 @@ export class Api<
         path: `/patients/create`,
         method: 'POST',
         body: data,
-        type: ContentType.Json,
+        type: ContentType.FormData,
         format: 'json',
         ...params,
       }),

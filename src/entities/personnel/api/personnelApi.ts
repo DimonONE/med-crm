@@ -1,5 +1,6 @@
 import {  useMutation } from '@tanstack/react-query';
-import { API_URL, Api, realworldApi } from '~shared/api/realworld';
+// import { v4 as uuidv4 } from 'uuid';
+import axiosInstance, { Api } from '~shared/api/realworld';
 import { useListOfInfinity } from '../../lib/hooks';
 
 export type QueryListOfUsers = {
@@ -24,30 +25,16 @@ export const personnelKeys = {
 export function useCreatePersonal() {
   return useMutation({
     mutationKey: personnelKeys.createPersonnel(),
-    mutationFn: async (personal: Api.CreatePersonalDtoDto) => {
-      const formData = new FormData();
-
-      Object.entries(personal).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-      
-      await realworldApi.admin.usersAdminControllerCreatePersonal(formData, {
+    mutationFn: async (personnel: Api.CreatePersonalDtoDto) => {
+      const response = await axiosInstance({ 
+        url: '/admin/create-personal', 
+        method: 'POST',
+        data: personnel,
         headers: {
           'Content-Type': 'multipart/form-data',
-          Accept: 'application/json',
         },
       });
-
-        const response = await fetch(`${API_URL}/admin/create-personal`, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-        console.log('response2', response);
-        
-        return response;
+      return response.data;
     },
   });
 }
@@ -56,21 +43,25 @@ export function useUpdatePersonnel() {
   return useMutation({
     mutationKey: personnelKeys.updatePersonnel(),
     mutationFn: async (personnel: Api.UpdatePersonalDtoDto) => {
-      const response = await realworldApi.admin.usersAdminControllerUpdatePersonal(personnel);
+      const response = await axiosInstance({ 
+        url: '/admin/update-personal', 
+        method: 'POST',
+        data: personnel,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     },
   });
 }
 
 const fetchListOfPersonnelPage = async (query: QueryListOfUsers) => {
-  const response = await realworldApi.admin.usersAdminControllerGetAllPersonal({
-    ...query,
-  });
+  const response = await axiosInstance({ url: '/admin/all-personal', method: 'GET', params: query });
   return response.data;
 };
 
 export function useListOfPersonnelInfinity(initialQuery?: Partial<QueryListOfUsers>) {
-
   return useListOfInfinity({
     queryKey: personnelKeys.listOfPersonnel(),
     fetchPage: fetchListOfPersonnelPage,

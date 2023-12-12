@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { superAdminApi } from '~entities/super-admin';
 import { useCreateClinicRequest } from '~features/session';
-import { Api, HttpResponse } from '~shared/api/realworld';
+import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { Button } from '~shared/ui/button';
 import { Modal } from '~shared/ui/modal';
@@ -44,7 +44,7 @@ export function RegistrationPage() {
         resetForm();
       },
       onError: (error) => {
-        toast(errorHandler(error as HttpResponse<any, any>), { type: 'error' });
+        toast(errorHandler(error), { type: 'error' });
       },
       onSettled: () => {
         setSubmitting(false);
@@ -84,7 +84,7 @@ export function RegistrationPage() {
             })}
             onSubmit={onSubmit}
           >
-            {({ isSubmitting }) => (
+            {() => (
               <Form className='full-width center'>
                 <div className='error-message'>
                   <ErrorMessage name="fullName" />
@@ -209,12 +209,10 @@ export function RegistrationPage() {
                     <ErrorMessage name="description" />
                   </div>
                 </fieldset>
-
                 <Button
                   className='form-submit'
                   type="submit"
                   color="primary"
-                  disabled={isSubmitting}
                 >
                   Подать заявку
                 </Button>

@@ -48,6 +48,7 @@ export function PersonnelDetailsPage() {
         <div className={s.content}>
           <div >
             <LoadImage
+              className={s.userImg}
               defaultImage={data.image}
             />
 

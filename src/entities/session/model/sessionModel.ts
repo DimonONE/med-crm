@@ -1,6 +1,7 @@
+import { setCookie } from 'cookies-next';
 import { StateCreator, createStore, useStore } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import { UserEntityDto, realworldApi } from '~shared/api/realworld';
+import { UserEntityDto } from '~shared/api/realworld';
 
 
 type RoleUser = {
@@ -12,11 +13,9 @@ type RoleUser = {
 type SessionState = {
   user: UserEntityDto | null;
   roles: Roles | null
-  token: string | null
-  addUser: (user: UserEntityDto, token: string) => void;
+  addUser: (user: UserEntityDto) => void;
   deleteUser: () => void;
   addRoles: (roles: Roles) => void;
-  addToken: (token: string) => void;
 };
 
 const createSessionSlice: StateCreator<
@@ -27,23 +26,17 @@ const createSessionSlice: StateCreator<
 > = (set) => ({
   user: null,
   roles: null,
-  token: null,
-  addUser: (user: UserEntityDto, token: string) => {
+  addUser: (user: UserEntityDto) => {
     set({ user }, false, 'session/addUser');
-    if (token) realworldApi.setSecurityData(token);
   },
 
   addRoles: (roles: Roles) => {
     set({ roles }, false, 'session/roles');
   },
 
-  addToken: (token: string) => {
-    set({ token }, false, 'session/token');
-  },
-
   deleteUser: () => {
-    set({ user: null, token: null }, false, 'session/deleteUser');
-    realworldApi.setSecurityData(null);
+    set({ user: null }, false, 'session/deleteUser');
+    setCookie('token', null);
   },
 });
 
@@ -57,30 +50,23 @@ export const sessionStore = createStore<SessionState>()(
     ),
     {
       name: 'session',
-      onRehydrateStorage: () => (state) => {
-        if (state?.token) {
-          realworldApi.setSecurityData(state.token);
-        } else
-          realworldApi.setSecurityData(null);
-      },
     },
   ),
 );
 
 export const useAuth = () =>
-useStore(sessionStore, (state) => !!state.user?.fullName);
+useStore(sessionStore, (state) => !!state.user?.id);
 
 
 export const useCurrentUser = () =>
 useStore(sessionStore, (state) => state.user);
 
-export const addUser = (user: UserEntityDto, token: string) => sessionStore.getState().addUser(user, token);
+export const addUser = (user: UserEntityDto) => sessionStore.getState().addUser(user);
 
 export const logout = () => sessionStore.getState().deleteUser();
 
 export const saveTokenToStorage = (token: string) => {
-  sessionStore.getState().addToken(token);
-  realworldApi.setSecurityData(token);
+  setCookie('token', token);
 };
 
 export const useRoleUser = (): RoleUser =>

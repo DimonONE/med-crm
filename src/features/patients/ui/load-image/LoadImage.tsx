@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import classNames from 'classnames';
+import { API_URL } from '~shared/api/realworld';
 import { FileLoader, FileValues } from '~shared/ui/file-loader';
 import s from './styles.module.scss';
 import FiledICO from './svg/filed-img.svg';
@@ -24,7 +25,7 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
   return (
     <div className={classNames(s.root, className)}>
       {image || defaultImage ? (
-        <img src={image ? URL.createObjectURL(image) : defaultImage} alt="user" />
+        <img src={image ? URL.createObjectURL(image) : `${defaultImage?.replace('/app', API_URL)}`} alt="user" />
       ) : <FiledICO />}
       {
         isLoad && (

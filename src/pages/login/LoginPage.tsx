@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { sessionModel } from '~entities/session';
 import { useCurrentUser, useGetRoles, useLoginUser } from '~features/session';
-import { UserEntityDto } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import EmailICO from '~shared/svg/email-ico.svg';
 import LockICO from '~shared/svg/lock-ico.svg';
@@ -23,12 +22,12 @@ export function LoginPage() {
   const { refetch: refetchGetRoles } = useGetRoles({ enabled: false });
   const navigate = useNavigate();
 
-  const handleLoginSuccess = async (token: string) => {
-    const { data } = await refetchCurrentUser();
+  const handleLoginSuccess = async () => {
+    const { data: userData } = await refetchCurrentUser();
 
-    if (data?.data) {
+    if (userData) {
       const rolesData = await refetchGetRoles();
-      sessionModel.addUser(data.data as UserEntityDto, token);
+      sessionModel.addUser(userData);
 
       if (rolesData?.data) {
         const roles: Roles = rolesData.data as unknown as Roles;
@@ -45,7 +44,7 @@ export function LoginPage() {
     mutate(values, {
       onSuccess: async (response) => {
         await sessionModel.saveTokenToStorage(response.data);
-        handleLoginSuccess(response.data);
+        handleLoginSuccess();
       },
       onSettled: () => {
         setSubmitting(false);

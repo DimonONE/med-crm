@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { UserEntityDto, realworldApi } from '~shared/api/realworld';
+import axiosInstance, { UserEntityDto } from '~shared/api/realworld';
 
 export const sessionKeys = {
   session: {
@@ -27,7 +27,7 @@ export const useGetUserId = (userId: string, options?: Options | undefined): Use
   useQuery({
     queryKey: [sessionKeys.users.getUserId()],
     queryFn: async () => {
-      const response = await realworldApi.users.usersControllerGetUserById(userId);
+      const response = await axiosInstance({ url: `/users/user/${userId}` });
       return response.data;
     }, 
     enabled: options?.enabled,
