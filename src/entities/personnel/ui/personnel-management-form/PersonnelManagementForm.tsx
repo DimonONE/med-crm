@@ -48,8 +48,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     notice: getInitialValue('notice'),
     ...(personnelId ? {
       id: personnelId.toString(),
-      newFiles: undefined,
-      files: null,
+      files: data?.files,
     } : {}),
     ...(isCreate ? { password: data?.password ?? '' } : {}),
   } as ManagementPersonalDto;
@@ -63,8 +62,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     try {
       // Update personnel
       if (personnelId && (('newImage' in values) || ('newFiles' in values))) {
-        const { image, ...filterValue } = values;
-        await update({ ...filterValue, newImage: image as any }, {
+        await update(values, {
           onSuccess: () => {
             toast('Success!', { type: 'success' });
             resetForm();
@@ -257,7 +255,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                   <LoadImage
                     isLoad
                     onChange={(file) => {
-                      form.setFieldValue('image', file);
+                      form.setFieldValue(isCreate ? 'image' : 'newImage', file);
                     }} />}
                 </Field>
                 <div className='error-message'>
@@ -324,19 +322,19 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
             <span className={s.title}>Прикрепленные документы</span>
             <fieldset>
               <Field
-                name="fiels"
+                name="files"
                 className='form-input'
               >
                 {({ form }: FieldProps) =>
                   <FileLoader
                     id="button-load-file"
                     title='Загрузить'
-                    onChange={(fiels) => form.setFieldValue('fiels', fiels)}
+                    onChange={(files) => form.setFieldValue(isCreate ? 'files' : 'newFiles', files)}
                   />
                 }
               </Field>
               <div className='error-message'>
-                <ErrorMessage name="fiels" />
+                <ErrorMessage name="files" />
               </div>
             </fieldset>
           </div>

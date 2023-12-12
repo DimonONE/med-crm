@@ -11,7 +11,7 @@ export const API_URL = 'http://stage.medicare-online.info';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_URL, 
-  timeout: 1000, 
+  timeout: 5000, 
 });
 
 axiosInstance.interceptors.request.use(
