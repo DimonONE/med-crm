@@ -1,7 +1,7 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { sessionModel, useRoleUser } from '~entities/session';
 import { NavigateButton } from '~features/navigate';
-import { getHomeUrl } from '~shared/lib/react-router';
+import { PATH_PAGE, getHomeUrl } from '~shared/lib/react-router';
 import HeartICO from '~shared/svg/heart-ico.svg';
 import FingerprintICO from '~shared/svg/settings-ico.svg';
 import { Button } from '~shared/ui/button';
@@ -9,6 +9,7 @@ import s from './styles.module.scss';
 
 
 export function Header() {
+  const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
 
   const homeUrl = getHomeUrl({ checkUserRole });
@@ -47,7 +48,10 @@ export function Header() {
             </span>
           </NavLink>
         </nav>
-        <Button onClick={() => sessionModel.logout()}>Вийти</Button>
+        <Button onClick={() => {
+          sessionModel.logout();
+          navigate(PATH_PAGE.login);
+        }}>Вийти</Button>
       </div>
       <Outlet />
     </>

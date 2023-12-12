@@ -9,12 +9,13 @@ import { LoadImage } from '~features/patients';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
-import { roleOptions, sexOptions } from '~shared/lib/utils';
+import { sexOptions } from '~shared/lib/utils';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
 import { FileLoader } from '~shared/ui/file-loader';
 import { SelectField } from '~shared/ui/select-field';
 import { useCreatePersonal, useUpdatePersonnel } from '../../api/personnelApi';
+import { rolesPersonnelOptions } from '../../lib/utils';
 import s from './styles.module.scss';
 
 type Props = {
@@ -36,7 +37,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     fullName: getInitialValue('fullName'),
     passport: getInitialValue('passport'),
     country: getInitialValue('country'),
-    role: (getInitialValue('role') || roleOptions[0].value) as keyof Roles,
+    role: (getInitialValue('role') || rolesPersonnelOptions[0].value) as keyof Roles,
     city: getInitialValue('city'),
     address: getInitialValue('address'),
     passportIssuingAuthority: getInitialValue('passportIssuingAuthority'),
@@ -122,7 +123,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                   <SelectField
                     {...props}
                     className={classNames('form-input')}
-                    selectOptions={roleOptions}
+                    selectOptions={rolesPersonnelOptions}
                   />}
               </Field>
 

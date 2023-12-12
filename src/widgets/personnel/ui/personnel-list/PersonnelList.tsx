@@ -4,9 +4,8 @@ import { FetchNextPageOptions, InfiniteQueryObserverResult } from '@tanstack/rea
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { personnelApi } from '~entities/personnel';
+import { personnelApi, rolesPersonnelOptions } from '~entities/personnel';
 import { Api } from '~shared/api/realworld';
-import { roleOptions } from '~shared/lib/utils';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import s from './styles.module.scss';
 
@@ -81,18 +80,18 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
                   className='table-head-cell'
                   onClick={() => sortHandler('role')} >
                   <span className={s.tableCellItem}>
-                    ДАТА РЕГ.
+                    ДОЛЖНОСТЬ
                     <ArrowBottomICO />
                     <div className={classNames(s.roles, { [s.active]: roleFilter.isOpen })}>
                       {
-                        roleOptions.map(({ label, value: link }) => (
+                        rolesPersonnelOptions.map(({ label, value: link }) => (
                           <option value={link}
                             className={s.optionRole}
                             onClick={(event) => {
                               setRoleFilter((prev) => ({
                                 ...prev, value:
                                   'value' in event.target &&
-                                    event.target.value !== roleOptions[0].value.toString()
+                                    event.target.value !== rolesPersonnelOptions[0].value.toString()
                                     ? event.target.value as string
                                     : null,
                               }));
