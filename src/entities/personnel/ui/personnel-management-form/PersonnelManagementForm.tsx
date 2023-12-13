@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
@@ -13,6 +14,7 @@ import { sexOptions } from '~shared/lib/utils';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
 import { FileLoader } from '~shared/ui/file-loader';
+import { Modal } from '~shared/ui/modal';
 import { SelectField } from '~shared/ui/select-field';
 import { useCreatePersonal, useUpdatePersonnel } from '../../api/personnelApi';
 import { rolesPersonnelOptions } from '../../lib/utils';
@@ -29,6 +31,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
   const { data, isLoading } = sessionApi.useGetUserId(personnelId || '', { enabled: !!personnelId });
   const { mutate: create } = useCreatePersonal();
   const { mutate: update } = useUpdatePersonnel();
+  const [isOpen, setOpen] = useState(false);
 
   const getInitialValue = <K extends keyof ManagementPersonalDto>(key: K): ManagementPersonalDto[K] | string =>
     personnelId ? (data?.[key] as ManagementPersonalDto[K]) : '';
@@ -65,7 +68,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
       if (personnelId && (('newImage' in values) || ('newFiles' in values))) {
         await update(values, {
           onSuccess: () => {
-            toast('Success!', { type: 'success' });
+            setOpen(true);
             resetForm();
           },
           onError: (error) => {
@@ -75,7 +78,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
       } else if ('password' in values) {
         await create(values, {
           onSuccess: () => {
-            toast('Success!', { type: 'success' });
+            setOpen(true);
             resetForm();
           },
           onError: (error) => {
@@ -247,7 +250,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
               </div>
             </span>
             <span className={classNames(s.userInfoGender)}>
-              <fieldset>
+              <fieldset className='center'>
                 <Field
                   name="image"
                   type='file'
@@ -330,7 +333,12 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                   <FileLoader
                     id="button-load-file"
                     title='Загрузить'
-                    onChange={(files) => form.setFieldValue(isCreate ? 'files' : 'newFiles', files)}
+                    onChange={(files) => {
+                      form.setFieldValue(isCreate ? 'files' : 'newFiles', files);
+                    }}
+                    onDelete={(files) => {
+                      form.setFieldValue(isCreate ? 'files' : 'newFiles', files);
+                    }}
                   />
                 }
               </Field>
@@ -374,6 +382,16 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
               </Button>
             )
           }
+
+          <Modal
+            isOpen={isOpen}
+            onSuccess={() => setOpen(false)}
+            onClose={() => setOpen(false)}
+            type='info' >
+            <div>
+              {isCreate ? 'Персонал успешно создан!' : 'Данные успешно сохранены!'}
+            </div>
+          </Modal>
         </Form>
       )}
     </Formik>
