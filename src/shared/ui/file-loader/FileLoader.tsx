@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import CloseICO from '../../svg/close-gray-ico.svg';
+import { Modal } from '../modal';
 import s from './styles.module.scss';
 import DownloadICO from './svg/download-ico.svg';
 
@@ -14,7 +15,7 @@ type FileLoaderProps = {
   accept?: 'pdf' | 'png'
   multiple?: boolean
   onDownload?: () => void
-  onDelete?: (files: FileValues) => void
+  onDelete?: (files: FileValues, file: File[]) => void
   onChange?: (files: FileValues) => void
   hiddenFileInfo?: boolean
   hiddenButton?: boolean
@@ -22,6 +23,10 @@ type FileLoaderProps = {
 
 export function FileLoader(props: FileLoaderProps) {
   const [files, setFiles] = useState<FileValues>(null);
+  const [isOpen, setOpen] = useState({
+    flag: false,
+    fileId: '',
+  });
 
   const {
     id,
@@ -63,13 +68,15 @@ export function FileLoader(props: FileLoaderProps) {
     }
   };
 
-  const handleClose = (fileId: string) => {
+  const handleDelete = (fileId: string) => {
     if (files) {
-      const deleteFile: FileValues = files.filter(({ name }) => name !== fileId);
-      setFiles(deleteFile);
+      const filterDeleteFile: FileValues = files.filter(({ name }) => name !== fileId);
+      setFiles(filterDeleteFile);
+
       if (onDelete) {
         const selectFileDelete = files.filter(({ name }) => name === fileId);
-        onDelete(selectFileDelete);
+        onDelete(filterDeleteFile, selectFileDelete);
+        setOpen({ flag: false, fileId: '' });
       }
     }
   };
@@ -84,7 +91,7 @@ export function FileLoader(props: FileLoaderProps) {
                 <DownloadICO />
               </button>
               <span className={s.name}>{file.name}</span>
-              <button type='button' onClick={() => handleClose(file.name)}>
+              <button type='button' onClick={() => setOpen({ flag: true, fileId: file.name })}>
                 <CloseICO />
               </button>
             </li>
@@ -108,6 +115,15 @@ export function FileLoader(props: FileLoaderProps) {
           </label>
         )
       }
+      <Modal
+        isOpen={isOpen.flag}
+        onSuccess={() => handleDelete(isOpen.fileId)}
+        onClose={() => setOpen({ flag: false, fileId: '' })}
+        type='warn' >
+        <div>
+          Удалить файл?
+        </div>
+      </Modal>
     </div>
   );
 }
