@@ -4,6 +4,7 @@ import { FetchNextPageOptions, InfiniteQueryObserverResult } from '@tanstack/rea
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useSearchParams } from 'react-router-dom';
 import { superAdminApi } from '~entities/super-admin';
 import { UserEntityDto } from '~shared/api/realworld';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
@@ -30,7 +31,8 @@ type AllClinicTableProps = {
 };
 
 export const AllClinicTable = React.forwardRef<HTMLDivElement, AllClinicTableProps>((props, ref) => {
-  const [fieldSort, setFieldSort] = useState<string | null>();
+  const [, setSearchParams] = useSearchParams();
+  const [fieldSort, setFieldSort] = useState<string | null | undefined>(undefined);
   const { clinicList, dataLength, hasNextPage, handleUpdateFilters, handleFetchNextPage, onScroll } = props;
 
   const sortHandler = (sortKey: 'createdAt' | 'country' | 'endPaidDate') => {
@@ -38,6 +40,17 @@ export const AllClinicTable = React.forwardRef<HTMLDivElement, AllClinicTablePro
   };
 
   useEffect(() => {
+    const filters = { fieldSort };
+
+    if (filters.fieldSort !== undefined) {
+      const paramsToUpdate = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          paramsToUpdate.set(key, value);
+        }
+      });
+      setSearchParams(paramsToUpdate);
+    }
     handleUpdateFilters({ fieldSort });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldSort]);

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { SelectClinic, superAdminApi } from '~entities/super-admin';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
@@ -16,12 +16,19 @@ type Params = {
 };
 
 export function AllClinics() {
+
+  const params = useParams<Params>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { data, fetchNextPage, updateQueryParameters, hasNextPage } = superAdminApi.useListOfUsersInfinity(
+    {
+      fieldSort: searchParams.get('fieldSort'),
+    },
+  );
+  const [filters, setFilters] = useState<Partial<superAdminApi.ListOfUsersQuery> | null>(null);
+
   const block1Ref = useRef<HTMLInputElement>(null);
   const block2Ref = useRef<HTMLInputElement>(null);
-  const params = useParams<Params>();
-  const navigate = useNavigate();
-  const { data, fetchNextPage, updateQueryParameters, hasNextPage } = superAdminApi.useListOfUsersInfinity();
-  const [filters, setFilters] = useState<Partial<superAdminApi.ListOfUsersQuery> | null>(null);
 
   const sidebarItemList = useMemo(() => generateSidebarItemList(data), [data]);
   const clinicList = useMemo(() => generateClinicList(data), [data]);
