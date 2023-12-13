@@ -4,6 +4,7 @@ import { FetchNextPageOptions, InfiniteQueryObserverResult } from '@tanstack/rea
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useSearchParams } from 'react-router-dom';
 import { personnelApi, rolesPersonnelOptions } from '~entities/personnel';
 import { Api } from '~shared/api/realworld';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
@@ -31,7 +32,8 @@ type RoleFilter = {
 };
 
 export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps>((props, ref) => {
-  const [fieldSort, setFieldSort] = useState<string | null>(null);
+  const [, setSearchParams] = useSearchParams();
+  const [fieldSort, setFieldSort] = useState<string | null | undefined>(undefined);
   const [roleFilter, setRoleFilter] = useState<RoleFilter>({
     isOpen: false,
     value: null,
@@ -47,7 +49,19 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
   };
 
   useEffect(() => {
-    handleUpdateFilters({ fieldSort, role: roleFilter.value });
+    const filters = { role: roleFilter.value, fieldSort };
+
+    if (filters.fieldSort !== undefined) {
+      const paramsToUpdate = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          paramsToUpdate.set(key, value);
+        }
+      });
+      setSearchParams(paramsToUpdate);
+    }
+
+    handleUpdateFilters(filters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldSort, roleFilter.value]);
 

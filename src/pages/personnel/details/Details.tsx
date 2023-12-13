@@ -43,7 +43,7 @@ export function PersonnelDetailsPage() {
 
   return (
     <div className={s.root}>
-      <BackButton title='Подробнее' link={PATH_PAGE.personnel.root} />
+      <BackButton title='Подробнее' />
       <div className={s.container}>
         <div className={s.content}>
           <div >

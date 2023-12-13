@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { personnelApi } from '~entities/personnel';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
@@ -12,16 +12,26 @@ import { SidebarItemList } from '~widgets/sidebar-items-list';
 import { generatePersonnelList, generateSidebarItemList } from './lib/utils';
 import s from './styles.module.scss';
 
+type Params = {
+  clinicId?: string
+};
+
 export function PersonnelHomePage() {
+  const params = useParams<Params>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [filters, setFilters] = useState<Partial<personnelApi.QueryListOfUsers> | null>(null);
+  const { data, fetchNextPage, updateQueryParameters, hasNextPage } = personnelApi.useListOfPersonnelInfinity(
+    {
+      role: searchParams.get('role'),
+    },
+  );
   const block1Ref = useRef<HTMLInputElement>(null);
   const block2Ref = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
-  const params = useParams();
-  const [filters, setFilters] = useState<Partial<personnelApi.QueryListOfUsers> | null>(null);
-  const { data, fetchNextPage, updateQueryParameters, hasNextPage } = personnelApi.useListOfPersonnelInfinity();
-
   const sidebarItemList = useMemo(() => generateSidebarItemList(data), [data]);
   const personnelList = useMemo(() => generatePersonnelList(data), [data]);
+
+
 
   useEffect(() => {
     const newQuery = filters ? filterObject(filters) : {};
