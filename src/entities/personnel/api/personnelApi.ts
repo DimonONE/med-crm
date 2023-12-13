@@ -1,7 +1,6 @@
 import {  useMutation } from '@tanstack/react-query';
-// import { v4 as uuidv4 } from 'uuid';
 import axiosInstance, { Api } from '~shared/api/realworld';
-import { useListOfInfinity } from '../../lib/hooks';
+import { useListOfInfinity } from '~shared/lib/react-query';
 
 export type QueryListOfUsers = {
   limit: number | null;

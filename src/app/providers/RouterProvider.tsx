@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
-import { AuthGuard, PatientsGuard, SuperAdminGuard, sessionModel } from '~entities/session';
+import { AuthGuard, PatientsGuard, PersonnelGuard, SuperAdminGuard, sessionModel } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
 import { Header, HeaderLogin } from '~widgets/header';
@@ -74,6 +74,17 @@ export function Router() {
       { path: 'member/:patientId?', element: <PatientManagementPage /> },
     ],
   });
+  const personnel = PersonnelGuard({
+    path: PATH_PAGE.personnel.root,
+    children: [
+      {
+        element: <PersonnelHomePage />,
+        index: true,
+      },
+      { path: 'details/:personnelId', element: <PersonnelDetailsPage /> },
+      { path: 'member/:personnelId?', element: <PersonnelManagementPage /> },
+    ],
+  });
 
   return useRoutes([
     {
@@ -81,6 +92,7 @@ export function Router() {
       children: [
         superAdmin,
         patients,
+        personnel,
         {
           path: 'doctor',
           children: [
@@ -90,17 +102,6 @@ export function Router() {
             },
             { path: ':patientId/record', element: <DoctorPage /> },
             { path: ':patientId', element: <DoctorPage /> },
-          ],
-        },
-        {
-          path: 'personnel',
-          children: [
-            {
-              element: <PersonnelHomePage />,
-              index: true,
-            },
-            { path: 'details/:personnelId', element: <PersonnelDetailsPage /> },
-            { path: 'member/:personnelId?', element: <PersonnelManagementPage /> },
           ],
         },
         {

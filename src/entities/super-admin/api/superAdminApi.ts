@@ -1,7 +1,7 @@
 import {  useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import axiosInstance, { Api } from '~shared/api/realworld';
-import { useListOfInfinity } from '../../lib/hooks';
+import { useListOfInfinity } from '~shared/lib/react-query';
 
 export type ListOfUsersQuery = {
   limit: number | null;
