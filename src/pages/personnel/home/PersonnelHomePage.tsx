@@ -23,6 +23,7 @@ export function PersonnelHomePage() {
   const [filters, setFilters] = useState<Partial<personnelApi.QueryListOfUsers> | null>(null);
   const { data, fetchNextPage, updateQueryParameters, hasNextPage } = personnelApi.useListOfPersonnelInfinity(
     {
+      fieldSort: searchParams.get('fieldSort'),
       role: searchParams.get('role'),
     },
   );
@@ -30,8 +31,6 @@ export function PersonnelHomePage() {
   const block2Ref = useRef<HTMLInputElement>(null);
   const sidebarItemList = useMemo(() => generateSidebarItemList(data), [data]);
   const personnelList = useMemo(() => generatePersonnelList(data), [data]);
-
-
 
   useEffect(() => {
     const newQuery = filters ? filterObject(filters) : {};
