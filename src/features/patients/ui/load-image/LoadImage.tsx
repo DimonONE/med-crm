@@ -35,7 +35,15 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
 
   return (
     <div className={classNames(s.root, className)}>
-      <button className={s.close} type='button' onClick={() => setOpen(true)}> <CloseGrayICO /></button>
+      {isLoad && (
+        <button
+          type='button'
+          className={s.close}
+          onClick={() => setOpen(true)}
+        >
+          <CloseGrayICO />
+        </button>
+      )}
       {image || defaultImage ? (
         <img src={image ? URL.createObjectURL(image) : `${defaultImage?.replace('/app', API_URL)}`} alt="user" />
       ) : <FiledICO />}
