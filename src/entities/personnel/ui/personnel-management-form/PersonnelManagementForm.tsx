@@ -53,6 +53,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     ...(personnelId ? {
       id: personnelId.toString(),
       files: data?.files,
+      image: data?.image,
     } : {}),
     ...(isCreate ? { password: data?.password ?? '' } : {}),
   } as ManagementPersonalDto;
@@ -255,12 +256,14 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                   name="image"
                   type='file'
                   className='form-input'
-                >{({ form }: FieldProps) =>
+                >{({ form, meta }: FieldProps) =>
                   <LoadImage
                     isLoad
+                    defaultImage={meta.value}
                     onChange={(file) => {
                       form.setFieldValue(isCreate ? 'image' : 'newImage', file);
-                    }} />}
+                    }} />
+                  }
                 </Field>
                 <div className='error-message'>
                   <ErrorMessage name="image" />

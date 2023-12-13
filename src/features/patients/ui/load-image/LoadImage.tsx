@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { API_URL } from '~shared/api/realworld';
 import CloseGrayICO from '~shared/svg/close-gray-ico.svg';
@@ -15,7 +15,7 @@ type LoadImageProps = {
 };
 
 export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadImageProps) {
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | string | null>(null);
   const [isOpen, setOpen] = useState(false);
 
   const handleChange = (files: FileValues) => {
@@ -33,6 +33,11 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
     }
   };
 
+  useEffect(() => {
+    setImage(`${defaultImage?.replace('/app', API_URL)}`);
+  }, [defaultImage]);
+
+
   return (
     <div className={classNames(s.root, className)}>
       {isLoad && (
@@ -44,8 +49,8 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
           <CloseGrayICO />
         </button>
       )}
-      {image || defaultImage ? (
-        <img src={image ? URL.createObjectURL(image) : `${defaultImage?.replace('/app', API_URL)}`} alt="user" />
+      {image ? (
+        <img src={typeof image === 'string' ? image : URL.createObjectURL(image)} alt="user" />
       ) : <FiledICO />}
       {
         isLoad && (
