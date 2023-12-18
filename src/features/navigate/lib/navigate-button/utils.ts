@@ -17,7 +17,7 @@ export const getNavigateList = (
       { value: PATH_PAGE.personnel.add, label: 'Добавить' },
       ];
 
-    case checkUserRole('patient'):
+    case checkUserRole('doctor'):
       return [
       { value: PATH_PAGE.patients.records, label: 'Пациенты' },
       { value: PATH_PAGE.patients.viewing, label: 'Пациент' },

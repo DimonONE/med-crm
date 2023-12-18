@@ -4,12 +4,12 @@ type HomeUrl = {
   checkUserRole: (role: keyof Roles) => boolean
 };
 
-export const   getHomeUrl = ({ checkUserRole }: HomeUrl)  => {
+export const getHomeUrl = ({ checkUserRole }: HomeUrl)  => {
   const redirectMap: Record<keyof Roles, string> = {
     superAdmin: PATH_PAGE.superAdmin.root,
-    doctor: PATH_PAGE.doctor.root,
+    doctor: PATH_PAGE.patients.records,
     medChief: PATH_PAGE.personnel.root,
-    patient: PATH_PAGE.patients.records,
+    patient: PATH_PAGE.root,
   };
 
   const matchingRole = Object.keys(redirectMap).find((role) =>

@@ -55,7 +55,9 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
       files: data?.files,
       image: data?.image,
     } : {}),
-    ...(isCreate ? { password: data?.password ?? '' } : {}),
+    ...(isCreate ? {
+      password: data?.password ?? '',
+    } : {}),
   } as ManagementPersonalDto;
 
 
@@ -65,9 +67,8 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     { setSubmitting, resetForm }: FormikHelpers<ManagementPersonalDto>,
   ) => {
     try {
-      // Update personnel
-      if (personnelId && (('newImage' in values) || ('newFiles' in values))) {
-        await update(values, {
+      if ('password' in values) {
+        await create(values, {
           onSuccess: () => {
             setOpen(true);
             resetForm();
@@ -76,8 +77,10 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
             toast(errorHandler(error), { type: 'error' });
           },
         });
-      } else if ('password' in values) {
-        await create(values, {
+
+        // Update personnel
+      } else {
+        await update(values, {
           onSuccess: () => {
             setOpen(true);
             resetForm();
@@ -332,10 +335,11 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                 name="files"
                 className='form-input'
               >
-                {({ form }: FieldProps) =>
+                {({ form, meta }: FieldProps) =>
                   <FileLoader
                     id="button-load-file"
                     title='Загрузить'
+                    filesData={meta.value}
                     onChange={(files) => {
                       form.setFieldValue(isCreate ? 'files' : 'newFiles', files);
                     }}
@@ -372,7 +376,6 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
           >
             Сохранить
           </Button>
-
           {
             personnelId && (
               <Button

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
+import { API_URL } from '~shared/api/realworld';
 import CloseICO from '../../svg/close-gray-ico.svg';
 import { Modal } from '../modal';
 import s from './styles.module.scss';
@@ -14,7 +15,7 @@ type FileLoaderProps = {
   className?: string
   accept?: 'pdf' | 'png'
   multiple?: boolean
-  onDownload?: () => void
+  onDownload?: (link: string) => void
   onDelete?: (files: FileValues, file: File[]) => void
   onChange?: (files: FileValues) => void
   hiddenFileInfo?: boolean
@@ -62,10 +63,11 @@ export function FileLoader(props: FileLoaderProps) {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = (path: string) => {
     if (onDownload) {
-      onDownload();
-    }
+      onDownload(`${path.replace('/app', API_URL)}`);
+    } else
+      window.open(`${path.replace('/app', API_URL)}`, '_blank');
   };
 
   const handleDelete = (fileId: string) => {
@@ -87,9 +89,13 @@ export function FileLoader(props: FileLoaderProps) {
         <ul>
           {files.map((file) => (
             <li key={file.name} className={s.fileInfo}>
-              <button type='button' onClick={() => handleSave()}>
-                <DownloadICO />
-              </button>
+              {
+                'path' in file && (
+                  <button type='button' onClick={() => handleSave(file.path as string)}>
+                    <DownloadICO />
+                  </button>
+                )
+              }
               <span className={s.name}>{file.name}</span>
               <button type='button' onClick={() => setOpen({ flag: true, fileId: file.name })}>
                 <CloseICO />

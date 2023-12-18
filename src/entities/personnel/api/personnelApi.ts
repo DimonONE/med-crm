@@ -25,10 +25,24 @@ export function useCreatePersonal() {
   return useMutation({
     mutationKey: personnelKeys.createPersonnel(),
     mutationFn: async (personnel: Api.CreatePersonalDtoDto) => {
+      const formData = new FormData();
+
+      Object.entries(personnel)
+      .filter(([key]) => key !== 'files')
+      .forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      if (Array.isArray(personnel.files)) {
+        personnel.files.forEach((file, index) => {
+          formData.append('files', file, `file${index}`);
+        });
+      }
+
       const response = await axiosInstance({ 
         url: '/admin/create-personal', 
         method: 'POST',
-        data: personnel,
+        data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -42,10 +56,28 @@ export function useUpdatePersonnel() {
   return useMutation({
     mutationKey: personnelKeys.updatePersonnel(),
     mutationFn: async (personnel: Api.UpdatePersonalDtoDto) => {
+      const formData = new FormData();
+
+      Object.entries(personnel)
+      .filter(([key]) => key !== 'newFiles')
+      .forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      if (personnel.newImage) {
+        formData.delete('image');
+      }
+
+      if (Array.isArray(personnel.newFiles)) {
+        personnel.newFiles.forEach((file, index) => {
+          formData.append('newFiles', file, `newFiles${index}`);
+        });
+      }
+      
       const response = await axiosInstance({ 
         url: '/admin/update-personal', 
         method: 'POST',
-        data: personnel,
+        data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
