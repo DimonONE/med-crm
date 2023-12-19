@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import dayjs from 'dayjs';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { useNavigate, useParams } from 'react-router-dom';
 import { patientsApi, usePatientsListInfinity } from '~entities/patients';
@@ -10,6 +11,8 @@ import { dataLength, filterObject } from '~shared/utils/helpers';
 import { PatientInfo, PatientList } from '~widgets/patients';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
 import { generatePatientList, generateSidebarItemList } from './lib/utils';
+
+dayjs.locale('ru');
 
 type Params = {
   patientId?: string

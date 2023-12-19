@@ -12,7 +12,6 @@ export function useListOfInfinity<T>({ queryKey, fetchPage, initialQuery }: UseL
   let defaultQuery: T = {
     offset: 0,
     limit: 10,
-    status: 'approval',
     sortBy: 'ASC',
     ...(initialQuery as T),
   };

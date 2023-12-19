@@ -57,6 +57,8 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
     } : {}),
     ...(isCreate ? {
       password: data?.password ?? '',
+      files: [],
+      image: null,
     } : {}),
   } as ManagementPersonalDto;
 
@@ -279,9 +281,9 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                   name="dateOfBirth"
                   className='form-input'
                 >
-                  {({ form }: FieldProps) =>
+                  {({ form, meta }: FieldProps) =>
                     <DatePicker
-                      value={dayjs(form?.values?.dateOfBirth)}
+                      value={meta.value}
                       onChange={(value) => {
                         form.setFieldValue('dateOfBirth', dayjs(value as string).toISOString());
                       }}

@@ -114,7 +114,8 @@ export function PersonnelDetailsPage() {
             <FileLoader
               id="personnel-info-load-file"
               title='Загрузить'
-              onDownload={() => false}
+              onDownload={() => undefined}
+              onDelete={() => undefined}
               hiddenButton
             />
           </div>

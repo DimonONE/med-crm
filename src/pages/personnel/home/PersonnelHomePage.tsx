@@ -23,6 +23,7 @@ export function PersonnelHomePage() {
   const [filters, setFilters] = useState<Partial<personnelApi.QueryListOfUsers> | null>(null);
   const { data, fetchNextPage, updateQueryParameters, hasNextPage } = personnelApi.useListOfPersonnelInfinity(
     {
+      status: 'approval',
       fieldSort: searchParams.get('fieldSort'),
       role: searchParams.get('role'),
     },

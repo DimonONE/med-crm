@@ -22,6 +22,7 @@ export function AllClinics() {
   const navigate = useNavigate();
   const { data, fetchNextPage, updateQueryParameters, hasNextPage } = superAdminApi.useListOfUsersInfinity(
     {
+      status: 'approval',
       fieldSort: searchParams.get('fieldSort'),
     },
   );

@@ -34,11 +34,11 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
   };
 
   useEffect(() => {
-    if (typeof defaultImage === 'string') {
+    if (typeof defaultImage === 'string' || defaultImage === null) {
       setImage(`${defaultImage?.replace('/app', API_URL)}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [defaultImage]);
 
   return (
     <div className={classNames(s.root, className)}>
