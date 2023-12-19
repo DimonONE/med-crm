@@ -4,7 +4,7 @@ import { useRoleUser } from '../../model/sessionModel';
 export function PatientsGuard(routes: RouteObject): RouteObject {
   const { checkUserRole } = useRoleUser();
 
-  if (!checkUserRole('patient')) return {};
+  if (!checkUserRole('doctor')) return {};
 
   return routes;
 }

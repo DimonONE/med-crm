@@ -10,7 +10,6 @@ const AllClinicsPage = Loadable(lazy(() => import('~pages/super-admin/all-clinic
 const EmployeeManagementPage = Loadable(lazy(() => import('~pages/super-admin/clinic-management')));
 const ClinicApplicationPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
-
 // Doctor
 const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
 
@@ -22,7 +21,6 @@ const PersonnelManagementPage = Loadable(lazy(() => import('~pages/personnel/emp
 // Patients
 const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
 const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
-const PatientsViewingPage = Loadable(lazy(() => import('~pages/patients/viewing-questionnaire')));
 const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
 const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-record')));
 
@@ -68,8 +66,7 @@ export function Router() {
         element: <PatientsHomePage />,
         index: true,
       },
-      { path: 'records', element: <PatientsRecordsPage /> },
-      { path: 'viewing', element: <PatientsViewingPage /> },
+      { path: 'records/:patientId?', element: <PatientsRecordsPage /> },
       { path: 'edit-record?', element: <PatientEditRecord /> },
       { path: 'member/:patientId?', element: <PatientManagementPage /> },
     ],

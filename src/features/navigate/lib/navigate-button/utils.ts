@@ -20,9 +20,7 @@ export const getNavigateList = (
     case checkUserRole('doctor'):
       return [
       { value: PATH_PAGE.patients.records, label: 'Пациенты' },
-      { value: PATH_PAGE.patients.viewing, label: 'Пациент' },
       { value: PATH_PAGE.patients.add, label: 'Добавить' },
-      { value: PATH_PAGE.patients.edit(''), label: 'Изменить' },
       { value: PATH_PAGE.patients.editRecord, label: 'Запись' },
       ];
    

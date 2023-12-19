@@ -1,44 +1,58 @@
 
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import { NavLink } from 'react-router-dom';
+import { usePatientId } from '~entities/patients';
 import { useRoleUser } from '~entities/session';
+import { LoadImage } from '~features/patients';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
+import { FileLoader } from '~shared/ui/file-loader';
 import s from './styles.module.scss';
 import BackICO from './svg/back-ico.svg';
 import EditICO from './svg/edit-ico.svg';
 import EmailICO from './svg/email-ico.svg';
-import FiledICO from './svg/filed-img.svg';
 import PhoneICO from './svg/phone-ico.svg';
 
-export function UserInfo() {
-  const role = useRoleUser();
-  const image = null;
+type PatientInfoProps = {
+  patientId: string
+};
+
+export function PatientInfo({ patientId }: PatientInfoProps) {
+  const { checkUserRole } = useRoleUser();
+  const { data, isLoading } = usePatientId(patientId);
+
+  const dateOfBirth = dayjs().diff(dayjs(data?.dateOfBirth), 'year');
+
+  if ((!data && !isLoading) || !data) {
+    return null;
+  }
 
   return (
     <div className={classNames(s.root, 'container')}>
       <div className={s.navigateInfo}>
-        <NavLink to=''>
+        <NavLink to={PATH_PAGE.patients.records}>
           <BackICO />
         </NavLink>
-        <span className={s.name}>Ганс Христиан Андерсон</span>
+        <span className={s.name}>{data.fullName}</span>
         {
-          role && (
+          checkUserRole('medChief') && (
             <Button color='primary-reverse'>
               <EditICO />
             </Button>
           )
         }
-
       </div>
 
       <div className={classNames('d-flex', s.blockInfo)}>
         <div className={s.image}>
-          {image ? (
-            <img src={URL.createObjectURL(image)} alt="user" />
-          ) : <FiledICO />}
+          <LoadImage className={s.userImage} defaultImage={data.image} />
 
-          <Button className={classNames(s.button, s.buttonSuccess)} onClick={() => false}>
+          <Button className={classNames(s.button, s.buttonSuccess, s.buttonRecord)} onClick={() => false}>
             Записать
+          </Button>
+          <Button className={classNames(s.button, s.buttonCancel)} onClick={() => false}>
+            Напоминание
           </Button>
         </div>
 
@@ -47,30 +61,38 @@ export function UserInfo() {
             <div className={s.icon}>
               <PhoneICO />
             </div>
-            +38 (099) 254-34-55
+            {data.phone}
           </div>
           <div className={s.textInfo}>
             <div className={s.icon}>
               <EmailICO />
             </div>
-            ganshrist@gmail.com
+            {data.email}
           </div>
-          <div className={s.textInfo}>Мужчина</div>
-          <div className={s.textInfo}>05.07.1991    |   31 год</div>
-          <div className={s.textInfo}>Код клиента: 87643543533423424</div>
-          <div className={classNames(s.textInfo, s.date)}>Рег. 05.07.2023</div>
+          <div className={s.textInfo}>{data.sex}</div>
+          <div className={s.textInfo}>{
+            dayjs(data.dateOfBirth).format('DD.MM.YYYY')} | {dateOfBirth} год(а)
+          </div>
+          <div className={s.textInfo}>Код клиента: {data.id}</div>
+          <div className={classNames(s.textInfo, s.date)}>Рег. {dayjs(data.createdAt).format('DD.MM.YYYY')}</div>
         </div>
 
         <div className={s.userInfo}>
-          <div className={s.textInfo}>США</div>
-          <div className={s.textInfo}>г.Вашингтон</div>
-          <div className={s.textInfo}>ул.Биллгейтская 65\5 кв. 8</div>
-          <div className={classNames(s.textInfo, s.passportNumber)}>Номер паспорта: 87АB0325</div>
-          <div className={s.textInfo}>Ньюйорским ГУМВД Нововашингтонского района</div>
+          <div className={s.textInfo}>{data.country}</div>
+          <div className={s.textInfo}>{data.city}</div>
+          <div className={s.textInfo}>{data.address}</div>
+          <div className={classNames(s.textInfo, s.passportNumber)}>Номер паспорта: {data.passport}</div>
+          <div className={s.textInfo}>{data.passportIssuingAuthority}</div>
         </div>
 
         <div>
           <div className={s.textBold}>Прикрепленные документы</div>
+          <FileLoader
+            id="patient-info-files"
+            title='Загрузить'
+            hiddenButton
+          // filesData={data.files}
+          />
         </div>
 
       </div>
@@ -81,10 +103,10 @@ export function UserInfo() {
             Запись:
             <EditICO />
           </div>
-          <div>14:30 четверг</div>
+          <div>{dayjs(data.user.createdBy).format('mm')} 14:30 четверг</div>
           <div>
             <span>Стоматолог:</span>
-            <span className={s.textValue}>Игнатенко Нина Федоровна</span>
+            <span className={s.textValue}>{data.user.fullName}</span>
           </div>
 
           <div className={s.nameDisease}>Установка брекетов</div>

@@ -20,7 +20,7 @@ export const PATH_PAGE = {
     root: '/patients',
     records: '/patients/records',
     editRecord: '/patients/edit-record',
-    viewing: '/patients/viewing',
+    details: (patientsId: string) => `/patients/records/${patientsId}`,
     add: '/patients/member',
     edit: (patientsId: string) => `/patients/member/${patientsId}`,
   },

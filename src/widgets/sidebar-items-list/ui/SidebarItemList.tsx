@@ -5,26 +5,17 @@ import { ItemContainer } from '~shared/ui/item-container';
 import { Sidebar } from '~shared/ui/sidebar';
 import s from './styles.module.scss';
 
-type ItemList = {
+type SidebarItemType = {
   id: string
   title: string
   subTitle: string
   link?: string
 };
 
-// type Props = {
-//   selectId: string | undefined
-//   items: ItemList[]
-//   children?: ReactElement
-
-//   ref?: React.RefObject<HTMLInputElement>
-//   onScroll?: () => void
-// };
-
 interface SidebarItemListProps {
   children?: ReactElement
   selectId: string | undefined;
-  items: ItemList[];
+  items: SidebarItemType[];
   onScroll?: () => void;
 }
 

@@ -97,9 +97,11 @@ export function FileLoader(props: FileLoaderProps) {
                 )
               }
               <span className={s.name}>{file.name}</span>
-              <button type='button' onClick={() => setOpen({ flag: true, fileId: file.name })}>
-                <CloseICO />
-              </button>
+              {onDelete && (
+                <button type='button' onClick={() => setOpen({ flag: true, fileId: file.name })}>
+                  <CloseICO />
+                </button>
+              )}
             </li>
           ))}
         </ul>

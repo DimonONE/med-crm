@@ -34,13 +34,15 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
   };
 
   useEffect(() => {
-    setImage(`${defaultImage?.replace('/app', API_URL)}`);
-  }, [defaultImage]);
-
+    if (typeof defaultImage === 'string') {
+      setImage(`${defaultImage?.replace('/app', API_URL)}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={classNames(s.root, className)}>
-      {isLoad && (
+      {(isLoad && image) && (
         <button
           type='button'
           className={s.close}
@@ -52,6 +54,7 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
       {image ? (
         <img src={typeof image === 'string' ? image : URL.createObjectURL(image)} alt="user" />
       ) : <FiledICO />}
+
       {
         isLoad && (
           <FileLoader

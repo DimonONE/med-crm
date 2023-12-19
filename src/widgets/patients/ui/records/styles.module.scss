@@ -1,7 +1,14 @@
+.tableCellItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
 .statusInfo {
+  display: inline-block;
   font-size: 18px;
   font-weight: 500;
-  line-height: 140%;
 
   .status {
     color: #029B64;
@@ -21,9 +28,3 @@
   }
 }
 
-.buttonLink {
-  padding: 9px 45px;
-  color: #0E5F8C;
-  font-size: 14px;
-  font-weight: 600;
-}

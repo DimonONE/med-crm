@@ -1,3 +1,5 @@
 export { Cards } from './ui/cards/Cards';
-export { Records } from './ui/records/Records';
-export { UserInfo } from './ui/user-info/UserInfo';
+export { PatientList } from './ui/records/PatientList';
+export { PatientInfo } from './ui/user-info/PatientInfo';
+
+export type { CreatePatientListData } from './ui/records/PatientList';
