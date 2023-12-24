@@ -35,7 +35,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    if (
+      error.response?.status === 401 && 
+      window.location.pathname !== PATH_PAGE.register
+    ) {
       window.location.href = PATH_PAGE.logout; 
     }
     return Promise.reject(error);
