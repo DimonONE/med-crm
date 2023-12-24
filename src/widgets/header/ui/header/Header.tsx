@@ -51,7 +51,7 @@ export function Header() {
         <Button onClick={() => {
           sessionModel.logout();
           navigate(PATH_PAGE.login);
-        }}>Вийти</Button>
+        }}>Выйти</Button>
       </div>
       <Outlet />
     </>
