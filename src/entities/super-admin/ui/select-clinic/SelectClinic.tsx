@@ -22,7 +22,7 @@ export function SelectClinic({ selectClinic }: Props) {
   const [, setPaidTo] = useState('');
 
   if (!selectClinic) {
-    navigate(PATH_PAGE.superAdmin.root);
+    navigate(PATH_PAGE.root);
     return null;
   }
 
@@ -37,7 +37,7 @@ export function SelectClinic({ selectClinic }: Props) {
 
   return (
     <div className={s.container}>
-      <BackButton title='' link={PATH_PAGE.superAdmin.root} />
+      <BackButton title='' link={PATH_PAGE.root} />
 
       <div className={s.row}>
         <div className={s.column}>

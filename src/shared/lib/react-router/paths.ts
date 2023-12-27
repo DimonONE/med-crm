@@ -4,12 +4,12 @@ export const PATH_PAGE = {
   logout: '/logout',
   register: '/register',
   superAdmin: {
-    root: '/clinic',
+    clinics: '/clinic',
     selectClinic: (clinicId: number) => `/clinic/${clinicId}`,
     addClinic: '/clinic/member',
     editClinic: (clinicId: number) => `/clinic/member/${clinicId}`,
     clinicApplications: '/clinic/applications',
-    selectApplications:(clinicId: number) => `/clinic/applications/${clinicId}`,
+    selectApplications: (clinicId: number) => `/clinic/applications/${clinicId}`,
   },
   doctor: {
     root: '/doctor',
@@ -25,14 +25,14 @@ export const PATH_PAGE = {
     edit: (patientsId: string) => `/patients/member/${patientsId}`,
   },
   personnel: {
-    root: '/personnel',
+    root: 'personnel',
     details: (personalId: string) => `/personnel/details/${personalId}`,
     add: '/personnel/member',
     edit: (personalId: string) => `/personnel/member/${personalId}`,
   },
   attendance: {
     root: 'attendance',
-    schedule: (id: string) => `schedule/${id}`,
+    schedule: (id: string) => `/attendance/schedule/${id}`,
   },
   services: '/services',
   page404: '/404',

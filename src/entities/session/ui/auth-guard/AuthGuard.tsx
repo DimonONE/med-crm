@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { getHomeUrl } from '~shared/lib/react-router';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import { useRoleUser } from '../../model/sessionModel';
 
 type AuthGuardProps = {
@@ -10,11 +10,10 @@ type AuthGuardProps = {
 
 export function AuthGuard(props: AuthGuardProps) {
   const { isAuth, children } = props;
-  const { roles, checkUserRole } = useRoleUser();
-  const homeUrl = getHomeUrl({ checkUserRole });
+  const { roles } = useRoleUser();
 
   if (isAuth && roles) {
-    return <Navigate to={homeUrl} />;
+    return <Navigate to={PATH_PAGE.root} />;
   }
 
   return <>{children} </>;

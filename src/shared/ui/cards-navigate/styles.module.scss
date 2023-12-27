@@ -8,6 +8,7 @@
   justify-content: center;
   align-items: center;
   padding-block: 40px;
+  margin: 0 auto;
 }
 
 .card, .icon {
@@ -18,6 +19,7 @@
 }
 
 .card {
+  position: relative;
   padding: 40px 0 23px 0;
   width: 270px;
   height: max-content;
@@ -33,6 +35,7 @@
   &:hover {
     outline: 1px solid var(--color-base);
     box-shadow: 0px 2.8895px 11.55801px 0px rgba(0, 0, 0, 0.25);
+    transition: box-shadow 0.7s;
   }
 }
 
@@ -42,4 +45,29 @@
   margin-bottom: 15px;
   background: linear-gradient(164deg, rgba(255, 255, 255, 0.20) -10.51%, rgba(39, 209, 232, 0.20) 130.19%);
   border-radius: 50%;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.notification {
+  position: absolute;
+  right: 10px; 
+  bottom: 10px; 
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  background-color: #029B64;
+  animation: blink 3s infinite;
 }

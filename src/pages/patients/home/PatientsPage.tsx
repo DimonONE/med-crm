@@ -1,23 +1,23 @@
-import LogoBlue from '~shared/svg/logo-blue.svg';
-import { Sidebar } from '~shared/ui/sidebar';
-import { Cards } from '~widgets/patients';
-import s from './styles.module.scss';
+import { HomeNavigation } from '~features/home-navigation';
 
 export function PatientsPage() {
-  return (
-    <div className={s.root}>
-      <Sidebar className={s.sidebar}>
-        <div className={s.sidebarContent}>
-          <div className={s.logo}>
-            <LogoBlue />
-          </div>
-          <div className={s.label}>
-            Стоматологическая клиника
-          </div>
-        </div>
-      </Sidebar>
 
-      <Cards />
-    </div>
+  const cards = [
+    {
+      id: 1,
+      title: 'Тарифы',
+      link: '/',
+    },
+    {
+      id: 2,
+      title: 'ЗАЯВКИ',
+      link: '/',
+    },
+  ];
+
+  return (
+    <HomeNavigation
+      title='Стоматологическая клиника'
+      cards={cards} />
   );
 }

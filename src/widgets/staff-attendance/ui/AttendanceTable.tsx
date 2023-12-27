@@ -50,9 +50,9 @@ export function AttendanceTable() {
       '178',
       <Button className={s.buttonLink}
         color='secondary'
-        onClick={() => navigate(`${PATH_PAGE.superAdmin.clinicApplications}/1`)}>
+        onClick={() => navigate(PATH_PAGE.attendance.schedule('1'))}>
         Настроить
-      </Button>),
+      </Button >),
   ];
 
 

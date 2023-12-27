@@ -1,18 +1,16 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { sessionModel, useRoleUser } from '~entities/session';
 import { NavigateButton } from '~features/navigate';
-import { PATH_PAGE, getHomeUrl } from '~shared/lib/react-router';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import HeartICO from '~shared/svg/heart-ico.svg';
 import FingerprintICO from '~shared/svg/settings-ico.svg';
 import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
 
-
 export function Header() {
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
 
-  const homeUrl = getHomeUrl({ checkUserRole });
 
   const statusLogo = () => {
     switch (true) {
@@ -29,7 +27,7 @@ export function Header() {
   return (
     <>
       <div className={s.header}>
-        <NavLink className={s.headerLogo} to={homeUrl}>
+        <NavLink className={s.headerLogo} to={PATH_PAGE.root}>
           <span className={s.status}>
             {statusLogo()}
           </span>

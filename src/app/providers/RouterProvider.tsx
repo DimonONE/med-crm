@@ -1,25 +1,28 @@
 import { lazy } from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
-import { AuthGuard, PatientsGuard, PersonnelGuard, SuperAdminGuard, sessionModel } from '~entities/session';
+import { AuthGuard, DoctorGuard, PersonnelGuard, SuperAdminGuard, sessionModel } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Loadable } from '~shared/ui/loadable';
 import { Header, HeaderLogin } from '~widgets/header';
 
 // SuperAdmin
+const SuperAdminHomePage = Loadable(lazy(() => import('~pages/super-admin/home')));
 const AllClinicsPage = Loadable(lazy(() => import('~pages/super-admin/all-clinics')));
 const EmployeeManagementPage = Loadable(lazy(() => import('~pages/super-admin/clinic-management')));
 const ClinicApplicationPage = Loadable(lazy(() => import('~pages/super-admin/clinic-applications')));
 
 // Doctor
-const DoctorPage = Loadable(lazy(() => import('~pages/doctor')));
+const DoctorHomePage = Loadable(lazy(() => import('~pages/doctor/home')));
+const DoctorPage = Loadable(lazy(() => import('~pages/doctor/medical-journal')));
 
 // Personnel
 const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
+const PersonnelListPage = Loadable(lazy(() => import('~pages/personnel/personnel-list-page')));
 const PersonnelDetailsPage = Loadable(lazy(() => import('~pages/personnel/details')));
 const PersonnelManagementPage = Loadable(lazy(() => import('~pages/personnel/employee-management')));
 
 // Patients
-const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
+// const PatientsHomePage = Loadable(lazy(() => import('~pages/patients/home')));
 const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
 const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
 const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-record')));
@@ -46,40 +49,43 @@ export function Router() {
 
   const superAdmin = SuperAdminGuard(
     {
-      path: 'clinic/:clinicId?',
+      path: PATH_PAGE.root,
       children: [
         {
-          element: <AllClinicsPage />,
+          element: <SuperAdminHomePage />,
           index: true,
         },
-        { path: 'applications/:clinicId?', element: <ClinicApplicationPage /> },
-        { path: 'member', element: <EmployeeManagementPage /> },
-        { path: 'member/:clinicId?', element: <EmployeeManagementPage /> },
+        { path: 'clinic/member', element: <EmployeeManagementPage /> },
+        { path: 'clinic/member/:clinicId?', element: <EmployeeManagementPage /> },
+        { path: 'clinic/applications/:clinicId?', element: <ClinicApplicationPage /> },
+        { path: 'clinic/:clinicId?', element: <AllClinicsPage /> },
       ],
     },
   );
 
-  const patients = PatientsGuard({
-    path: PATH_PAGE.patients.root,
+  const doctor = DoctorGuard({
+    path: PATH_PAGE.root,
     children: [
       {
-        element: <PatientsHomePage />,
+        element: <DoctorHomePage />,
         index: true,
       },
-      { path: 'records/:patientId?', element: <PatientsRecordsPage /> },
-      { path: 'edit-record?', element: <PatientEditRecord /> },
-      { path: 'member/:patientId?', element: <PatientManagementPage /> },
+      { path: 'patients/records/:patientId?', element: <PatientsRecordsPage /> },
+      { path: 'patients/edit-record?', element: <PatientEditRecord /> },
+      { path: 'patients/member/:patientId?', element: <PatientManagementPage /> },
     ],
   });
   const personnel = PersonnelGuard({
-    path: PATH_PAGE.personnel.root,
+    path: PATH_PAGE.root,
     children: [
       {
         element: <PersonnelHomePage />,
         index: true,
       },
-      { path: 'details/:personnelId', element: <PersonnelDetailsPage /> },
-      { path: 'member/:personnelId?', element: <PersonnelManagementPage /> },
+      { path: 'personnel', element: <PersonnelListPage /> },
+      { path: 'personnel/details/:personnelId', element: <PersonnelDetailsPage /> },
+      { path: 'personnel/member/:personnelId?', element: <PersonnelManagementPage /> },
+      { path: 'patients/records/:patientId?', element: <PatientsRecordsPage /> },
     ],
   });
 
@@ -88,10 +94,10 @@ export function Router() {
       element: isAuth ? <Header /> : <HeaderLogin />,
       children: [
         superAdmin,
-        patients,
+        doctor,
         personnel,
         {
-          path: 'doctor',
+          path: PATH_PAGE.doctor.root,
           children: [
             {
               element: <DoctorPage />,
