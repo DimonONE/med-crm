@@ -30,6 +30,9 @@ const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-recor
 // Services
 const ServicesPage = Loadable(lazy(() => import('~pages/services')));
 
+// Tariffs
+const TariffsPage = Loadable(lazy(() => import('~pages/tariffs')));
+
 // Staff Attendance
 const AttendancePage = Loadable(lazy(() => import('~pages/staff-attendance/attendance')));
 const AttendanceSchedulePage = Loadable(lazy(() => import('~pages/staff-attendance/schedule')));
@@ -118,6 +121,7 @@ export function Router() {
           ],
         },
         { path: 'services', element: <ServicesPage /> },
+        { path: 'tariffs', element: <TariffsPage /> },
         {
           path: 'login',
           element: (

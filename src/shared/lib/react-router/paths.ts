@@ -35,5 +35,6 @@ export const PATH_PAGE = {
     schedule: (id: string) => `/attendance/schedule/${id}`,
   },
   services: '/services',
+  tariffs: '/tariffs',
   page404: '/404',
 };

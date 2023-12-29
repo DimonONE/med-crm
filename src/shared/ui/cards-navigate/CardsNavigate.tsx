@@ -2,10 +2,6 @@
 import { ReactElement } from 'react';
 import { NavLink } from 'react-router-dom';
 import s from './styles.module.scss';
-// import ClientsICO from './svg/clients-ico.svg';
-// import OfficesICO from './svg/offices-ico.svg';
-// import ServicesICO from './svg/services-ico.svg';
-// import SettingsICO from './svg/settings-ico.svg';
 
 export type TCard = {
   id: number
