@@ -2,7 +2,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, 270px);
   grid-gap: 14px;
-  width: calc(270px * 2 + 14px * 2 * 2);
+  width: calc(270px * 4 + 14px * 4 * 2);
+  height: calc(100vh - var(--header-height));
   overflow-y: auto;
   justify-content: center;
   align-items: center;
