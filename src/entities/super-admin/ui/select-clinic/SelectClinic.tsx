@@ -36,7 +36,8 @@ export function SelectClinic({ selectClinic }: Props) {
   };
 
   return (
-    <div className={s.container}>
+    <div className={classNames(s.root)}>
+
       <BackButton title='' link={PATH_PAGE.root} />
 
       <div className={s.row}>

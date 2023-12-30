@@ -140,10 +140,7 @@ textarea {
   }
 }
 
-// Scrollbar
-::-webkit-scrollbar {
-  display: none;
-}
+
 
 // remove all animations, transitions and smooth scroll for people that prefer not to see them
 @media (prefers-reduced-motion: reduce) {
@@ -161,24 +158,26 @@ textarea {
   }
 }
 
+
+// Scrollbar
+::-webkit-scrollbar {
+  display: block;
+  width: var(--width-scrollbar);
+  height: 0;
+  overflow: auto;
+  background-color: #A1B6C1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0E5F8C;
+  border-radius: 9px;
+}
+
 .container {
   width: calc(100vw - var(--sidebar-width));
   max-height: calc(100vh - var(--header-height));
   overflow-x: scroll;
   overflow-y: auto; 
-
-  ::-webkit-scrollbar {
-    display: block;
-    width: var(--width-scrollbar);
-    overflow: auto;
-    height: 0;
-    background-color: #A1B6C1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #0E5F8C;
-    border-radius: 25%;
-  }
 }
 
 .btn-primary {
@@ -383,7 +382,6 @@ textarea {
 
 
 // Tabels
-
 .table-container {
   .MuiTableCell-root {
     font-family: Montserrat;
