@@ -34,6 +34,10 @@ export const PATH_PAGE = {
     root: 'attendance',
     schedule: (id: string) => `/attendance/schedule/${id}`,
   },
+  receptionTable: {
+    root: '/reception-table',
+    create: '/reception-table-create',
+  },
   services: '/services',
   tariffs: '/tariffs',
   page404: '/404',

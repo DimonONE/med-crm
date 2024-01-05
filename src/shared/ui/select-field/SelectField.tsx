@@ -22,12 +22,13 @@ type SelectFieldProps = {
   className?: string
   selectNavigate?: boolean
   defaultOption?: string | number
+  classNameIcon?: string
 } & DataProps;
 
 export function SelectField(props: SelectFieldProps) {
   const [isOpen, setOpen] = useState(false);
   const [selectValue, setValue] = useState<number | string>('');
-  const { children, selectOptions, defaultOption, selectNavigate, className, ...propsSpread } = props;
+  const { children, selectOptions, defaultOption, selectNavigate, className, classNameIcon, ...propsSpread } = props;
   const fieldValue = 'field' in propsSpread ? propsSpread.field : propsSpread;
 
   useEffect(() => {
@@ -74,9 +75,19 @@ export function SelectField(props: SelectFieldProps) {
           ))
         }
       </Select>
-      <div className='icon-end'>
+      <span
+        className={classNames('icon-end', classNameIcon)}
+        onClick={() => setOpen(prev => !prev)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            setOpen(prev => !prev);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+      >
         {isOpen ? <FiChevronUp /> : <FiChevronDown />}
-      </div>
+      </span>
     </div>
   );
 }

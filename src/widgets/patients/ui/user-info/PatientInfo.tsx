@@ -152,9 +152,9 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
       </div>
 
 
-      <div className={s.tableInfo}>
+      <NavLink to={PATH_PAGE.receptionTable.root} className={s.tableInfo}>
         Таблица приема
-      </div>
+      </NavLink>
       <div className={s.tableInfo}>
         Медицинская информация
       </div>

@@ -27,6 +27,10 @@ const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records'
 const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
 const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-record')));
 
+// Reception Table
+const ReceptionTablePage = Loadable(lazy(() => import('~pages/reception-table/details')));
+
+
 // Services
 const ServicesPage = Loadable(lazy(() => import('~pages/services')));
 
@@ -108,6 +112,16 @@ export function Router() {
             },
             { path: ':patientId/record', element: <DoctorPage /> },
             { path: ':patientId', element: <DoctorPage /> },
+          ],
+        },
+        {
+          path: 'reception-table',
+          children: [
+            {
+              element: <ReceptionTablePage />,
+              index: true,
+            },
+
           ],
         },
         {
