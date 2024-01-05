@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import classNames from 'classnames';
 import { FieldProps } from 'formik';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import './styles-custom.scss';
 import s from './styles.module.scss';
 
 export interface MenuItemProps {
@@ -59,7 +60,7 @@ export function SelectField(props: SelectFieldProps) {
         MenuProps={{
           className: classNames({ 'select-navigate': selectNavigate }),
           anchorOrigin: {
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'center',
           },
         }}
