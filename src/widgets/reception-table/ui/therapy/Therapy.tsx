@@ -49,7 +49,7 @@ export function Therapy() {
         <SelectField
           value={filter}
           onChange={(event) => setFilter(event.target.value)}
-          className={classNames(s.filter)}
+          className={s.filter}
           classNameIcon={s.filterIcon}
           selectNavigate
           selectOptions={selectOptions}

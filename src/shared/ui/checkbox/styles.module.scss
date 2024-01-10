@@ -1,0 +1,15 @@
+.root {
+  color: var(--color-font);
+
+  &.checked {
+    span {
+      font-weight: 600;
+
+      svg {
+        min-width: 20px;
+      }
+    }
+  }
+}
+
+

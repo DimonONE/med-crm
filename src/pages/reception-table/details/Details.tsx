@@ -32,11 +32,6 @@ export function PersonnelDetailsPage() {
             <span className={s.info}>
               У пациента еще нет приемов, чтобы создать <br /> прием, создать прием?
             </span>
-
-            <Button className={s.createButton} onClick={() => navigate(PATH_PAGE.personnel.add)}>
-              <AiOutlinePlusCircle />
-              Создать прием
-            </Button>
           </div>
         );
 
@@ -47,7 +42,7 @@ export function PersonnelDetailsPage() {
   return (
     <div className={s.root}>
       <nav className={s.navigate}>
-        <BackButton title='Таблица приема' />
+        <BackButton title='Таблица приема' className={s.backButton} />
 
         <NavLink className={s.tab} to={PATH_PAGE.receptionTable.root} >ВСЕ</NavLink>
         <NavLink className={s.tab} to={PATH_PAGE.receptionTable.root} >ПАРОДОНТОЛОГИЯ</NavLink>
@@ -62,7 +57,7 @@ export function PersonnelDetailsPage() {
 
 
       </div>
-      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.personnel.add)}>
+      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.receptionTable.create)}>
         <AiOutlinePlusCircle />
         Создать прием
       </Button>

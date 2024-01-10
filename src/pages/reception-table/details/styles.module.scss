@@ -8,6 +8,10 @@
   display: flex;
   white-space: wrap;
   
+  .backButton {
+    line-height: 107%;
+  }
+
   .tab {
     padding: 28px 23px;
     color: var(--color-font);
@@ -24,8 +28,6 @@
     &:hover {
       translate: background 6s;
     }
-
-  
   }
 }
 
@@ -64,7 +66,5 @@
       }
     }
   }
-
-
 }
 

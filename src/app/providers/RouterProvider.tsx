@@ -29,6 +29,7 @@ const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/edit-recor
 
 // Reception Table
 const ReceptionTablePage = Loadable(lazy(() => import('~pages/reception-table/details')));
+const CreatingReceptionPage = Loadable(lazy(() => import('~pages/reception-table/creating-reception')));
 
 
 // Services
@@ -121,7 +122,7 @@ export function Router() {
               element: <ReceptionTablePage />,
               index: true,
             },
-
+            { path: 'create', element: <CreatingReceptionPage /> },
           ],
         },
         {

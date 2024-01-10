@@ -36,7 +36,7 @@ export const PATH_PAGE = {
   },
   receptionTable: {
     root: '/reception-table',
-    create: '/reception-table-create',
+    create: '/reception-table/create',
   },
   services: '/services',
   tariffs: '/tariffs',
