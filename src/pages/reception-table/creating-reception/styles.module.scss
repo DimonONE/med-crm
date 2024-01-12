@@ -22,11 +22,20 @@
     }
   }
 
-  .nameDisease {
+  .valueInfo {
+    padding-inline: 10px;
+    color: var(--color-error);
+    font-weight: 600;
+  }
+
+  .nameDisease,
+   {
     font-weight: 500;
     color: var(--color-font);
     line-height: 107%;
   }
+
+ 
 
   .head {
     display: flex;
@@ -76,6 +85,10 @@
       color: var(--color-font);
       padding: clamp(2px, 2vw, 5px ) clamp(10px, 2vw, 15px);
     }
+
+    @media (min-width: 720px) {
+      white-space: nowrap;
+    }
   }
 
   .description {
@@ -91,6 +104,10 @@
 
 .verticalGap {
   margin-bottom: 15px;
+}
+
+.horizontalGap {
+  margin-left: 10px;
 }
 
 .checkboxes {

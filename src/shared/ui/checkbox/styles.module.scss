@@ -1,5 +1,6 @@
 .root {
   color: var(--color-font);
+  white-space: pre-wrap;
 
   &.checked {
     span {
