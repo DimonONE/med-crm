@@ -77,7 +77,7 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
             scrollableTarget="all-personnel-table"
             next={handleFetchNextPage}
             hasMore={hasNextPage || false}
-            loader={<div>Loading...</div>}
+            loader={null}
             dataLength={dataLength}
           >
             <TableHead >
@@ -121,7 +121,7 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
                 <TableCell width='100%' className='table-head-cell'>ТЕЛЕФОН</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody >
+            <TableBody>
               {personnelList.map((row) => (
                 <TableRow
                   key={row.createdAt}

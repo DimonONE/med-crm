@@ -67,7 +67,7 @@ export const PatientList = React.forwardRef<HTMLDivElement, PatientListProps>((p
             scrollableTarget="all-patient-table"
             next={handleFetchNextPage}
             hasMore={hasNextPage || false}
-            loader={<div>Loading...</div>}
+            loader={null}
             dataLength={dataLength}
           >
             <TableHead >

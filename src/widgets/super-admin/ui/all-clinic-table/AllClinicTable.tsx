@@ -67,7 +67,7 @@ export const AllClinicTable = React.forwardRef<HTMLDivElement, AllClinicTablePro
             scrollableTarget="all-clinic-table"
             next={handleFetchNextPage}
             hasMore={hasNextPage || false}
-            loader={<div>Loading...</div>}
+            loader={null}
             dataLength={dataLength}
           >
             <TableHead  >

@@ -57,7 +57,7 @@ export function PersonnelListPage() {
           }}
           />
         </SidebarItemList>
-        <div className='container'>
+        <div >
           <PersonnelList
             ref={block2Ref}
             personnelList={personnelList}

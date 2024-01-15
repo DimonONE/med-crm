@@ -59,7 +59,7 @@ export function AllClinics() {
           }}
           />
         </SidebarItemList>
-        <div className='container'>
+        <div >
           {
             !params.clinicId
               ? <AllClinicTable

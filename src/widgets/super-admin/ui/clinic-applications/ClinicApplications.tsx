@@ -48,7 +48,7 @@ export const ClinicApplications = React.forwardRef<HTMLDivElement, ClinicApplica
             scrollableTarget="all-clinic-applications"
             next={handleFetchNextPage}
             hasMore={hasNextPage || false}
-            loader={<div>Loading...</div>}
+            loader={null}
             dataLength={dataLength}
           >
             <TableHead  >
