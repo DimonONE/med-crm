@@ -178,6 +178,10 @@ textarea {
   max-height: calc(100vh - var(--header-height));
   overflow-x: scroll;
   overflow-y: auto; 
+
+  ::-webkit-scrollbar {
+    height: var(--width-scrollbar);
+  }
 }
 
 .btn-primary {
@@ -360,6 +364,8 @@ textarea {
 
 // Tabels
 .table-container {
+  height: 100%;
+
   .MuiTableCell-root {
     font-family: Montserrat;
   }
