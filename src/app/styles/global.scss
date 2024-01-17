@@ -175,7 +175,7 @@ textarea {
 
 .container {
   width: calc(100vw - var(--sidebar-width));
-  max-height: calc(100vh - var(--header-height));
+  height: calc(100vh - var(--header-height));
   overflow-x: scroll;
   overflow-y: auto; 
 

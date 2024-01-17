@@ -70,8 +70,8 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
   }
 
   return (
-    <div id='all-personnel-table' ref={ref} className={classNames(s.root, 'container')} onScroll={onScroll}>
-      <TableContainer className='table-container' component={Paper}>
+    <div className={classNames(s.root, 'container')} >
+      <TableContainer id='all-personnel-table' ref={ref} className='table-container' onScroll={onScroll} component={Paper}>
         <Table sx={{ minWidth: 850 }} aria-label="simple table">
           <InfiniteScroll
             scrollableTarget="all-personnel-table"
