@@ -116,6 +116,8 @@ export function CreatingReception() {
         periapicalSpace_2: false,
         periapicalSpace_3: false,
         periapicalSpace_4: false,
+
+        previouslyTreated: -1,
       }}
       // validationSchema={object().shape({
       //   email: string().email().required(),
@@ -941,33 +943,55 @@ export function CreatingReception() {
             <ul className={s.ul}>
               <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
                 <span className={s.filterOptions}>
-                  Зуб <div className={s.valueInfo}>{values.toothNumber}</div> под пломбой по
-                  <Field name="test">
-                    {(props: FieldProps) =>
-                      <SelectField
-                        className={s.optionInfo}
-                        selectNavigate
-                        selectOptions={[{ value: 0, label: 'выбрать' }]}
-                        {...props}
-                      >
-                        {
-                          [{ value: 0, label: 'выбрать' }].map(({ label, value: link }) => (
-                            <MenuItem
-                              key={link}
-                              value={link}
-                              className='select-link'
+                  Зуб<div className={s.valueInfo}>{values.toothNumber}</div>
+                  {
+                    values.previouslyTreated > 0
+                      ? <>
+                        глубокая кариозная полость на
+                        <Field
+                          name="test"
+                        >
+                          {(props: FieldProps) =>
+                            <UnderlineText
+                              width='100%'
+                              name='test'
+                              className={classNames(s.defaultInput, s.title)}
+                              onChange={props.field.onChange} />}
+                        </Field>
+                        поверхности(ях),
+                      </>
+                      : <>
+                        под пломбой по
+                        <Field name="test">
+                          {(props: FieldProps) =>
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={[{ value: 0, label: 'выбрать' }]}
+                              {...props}
                             >
-                              {label}
-                            </MenuItem>
-                          ))
-                        }
-                      </SelectField>}
-                  </Field>
-                  классу по Блеку с нарушением краевой проницаемости, после снятия пломбы,
+                              {
+                                [{ value: 0, label: 'выбрать' }].map(({ label, value: link }) => (
+                                  <MenuItem
+                                    key={link}
+                                    value={link}
+                                    className='select-link'
+                                  >
+                                    {label}
+                                  </MenuItem>
+                                ))
+                              }
+                            </SelectField>}
+                        </Field>
+                        классу по Блеку с нарушением краевой проницаемости, после снятия пломбы,
+                      </>
+                  }
                 </span>
               </li>
               <li className={classNames(s.verticalGap, s.description)}>
-                зондирование дна кариозной полости безболезненное, полость зуба вскрыта, реакция на холод длительная, ЭОД – 100-200 мкА, перкуссия резко болезненная, слизистая оболочка рта в области переходной складки в проекции корня зуба ____ гипермирована, отечна, болезненна при пальпации.
+                зондирование дна кариозной полости безболезненное, полость зуба вскрыта, реакция на холод длительная, ЭОД – 100-200 мкА, перкуссия резко болезненная, слизистая оболочка рта в области переходной складки в проекции корня зуба
+                <div className={s.valueInfo}>{values.toothNumber}</div>
+                гипермирована, отечна, болезненна при пальпации.
               </li>
               <li className={s.verticalGap}>
                 <span className={s.filterOptions}>
