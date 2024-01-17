@@ -2195,6 +2195,383 @@ export function CreatingReception() {
               <li className={classNames(s.li, s.nameDisease)}>Зуб <span className={s.valueInfo}>{values.toothNumber}</span>  Острый апикальный периодонтит. К04.4</li>
             </ul>
           </div>
+
+          <div className={s.cardBlock}>
+            <div className={classNames(s.title, s.verticalGap)}>Прием №1</div>
+
+            <div className={s.horizontalGap}>
+              <div className={s.verticalGap}>
+                Зуб <span className={s.valueInfo}>{values.toothNumber}</span>  проведено:
+              </div>
+              <ul className={s.ul}>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.description, s.li)}>
+                  раскрытие кариозной полости, удаление размягченного пигментированного дентина, формирование полости, раскрытие полости зуба,
+                  создание прямого доступа к корневым каналам, обнаружение устьев корневых каналов,
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >
+                        <div className={s.filterOptions}>
+                          Лечение под анестезией
+                          <Field name="test">
+                            {(props: FieldProps) =>
+                              <SelectField
+                                className={classNames(s.optionInfo, s.horizontalGap)}
+                                selectNavigate
+                                selectOptions={[{ value: -1, label: 'инфильтрационной' }, { value: 1, label: 'проводниковой' }, { value: 1, label: 'интралегаментарная' }]}
+                                {...props}
+                              >
+                                {
+                                  yesNoOptions.map(({ label, value: link }) => (
+                                    <MenuItem
+                                      key={link}
+                                      value={link}
+                                      className='select-link'
+                                    >
+                                      {label}
+                                    </MenuItem>
+                                  ))
+                                }
+                              </SelectField>}
+                          </Field>
+                          , применен раствор
+                          <Field
+                            name="test"
+                          >
+                            {(props: FieldProps) =>
+                              <UnderlineText
+                                width='100%'
+                                name='test'
+                                className={classNames(s.defaultInput, s.title)}
+                                onChange={props.field.onChange} />}
+                          </Field>
+                        </div>
+                      </Checkbox>}
+                  </Field>
+                </li>
+
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >Снятие пломбы</Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >Использование коффердама</Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >Извлечение штифта,</Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >
+                        <div className={s.filterOptions}>
+                          Извлечение отломка, фрагмента инструмента
+                          <Field
+                            name="test"
+                          >
+                            {(props: FieldProps) =>
+                              <UnderlineText
+                                width='100%'
+                                name='test'
+                                className={classNames(s.defaultInput, s.title)}
+                                onChange={props.field.onChange} />}
+                          </Field>,
+                        </div>
+                      </Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >
+                        <div className={s.filterOptions}>
+                          Распломбирование корневого(ых) канала(ов)
+                          <Field
+                            name="test"
+                          >
+                            {(props: FieldProps) =>
+                              <UnderlineText
+                                width='100%'
+                                name='test'
+                                className={classNames(s.defaultInput, s.title)}
+                                onChange={props.field.onChange} />}
+                          </Field>,
+                        </div>
+                      </Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >Содержимое корневых каналов гнойное,</Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <div className={s.verticalGap}>Прохождение канала(ов) до:</div>
+                  <FormGroup className={s.checkboxes} >
+                    <Grid container className={s.verticalGap}>
+                      <Field
+                        name="test"
+                      >
+                        {({ field, form }: FieldProps) =>
+                          <Checkbox
+                            checked={field.value}
+                            onChange={() => form.setFieldValue('test', !field.value)}
+                          >
+                            <span className={s.filterOptions}>
+                              Физиологической верхушки
+                              <Field
+                                name="test"
+                              >
+                                {(props: FieldProps) =>
+                                  <UnderlineText
+                                    width='100%'
+                                    name='test'
+                                    className={classNames(s.defaultInput, s.title)}
+                                    onChange={props.field.onChange} />}
+                              </Field>
+                            </span>
+                          </Checkbox>}
+                      </Field>
+                    </Grid>
+                    <Grid container className={s.verticalGap}>
+                      <Field
+                        name="test"
+                      >
+                        {({ field, form }: FieldProps) =>
+                          <Checkbox
+                            checked={field.value}
+                            onChange={() => form.setFieldValue('test', !field.value)}
+                          >
+                            <span className={classNames(s.filterOptions, 'w-auto')}>
+                              На 1/2 канала
+                              <Field
+                                name="test"
+                              >
+                                {(props: FieldProps) =>
+                                  <UnderlineText
+                                    width='100%'
+                                    name='test'
+                                    className={classNames(s.defaultInput, s.title)}
+                                    onChange={props.field.onChange} />}
+                              </Field>
+                            </span>
+                          </Checkbox>}
+                      </Field>
+                    </Grid>
+                    <Grid container className={s.verticalGap}>
+                      <Field
+                        name="test"
+                      >
+                        {({ field, form }: FieldProps) =>
+                          <Checkbox
+                            checked={field.value}
+                            onChange={() => form.setFieldValue('test', !field.value)}
+                          >
+                            <span className={classNames(s.filterOptions, 'w-auto')}>
+                              На 1/3 канала
+                              <Field
+                                name="test"
+                              >
+                                {(props: FieldProps) =>
+                                  <UnderlineText
+                                    width='100%'
+                                    name='test'
+                                    className={classNames(s.defaultInput, s.title)}
+                                    onChange={props.field.onChange} />}
+                              </Field>
+                            </span>
+                          </Checkbox>}
+                      </Field>
+                    </Grid>
+                    <Grid container className={s.verticalGap}>
+                      <Field
+                        name="test"
+                      >
+                        {({ field, form }: FieldProps) =>
+                          <Checkbox
+                            checked={field.value}
+                            onChange={() => form.setFieldValue('test', !field.value)}
+                          >
+                            <span className={classNames(s.filterOptions, 'w-auto')}>
+                              На 2/3 канала
+                              <Field
+                                name="test"
+                              >
+                                {(props: FieldProps) =>
+                                  <UnderlineText
+                                    width='100%'
+                                    name='test'
+                                    className={classNames(s.defaultInput, s.title)}
+                                    onChange={props.field.onChange} />}
+                              </Field>
+                            </span>
+                          </Checkbox>}
+                      </Field>
+                    </Grid>
+                    <Grid container className={s.verticalGap}>
+                      <Field
+                        name="test"
+                      >
+                        {({ field, form }: FieldProps) =>
+                          <Checkbox
+                            checked={field.value}
+                            onChange={() => form.setFieldValue('test', !field.value)}
+                          >
+                            <span className={classNames(s.filterOptions, 'w-auto')}>
+                              Другое
+                              <Field
+                                name="test"
+                              >
+                                {(props: FieldProps) =>
+                                  <UnderlineText
+                                    width='100%'
+                                    name='test'
+                                    className={classNames(s.defaultInput, s.title)}
+                                    onChange={props.field.onChange} />}
+                              </Field>
+                            </span>
+                          </Checkbox>}
+                      </Field>
+                    </Grid>
+                  </FormGroup>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >
+                        <div className={s.filterOptions}>
+                          Закрытие перфорации
+                          <Field
+                            name="test"
+                          >
+                            {(props: FieldProps) =>
+                              <UnderlineText
+                                width='100%'
+                                name='test'
+                                className={classNames(s.defaultInput, s.title)}
+                                onChange={props.field.onChange} />}
+                          </Field>,
+                        </div>
+                      </Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.description, s.li)}>
+                  Рентгенологический контроль прохождения канала(ов), формирование корневого(ых) канала(ов), медикаментозная обработка
+                  и высушивание канала(ов), использование ультразвуковых насадок для активации антисептического раствора,
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <Field
+                    name="test"
+                  >
+                    {({ field, form }: FieldProps) =>
+                      <Checkbox
+                        checked={field.value}
+                        onChange={() => form.setFieldValue('test', !field.value)}
+                      >
+                        <div className={s.filterOptions}>
+                          Временное пломбирование корневого (ых) канала(ов) материалом
+                          <Field
+                            name="test"
+                          >
+                            {(props: FieldProps) =>
+                              <UnderlineText
+                                width='100%'
+                                name='test'
+                                className={classNames(s.defaultInput, s.title)}
+                                onChange={props.field.onChange} />}
+                          </Field>,
+                        </div>
+                      </Checkbox>}
+                  </Field>
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  Рентгенологический контроль обтурации временным материалом (см. таблицу), поставлена временная пломба.
+                </li>
+                <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                  <div className={s.filterOptions}>
+                    Назначен повторный прием:
+                    <Field
+                      name="test"
+                      className='form-input'
+                    >{({ form, meta }: FieldProps) =>
+                      <DatePicker
+                        sx={{
+                          '.MuiInputBase-root.MuiOutlinedInput-root': {
+                            width: '150px',
+                            height: '38px',
+                            marginLeft: '15px',
+                            borderRadius: '10px',
+                            border: '1px solid #0E5F8C',
+                            background: '#CBECFF',
+                            color: 'var(--color-font)',
+                            fontSize: '14px',
+                            fontWeight: 400,
+                          },
+                          '.MuiInputBase-root .MuiButtonBase-root.MuiIconButton-root': {
+                            color: 'var(--color-font)',
+                          },
+                        }}
+                        value={meta.value}
+                        onChange={(date) =>
+                          date && form.setFieldValue('test', dayjs(date as string).toISOString())
+                        } />
+                      }
+                    </Field>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
           <Button
             className={classNames(s.submit, 'form-submit')}
             type="submit"
