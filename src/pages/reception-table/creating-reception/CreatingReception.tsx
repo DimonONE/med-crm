@@ -19,6 +19,11 @@ interface UnderlineTextProps {
   className?: string
 }
 
+interface RootChannelProps {
+  title: string
+  isDefault?: boolean
+}
+
 
 function UnderlineText(props: UnderlineTextProps): JSX.Element {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -53,6 +58,297 @@ function UnderlineText(props: UnderlineTextProps): JSX.Element {
       style={{ width: value ? `${value.length}ch` : width || 'auto' }}
       {...prevProps}
     />
+  );
+}
+
+
+function RootChannel({ title, isDefault }: RootChannelProps): JSX.Element {
+  const [isHidden, setHidden] = useState(true);
+
+  const handleClick = () => {
+    setHidden(prev => !prev);
+  };
+
+  useEffect(() => {
+    if (isDefault) {
+      setHidden(prev => !prev);
+    }
+  }, [isDefault]);
+
+  return (
+    <div className={s.cardBlock}>
+      <button
+        onClick={handleClick}
+        type='button'
+        className={classNames(s.title, { [s.verticalGap]: !isHidden })}
+      >{title}</button>
+      {
+        !isHidden && (
+          <>
+            <ul className={s.ul}>
+              <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                <span className={s.filterOptions}>
+                  Наименование корневого канала
+                  <Field
+                    name="test"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='test'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                </span>
+              </li>
+              <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                <span className={s.filterOptions}>
+                  Рабочая длина, мм
+                  <Field
+                    name="test"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='test'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                </span>
+              </li>
+              <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                <span className={s.filterOptions}>
+                  Наименование системы эндодонтического инструментария, размер финального инструмента по ISO
+                  <Field
+                    name="test"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='test'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                </span>
+              </li>
+              <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                <div className={s.verticalGap}> Рентген контроль после <span className={s.title}>временного пломбирования:</span></div>
+                <FormGroup className={s.checkboxes} >
+                  <Grid container className={s.verticalGap}>
+                    <span className={s.filterOptions}>
+                      видна тень рентгеноконтрастного пломбировочного материала  по всей длине канала зуба
+                      <Field name="test">
+                        {(props: FieldProps) =>
+                          <SelectField
+                            className={classNames(s.optionInfo, s.horizontalGap)}
+                            selectNavigate
+                            selectOptions={[{ value: -1, label: 'доходя до апекса' }, { value: 1, label: 'не доходя до апекса,' }]}
+                            {...props}
+                          >
+                            {
+                              [{ value: -1, label: 'доходя до апекса' }, { value: 1, label: 'не доходя до апекса,' }].map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                            }
+                          </SelectField>}
+                      </Field>
+                      <Field
+                        name="test"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='10px'
+                            name='test'
+                            className={classNames(s.defaultInput, s.title)}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                      мм,
+                    </span>
+                  </Grid>
+                  <Grid container className={s.verticalGap}>
+                    <span className={s.filterOptions}>
+                      распределение материала по всей длине
+                      <Field name="test">
+                        {(props: FieldProps) =>
+                          <SelectField
+                            className={classNames(s.optionInfo, s.horizontalGap)}
+                            selectNavigate
+                            selectOptions={[{ value: -1, label: 'Равномерное' }, { value: 1, label: 'Не равномерное' }]}
+                            {...props}
+                          >
+                            {
+                              [{ value: -1, label: 'Равномерное' }, { value: 1, label: 'Не равномерное' }].map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                            }
+                          </SelectField>}
+                      </Field>
+                    </span>
+                  </Grid>
+                  <Grid container className={s.verticalGap}>
+                    <span className={s.filterOptions}>
+                      выход материала за пределы корневого канала
+                      <Field name="test">
+                        {(props: FieldProps) =>
+                          <SelectField
+                            className={classNames(s.optionInfo, s.horizontalGap)}
+                            selectNavigate
+                            selectOptions={[{ value: -1, label: 'Не визуализируется' }, { value: 1, label: 'Визуализируется' }]}
+                            {...props}
+                          >
+                            {
+                              [{ value: -1, label: 'Не визуализируется' }, { value: 1, label: 'Визуализируется' }].map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                            }
+                          </SelectField>}
+                      </Field>
+                    </span>
+                  </Grid>
+                </FormGroup>
+              </li>
+            </ul>
+            <div className={s.verticalGap}>
+              <Field
+                name="test"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test'
+                    className={classNames(s.defaultInput, s.title, s.verticalGap)}
+                    onChange={props.field.onChange} />}
+              </Field>
+            </div>
+            <ul className={s.ul}>
+              <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
+                <div className={s.verticalGap}> Рентген контроль после <span className={s.title}>постоянного пломбирования:</span></div>
+                <FormGroup className={s.checkboxes} >
+                  <Grid container className={s.verticalGap}>
+                    <span className={s.filterOptions}>
+                      видна тень рентгеноконтрастного пломбировочного материала  по всей длине канала зуба
+                      <Field name="test">
+                        {(props: FieldProps) =>
+                          <SelectField
+                            className={classNames(s.optionInfo, s.horizontalGap)}
+                            selectNavigate
+                            selectOptions={[{ value: -1, label: 'доходя до апекса' }, { value: 1, label: 'не доходя до апекса,' }]}
+                            {...props}
+                          >
+                            {
+                              [{ value: -1, label: 'доходя до апекса' }, { value: 1, label: 'не доходя до апекса,' }].map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                            }
+                          </SelectField>}
+                      </Field>
+                      <Field
+                        name="test"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='10px'
+                            name='test'
+                            className={classNames(s.defaultInput, s.title)}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                      мм,
+                    </span>
+                  </Grid>
+                  <Grid container className={s.verticalGap}>
+                    <span className={s.filterOptions}>
+                      распределение материала по всей длине
+                      <Field name="test">
+                        {(props: FieldProps) =>
+                          <SelectField
+                            className={classNames(s.optionInfo, s.horizontalGap)}
+                            selectNavigate
+                            selectOptions={[{ value: -1, label: 'Равномерное' }, { value: 1, label: 'Не равномерное' }]}
+                            {...props}
+                          >
+                            {
+                              [{ value: -1, label: 'Равномерное' }, { value: 1, label: 'Не равномерное' }].map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                            }
+                          </SelectField>}
+                      </Field>
+                    </span>
+                  </Grid>
+                  <Grid container className={s.verticalGap}>
+                    <span className={s.filterOptions}>
+                      выход материала за пределы корневого канала
+                      <Field name="test">
+                        {(props: FieldProps) =>
+                          <SelectField
+                            className={classNames(s.optionInfo, s.horizontalGap)}
+                            selectNavigate
+                            selectOptions={[{ value: -1, label: 'Не визуализируется' }, { value: 1, label: 'Визуализируется' }]}
+                            {...props}
+                          >
+                            {
+                              [{ value: -1, label: 'Не визуализируется' }, { value: 1, label: 'Визуализируется' }].map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                            }
+                          </SelectField>}
+                      </Field>
+                    </span>
+                  </Grid>
+                </FormGroup>
+              </li>
+            </ul>
+            <Field
+              name="test"
+            >
+              {(props: FieldProps) =>
+                <UnderlineText
+                  width='100%'
+                  name='test'
+                  className={classNames(s.defaultInput, s.title)}
+                  onChange={props.field.onChange} />}
+            </Field>
+          </>
+        )
+      }
+
+    </div>
   );
 }
 
@@ -2224,11 +2520,11 @@ export function CreatingReception() {
                               <SelectField
                                 className={classNames(s.optionInfo, s.horizontalGap)}
                                 selectNavigate
-                                selectOptions={[{ value: -1, label: 'инфильтрационной' }, { value: 1, label: 'проводниковой' }, { value: 1, label: 'интралегаментарная' }]}
+                                selectOptions={[{ value: -1, label: 'инфильтрационной' }, { value: 1, label: 'проводниковой' }, { value: 2, label: 'интралегаментарная' }]}
                                 {...props}
                               >
                                 {
-                                  yesNoOptions.map(({ label, value: link }) => (
+                                  [{ value: -1, label: 'инфильтрационной' }, { value: 1, label: 'проводниковой' }, { value: 2, label: 'интралегаментарная' }].map(({ label, value: link }) => (
                                     <MenuItem
                                       key={link}
                                       value={link}
@@ -2255,7 +2551,6 @@ export function CreatingReception() {
                       </Checkbox>}
                   </Field>
                 </li>
-
                 <li className={classNames(s.verticalGap, s.nameDisease, s.li)}>
                   <Field
                     name="test"
@@ -2572,6 +2867,14 @@ export function CreatingReception() {
               </ul>
             </div>
           </div>
+
+
+          <RootChannel isDefault title="Корневой канал 1" />
+          <RootChannel title="Корневой канал 2" />
+          <RootChannel title="Корневой канал 3" />
+          <RootChannel title="Корневой канал 4" />
+          <RootChannel title="Корневой канал 5" />
+
           <Button
             className={classNames(s.submit, 'form-submit')}
             type="submit"
