@@ -14,6 +14,17 @@ type LoadImageProps = {
   isLoad?: boolean
 };
 
+function isValidImage(url: string | File | null, callback: (valid: boolean) => void): void {
+  console.log('url', url);
+
+  if (typeof url === 'string') {
+    const img = new Image();
+    img.onload = () => callback(true);
+    img.onerror = () => callback(false);
+    img.src = url;
+  }
+}
+
 export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadImageProps) {
   const [image, setImage] = useState<File | string | null>(null);
   const [isOpen, setOpen] = useState(false);
@@ -37,8 +48,17 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
     if (typeof defaultImage === 'string' || defaultImage === null) {
       setImage(`${defaultImage?.replace('/app', API_URL)}`);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultImage]);
+
+  useEffect(() => {
+    isValidImage(image, (valid: boolean) => {
+      if (!valid) {
+        setImage(null);
+      }
+    });
+  }, [image]);
 
   return (
     <div className={classNames(s.root, className)}>
