@@ -120,23 +120,24 @@ export function PersonnelDetailsPage() {
             />
           </div>
         </div>
-
-        <Button
-          className={classNames(s.submit, 'form-submit')}
-          type="submit"
-          color="secondary"
-          onClick={() => navigate(PATH_PAGE.personnel.edit(data.id))}
-        >
-          Редактировать
-        </Button>
-        <Button
-          className={classNames(s.delete, 'form-submit')}
-          type="submit"
-          color="primary"
-          onClick={() => setOpen(true)}
-        >
-          Удалить
-        </Button>
+        <div>
+          <Button
+            className={classNames(s.submit, 'form-submit')}
+            type="submit"
+            color="secondary"
+            onClick={() => navigate(PATH_PAGE.personnel.edit(data.id))}
+          >
+            Редактировать
+          </Button>
+          <Button
+            className={classNames(s.delete, 'form-submit')}
+            type="submit"
+            color="primary"
+            onClick={() => setOpen(true)}
+          >
+            Удалить
+          </Button>
+        </div>
       </div>
 
       <Modal

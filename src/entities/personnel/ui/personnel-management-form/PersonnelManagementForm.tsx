@@ -118,7 +118,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
       onSubmit={onSubmit}
     >
       {({ isSubmitting }) => (
-        <Form className='full-width'>
+        <Form className={classNames(s.container, 'full-width')}>
           <div className={s.userInfo} >
             <span className='full-width'>
               <div className='error-message'>
@@ -283,7 +283,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                 >
                   {({ form, meta }: FieldProps) =>
                     <DatePicker
-                      value={meta.value}
+                      defaultValue={dayjs(meta.value)}
                       onChange={(value) => {
                         form.setFieldValue('dateOfBirth', dayjs(value as string).toISOString());
                       }}
@@ -370,26 +370,28 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
               <ErrorMessage name="notice" />
             </div>
           </fieldset>
-          <Button
-            className={classNames(s.submit, 'form-submit')}
-            type="submit"
-            color="primary"
-            disabled={isSubmitting}
-          >
-            Сохранить
-          </Button>
-          {
-            personnelId && (
-              <Button
-                className={classNames(s.delete, 'form-submit')}
-                type="submit"
-                color="primary"
-                disabled={isSubmitting}
-              >
-                Удалить
-              </Button>
-            )
-          }
+          <div>
+            <Button
+              className={classNames(s.submit, 'form-submit')}
+              type="submit"
+              color="primary"
+              disabled={isSubmitting}
+            >
+              Сохранить
+            </Button>
+            {
+              personnelId && (
+                <Button
+                  className={classNames(s.delete, 'form-submit')}
+                  type="submit"
+                  color="primary"
+                  disabled={isSubmitting}
+                >
+                  Удалить
+                </Button>
+              )
+            }
+          </div>
 
           <Modal
             isOpen={isOpen}

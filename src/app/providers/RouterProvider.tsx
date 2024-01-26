@@ -93,6 +93,8 @@ export function Router() {
       { path: 'personnel', element: <PersonnelListPage /> },
       { path: 'personnel/details/:personnelId', element: <PersonnelDetailsPage /> },
       { path: 'personnel/member/:personnelId?', element: <PersonnelManagementPage /> },
+      { path: 'patients/member/:patientId?', element: <PatientManagementPage /> },
+      { path: 'patients/edit-record?', element: <PatientEditRecord /> },
       { path: 'patients/records/:patientId?', element: <PatientsRecordsPage /> },
     ],
   });

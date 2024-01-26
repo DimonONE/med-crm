@@ -123,7 +123,7 @@ export function PatientsManagementForm({ patientId, isCreate }: Props) {
       onSubmit={onSubmit}
     >
       {({ isSubmitting }) => (
-        <Form className='full-width'>
+        <Form className={classNames(s.container, 'full-width')}>
           <div className={s.userInfo} >
             <span className='full-width'>
               <div className={s.formLabel}>
@@ -340,27 +340,29 @@ export function PatientsManagementForm({ patientId, isCreate }: Props) {
             placeholder="Заметка"
             component="textarea"
           />
-          <Button
-            className={classNames(s.submit, 'form-submit')}
-            type="submit"
-            color="primary"
-            disabled={isSubmitting}
-          >
-            Сохранить
-          </Button>
+          <div>
+            <Button
+              className={classNames(s.submit, 'form-submit')}
+              type="submit"
+              color="primary"
+              disabled={isSubmitting}
+            >
+              Сохранить
+            </Button>
 
-          {
-            patientId && (
-              <Button
-                className={classNames(s.delete, 'form-submit')}
-                type="submit"
-                color="primary"
-                disabled={isSubmitting}
-              >
-                Удалить
-              </Button>
-            )
-          }
+            {
+              patientId && (
+                <Button
+                  className={classNames(s.delete, 'form-submit')}
+                  type="submit"
+                  color="primary"
+                  disabled={isSubmitting}
+                >
+                  Удалить
+                </Button>
+              )
+            }
+          </div>
 
           <Modal
             isOpen={isOpen}

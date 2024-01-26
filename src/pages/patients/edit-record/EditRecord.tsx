@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { ErrorMessage, Field, FieldProps, Form, Formik } from 'formik';
 import { object } from 'yup';
 import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
-import CloseICO from '~shared/svg/close-gray-ico.svg';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
@@ -13,7 +12,6 @@ import s from './styles.module.scss';
 
 export function EditRecord() {
   const selectOptions = [{ value: '0', label: 'Имя врача' }, { value: '1', label: 'Dima' }, { value: '2', label: 'Ivan' }];
-
 
   return (
     <div className={s.root}>
@@ -42,7 +40,7 @@ export function EditRecord() {
           }}
         >
           {({ isSubmitting, values }) => (
-            <Form className='full-width'>
+            <Form className={classNames(s.container, 'full-width')}>
               <div className={s.label}>Имя врача</div>
               <Field
                 name="nameDoctor"
@@ -86,66 +84,8 @@ export function EditRecord() {
                       <ErrorMessage name="complaint" />
                     </fieldset>
 
-                    <div className={s.label}>Добавить услуги</div>
-                    <div className={s.addServicesBlock}>
-                      <Field
-                        name="addServices"
-                      >
-                        {(props: FieldProps) =>
-                          <SelectField
-                            {...props}
-                            className={classNames(s.addServices, 'form-input')}
-                            selectOptions={selectOptions}
-                          />}
-                      </Field>
-                      <Button
-                        className={classNames(s.adding, 'form-submit')}
-                        type="submit"
-                        color="primary"
-                        disabled={isSubmitting}
-                      >
-                        Добавить
-                      </Button>
-                    </div>
-
-
-                    <div className='d-flex'>
-                      <Field
-                        name="servicesPrice"
-                        className={classNames(s.servicesPrice, 'form-input')}
-                        placeholder='Цена ₽'
-                      />
-                      <Field
-                        name="additionalExpenses"
-                        className={classNames(s.additionalExpenses, 'form-input')}
-                        placeholder='Доп.расходы'
-
-                      />
-
-                      <Button
-                        className={classNames(s.adding, 'form-submit')}
-                        type="submit"
-                        color="primary"
-                        disabled={isSubmitting}
-                      >
-                        Добавить
-                      </Button>
-                    </div>
-
-                    <div className={s.servicesList}>
-                      <span className={s.price}>₽ 40</span>
-                      <span className={s.info}>Пломбирование</span>
-                      <Button color='primary-reverse' onClick={() => false}>
-                        <CloseICO />
-                      </Button>
-                    </div>
-
                     <div className={s.submitting}>
-                      <div className={s.priceBlock}>
-                        <span className={s.price}>₽ 370</span>
-                        Вся сумма
-                      </div>
-
+                      <Button color='primary-reverse' className={s.delete}>Удалить запись</Button>
                       <Button
                         className={classNames(s.submit, 'form-submit')}
                         type="submit"
@@ -157,7 +97,6 @@ export function EditRecord() {
                     </div>
 
 
-                    <Button color='primary-reverse' className={s.delete}>Удалить запись</Button>
                   </>
                 )
               }
