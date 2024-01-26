@@ -2868,12 +2868,56 @@ export function CreatingReception() {
             </div>
           </div>
 
-
           <RootChannel isDefault title="Корневой канал 1" />
           <RootChannel title="Корневой канал 2" />
           <RootChannel title="Корневой канал 3" />
           <RootChannel title="Корневой канал 4" />
           <RootChannel title="Корневой канал 5" />
+
+          <div className={s.cardBlock}>
+            <div className={classNames(s.title, s.verticalGap)}>Краткое резюме посещения №1 ( не для печати): ЭНДО 1, Кальций.</div>
+            <ul className={s.ul}>
+              <li className={s.li}>
+                <span>План</span>
+                <Field
+                  name="test"
+                >
+                  {(props: FieldProps) =>
+                    <UnderlineText
+                      width='100%'
+                      name='test'
+                      className={classNames(s.defaultInput, s.title)}
+                      onChange={props.field.onChange} />}
+                </Field>
+              </li>
+              <li className={s.li}>
+                <span>Выполнили:</span>
+                <Field
+                  name="test"
+                >
+                  {(props: FieldProps) =>
+                    <UnderlineText
+                      width='100%'
+                      name='test'
+                      className={classNames(s.defaultInput, s.title)}
+                      onChange={props.field.onChange} />}
+                </Field>
+              </li>
+              <li className={s.li}>
+                <span>Комментарий</span>
+                <Field
+                  name="test"
+                >
+                  {(props: FieldProps) =>
+                    <UnderlineText
+                      width='100%'
+                      name='test'
+                      className={classNames(s.defaultInput, s.title)}
+                      onChange={props.field.onChange} />}
+                </Field>
+              </li>
+            </ul>
+          </div>
 
           <Button
             className={classNames(s.submit, 'form-submit')}
