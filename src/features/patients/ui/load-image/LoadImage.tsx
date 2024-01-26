@@ -15,8 +15,6 @@ type LoadImageProps = {
 };
 
 function isValidImage(url: string | File | null, callback: (valid: boolean) => void): void {
-  console.log('url', url);
-
   if (typeof url === 'string') {
     const img = new Image();
     img.onload = () => callback(true);
