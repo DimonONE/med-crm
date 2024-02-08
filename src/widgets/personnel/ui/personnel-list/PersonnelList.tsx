@@ -70,9 +70,9 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
   }
 
   return (
-    <div className={classNames(s.root, 'container')} >
-      <TableContainer id='all-personnel-table' ref={ref} className='table-container' onScroll={onScroll} component={Paper}>
-        <Table sx={{ minWidth: 850 }} aria-label="simple table">
+    <div id='all-personnel-table' ref={ref} className={classNames(s.root, 'container')} onScroll={onScroll}>
+      <TableContainer className='table-container' component={Paper}>
+        <Table aria-label="simple table">
           <InfiniteScroll
             scrollableTarget="all-personnel-table"
             next={handleFetchNextPage}
@@ -82,7 +82,7 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
           >
             <TableHead >
               <TableRow >
-                <TableCell width='auto' sx={{ minWidth: 220 }} className='table-head-cell'
+                <TableCell className='table-head-cell'
                   onClick={() => sortHandler('createdAt')}>
                   <span className={s.tableCellItem}>
                     ДАТА РЕГ.
@@ -90,7 +90,6 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
                   </span>
                 </TableCell>
                 <TableCell
-                  width='auto' sx={{ minWidth: 220 }}
                   className='table-head-cell'
                   onClick={() => sortHandler('role')} >
                   <span className={s.tableCellItem}>
@@ -118,7 +117,7 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
                     </div>
                   </span>
                 </TableCell>
-                <TableCell width='100%' className='table-head-cell'>ТЕЛЕФОН</TableCell>
+                <TableCell className='table-head-cell'>ТЕЛЕФОН</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

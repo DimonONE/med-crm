@@ -54,7 +54,7 @@ export function RecordsPage() {
           }}
           />
         </SidebarItemList>
-        <div>
+        <div >
           {params.patientId
             ? <PatientInfo patientId={params.patientId} />
             : (
