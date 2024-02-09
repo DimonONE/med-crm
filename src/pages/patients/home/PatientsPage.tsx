@@ -1,4 +1,5 @@
 import { HomeNavigation } from '~features/home-navigation';
+import { PATH_PAGE } from '~shared/lib/react-router';
 
 export function PatientsPage() {
 
@@ -6,7 +7,7 @@ export function PatientsPage() {
     {
       id: 1,
       title: 'Тарифы',
-      link: '/',
+      link: PATH_PAGE.tariffs,
     },
     {
       id: 2,

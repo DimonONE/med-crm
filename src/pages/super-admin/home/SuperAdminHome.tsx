@@ -10,7 +10,7 @@ export function SuperAdminHome() {
       id: 1,
       title: 'Тарифы',
       ico: <RatesICO />,
-      link: '/',
+      link: PATH_PAGE.tariffs,
     },
     {
       id: 2,

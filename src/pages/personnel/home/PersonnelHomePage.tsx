@@ -16,7 +16,7 @@ export function PersonnelHomePage() {
       id: 2,
       title: 'Тарифы',
       ico: <RatesICO />,
-      link: '/',
+      link: PATH_PAGE.tariffs,
     },
     {
       id: 3,
