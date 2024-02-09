@@ -10,7 +10,6 @@ import { dataLength, filterObject } from '~shared/utils/helpers';
 import { PersonnelList } from '~widgets/personnel';
 import { SidebarItemList } from '~widgets/sidebar-items-list';
 import { generatePersonnelList, generateSidebarItemList } from './lib/utils';
-import s from './styles.module.scss';
 
 type Params = {
   clinicId?: string
@@ -44,7 +43,7 @@ export function PersonnelListPage() {
   }, [params]);
 
   return (
-    <div className={s.root}>
+    <div >
       <div className='d-flex'>
         <SidebarItemList
           ref={block1Ref}
