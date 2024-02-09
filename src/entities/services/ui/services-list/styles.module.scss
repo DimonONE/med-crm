@@ -1,0 +1,39 @@
+
+.root {
+  height: calc(100vh - var(--header-height) - var(--add-services-height)) ;
+  padding: 40px 46px;
+  background: #EDF8FF;
+
+  .label {
+    color: var(--color-font);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 107%;
+    margin-bottom: 5px;
+  }
+  
+  .servicesList {
+    overflow-y: auto;
+    margin-top: 20px;
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: 600;
+  
+    .servicesItem {
+      display: flex;
+      align-items: center;
+      margin-bottom: 13px;
+  
+      .price {
+        margin-right: 16px;
+        color: var(--color-success);
+      }
+  
+      .info {
+        margin-right: 8px;
+        color: var(--color-base);
+      }
+    }
+  }
+}
+

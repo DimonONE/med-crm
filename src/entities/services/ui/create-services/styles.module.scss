@@ -1,0 +1,48 @@
+.label {
+  color: var(--color-font);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 107%;
+  margin-bottom: 5px;
+}
+
+
+.addServices {
+  display: flex;
+  flex-direction: column;
+  height: var(--add-services-height);
+  padding-inline: 46px;
+
+  justify-content: center;
+  background: #F6FCFF;
+  
+  .servicesPrice {
+    flex-direction: column;
+    justify-content: center;
+    width: 110px;
+    min-width: 107px;
+    margin-right: 10px;
+    margin-bottom: 0;
+
+    input {
+      text-align: center;
+    }
+  }
+
+  .servicesName {
+    color: var(--color-font);
+  }
+}
+
+.adding {
+  width: max-content;
+  height: 24px;
+  margin: 0 60px 0 auto;
+  padding: 0 14px;
+  color: var(--white, #FFF);
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 123.9%; /* 17.346px */
+}
+

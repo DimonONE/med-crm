@@ -9,6 +9,13 @@
  * ---------------------------------------------------------------
  */
 
+export interface LoginUserDtoDto {
+  /** Email user */
+  email: string;
+  /** Password user */
+  password: string;
+}
+
 export interface CreateClinicUserDtoDto {
   /** Name clinic */
   name?: string;
@@ -34,13 +41,6 @@ export interface CreateClinicUserDtoDto {
 
 export interface MessageResponseDto {
   message: string;
-}
-
-export interface LoginUserDtoDto {
-  /** Email user */
-  email: string;
-  /** Password user */
-  password: string;
 }
 
 export interface FileSchemaDto {
@@ -100,6 +100,21 @@ export interface ClinicEntityDto {
   save: object;
 }
 
+export interface RecordEntityDto {
+  id: number;
+  userId: string;
+  clinicId: object;
+  patientId: string;
+  /** @format date-time */
+  startTime: string;
+  /** @format date-time */
+  endTime: string;
+  status: string;
+  servicePrices: object[];
+  notice?: string;
+  user: UserEntityDto;
+}
+
 export interface UserEntityDto {
   files: FileSchemaDto;
   id: string;
@@ -128,6 +143,7 @@ export interface UserEntityDto {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
+  records: RecordEntityDto[];
 }
 
 export interface RoleEntityDto {
@@ -291,9 +307,9 @@ export interface UpdatePersonalDtoDto {
   dateOfBirth: string;
   /** Notice about personal */
   notice?: string | null;
-  /** Notice about personal */
+  /** Files personal */
   files: object[] | null;
-  /** Notice about personal */
+  /** Image personal */
   image?: string | null;
   /**
    * Personal photo
@@ -347,9 +363,106 @@ export interface CreatePatientDtoDto {
   files?: File;
 }
 
-export interface GetPatientsSchemaDto {
-  totalCount: number;
-  patients: PatientEntityDto[];
+export interface UpdatePatientDtoDto {
+  /** Id patient */
+  id: string;
+  /** Full name of the patient */
+  fullName: string;
+  /** Patient passport id */
+  passport: string;
+  /** Patient country */
+  country: string;
+  /** Patient city */
+  city: string;
+  /** Patient address */
+  address: string;
+  /** passport issuing authority */
+  passportIssuingAuthority: string;
+  /** Patient sex */
+  sex: 'man' | 'woman';
+  /** Passport issued by */
+  tin: string;
+  /** Email of the patient */
+  email: string;
+  /** Phone of the patient */
+  phone: string;
+  /**
+   * Date of birth of the patient
+   * @format date-time
+   */
+  dateOfBirth: string;
+  /** Notice about patient */
+  notice?: string | null;
+  /** files patient */
+  files: object[] | null;
+  /** Image patient */
+  image?: string | null;
+  /**
+   * Patient photo
+   * @format binary
+   */
+  newImage?: File;
+  /**
+   * Patient document scan
+   * @format binary
+   */
+  newFiles?: File;
+}
+
+export interface CreateRecordDtoDto {
+  /** Patient id */
+  patientId: string;
+  /** Doctor id */
+  userId: string;
+  /**
+   * Date of start record
+   * @format date-time
+   */
+  startTime: string;
+  /**
+   * Date of end record
+   * @format date-time
+   */
+  endTime: string;
+  /** Notice record */
+  notice: string;
+  /** Price list */
+  servicePrices: object[];
+}
+
+export interface UpdateRecordDTODto {
+  /** Record id */
+  id: number;
+  /** Doctor id */
+  userId: string;
+  /**
+   * Date of start record
+   * @format date-time
+   */
+  startTime: string;
+  /**
+   * Date of end record
+   * @format date-time
+   */
+  endTime: string;
+  /** Notice record */
+  notice: string;
+  /** Price list */
+  servicePrices: object[];
+}
+
+export interface CreateServicePriceDtoDto {
+  /** Price service */
+  price: number;
+  /** Name Service */
+  name: string;
+}
+
+export interface ServicePriceEntityDto {
+  id: number;
+  name: string;
+  price: number;
+  clinicId: number;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -404,7 +517,7 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = 'http://stage.medicare-online.info';
+  public baseUrl: string = '';
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>['securityWorker'];
   private abortControllers = new Map<CancelToken, AbortController>();
@@ -472,7 +585,6 @@ export class HttpClient<SecurityDataType = unknown> {
         : input,
     [ContentType.FormData]: (input: any) =>
       Object.keys(input || {}).reduce((formData, key) => {
-        
         const property = input[key];
         formData.append(
           key,
@@ -481,14 +593,7 @@ export class HttpClient<SecurityDataType = unknown> {
             : typeof property === 'object' && property !== null
             ? JSON.stringify(property)
             : `${property}`,
-            );
-        
-            
-      Object.entries(formData).forEach(([key, ]) => {
-        console.log('formData1', key);
-      });
-
-
+        );
         return formData;
       }, new FormData()),
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
@@ -623,6 +728,23 @@ export class Api<
      * No description
      *
      * @tags Users
+     * @name UsersControllerLogin
+     * @request POST:/users/login
+     */
+    usersControllerLogin: (data: LoginUserDtoDto, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/users/login`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
      * @name UsersControllerMakeProposal
      * @request POST:/users/create
      */
@@ -636,23 +758,6 @@ export class Api<
         body: data,
         type: ContentType.Json,
         format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name UsersControllerLogin
-     * @request POST:/users/login
-     */
-    usersControllerLogin: (data: LoginUserDtoDto, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/users/login`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        format: 'text',
         ...params,
       }),
 
@@ -1039,6 +1144,26 @@ export class Api<
      * No description
      *
      * @tags Patients
+     * @name PatientsControllerUpdatePatient
+     * @request POST:/patients/update
+     */
+    patientsControllerUpdatePatient: (
+      data: UpdatePatientDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<PatientEntityDto, PatientEntityDto>({
+        path: `/patients/update`,
+        method: 'POST',
+        body: data,
+        type: ContentType.FormData,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Patients
      * @name PatientsControllerGetPatientById
      * @request GET:/patients/{id}
      */
@@ -1076,10 +1201,158 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetPatientsSchemaDto, any>({
+      this.request<PatientEntityDto[], any>({
         path: `/patients`,
         method: 'GET',
         query: query,
+        format: 'json',
+        ...params,
+      }),
+  };
+  record = {
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerCreateRecord
+     * @request POST:/record/create
+     * @secure
+     */
+    recordControllerCreateRecord: (
+      data: CreateRecordDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<RecordEntityDto, any>({
+        path: `/record/create`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerUpdateRecord
+     * @request POST:/record/update
+     * @secure
+     */
+    recordControllerUpdateRecord: (
+      data: UpdateRecordDTODto,
+      params: RequestParams = {},
+    ) =>
+      this.request<RecordEntityDto, any>({
+        path: `/record/update`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerDeleteRecord
+     * @request DELETE:/record/delete-record/{id}
+     * @secure
+     */
+    recordControllerDeleteRecord: (id: number, params: RequestParams = {}) =>
+      this.request<MessageResponseDto, any>({
+        path: `/record/delete-record/${id}`,
+        method: 'DELETE',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerGetRecords
+     * @request GET:/record/get-all-records
+     * @secure
+     */
+    recordControllerGetRecords: (
+      query: {
+        /**
+         * Date find
+         * @format date-time
+         */
+        date: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<RecordEntityDto[], any>({
+        path: `/record/get-all-records`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerCreateServicePrice
+     * @request POST:/record/create-service-price
+     * @secure
+     */
+    recordControllerCreateServicePrice: (
+      data: CreateServicePriceDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ServicePriceEntityDto, any>({
+        path: `/record/create-service-price`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerDeleteServicePrice
+     * @request DELETE:/record/delete-service-price/{id}
+     * @secure
+     */
+    recordControllerDeleteServicePrice: (
+      id: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<MessageResponseDto, any>({
+        path: `/record/delete-service-price/${id}`,
+        method: 'DELETE',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerGetServices
+     * @request GET:/record/get-all-service-prices
+     * @secure
+     */
+    recordControllerGetServices: (params: RequestParams = {}) =>
+      this.request<ServicePriceEntityDto[], any>({
+        path: `/record/get-all-service-prices`,
+        method: 'GET',
+        secure: true,
         format: 'json',
         ...params,
       }),

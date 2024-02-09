@@ -1,35 +1,6 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/users/create": {
-      "post": {
-        "operationId": "UsersController_makeProposal",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateClinicUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponse"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Users"]
-      }
-    },
     "/users/login": {
       "post": {
         "operationId": "UsersController_login",
@@ -51,6 +22,35 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"]
+      }
+    },
+    "/users/create": {
+      "post": {
+        "operationId": "UsersController_makeProposal",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClinicUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
                 }
               }
             }
@@ -742,6 +742,45 @@
         "tags": ["Patients"]
       }
     },
+    "/patients/update": {
+      "post": {
+        "operationId": "PatientsController_updatePatient",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePatientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientEntity"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Patients"]
+      }
+    },
     "/patients/{id}": {
       "get": {
         "operationId": "PatientsController_getPatientById",
@@ -823,13 +862,249 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetPatientsSchema"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PatientEntity"
+                  }
                 }
               }
             }
           }
         },
         "tags": ["Patients"]
+      }
+    },
+    "/record/create": {
+      "post": {
+        "operationId": "RecordController_createRecord",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/record/update": {
+      "post": {
+        "operationId": "RecordController_updateRecord",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecordDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/record/delete-record/{id}": {
+      "delete": {
+        "operationId": "RecordController_deleteRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/record/get-all-records": {
+      "get": {
+        "operationId": "RecordController_getRecords",
+        "parameters": [
+          {
+            "name": "date",
+            "required": true,
+            "in": "query",
+            "description": "Date find",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecordEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/record/create-service-price": {
+      "post": {
+        "operationId": "RecordController_createServicePrice",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateServicePriceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServicePriceEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/record/delete-service-price/{id}": {
+      "delete": {
+        "operationId": "RecordController_deleteServicePrice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/record/get-all-service-prices": {
+      "get": {
+        "operationId": "RecordController_getServices",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServicePriceEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
       }
     }
   },
@@ -850,6 +1125,22 @@
       }
     },
     "schemas": {
+      "LoginUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email user",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "description": "Password user",
+            "nullable": false
+          }
+        },
+        "required": ["email", "password"]
+      },
       "CreateClinicUserDto": {
         "type": "object",
         "properties": {
@@ -912,22 +1203,6 @@
           }
         },
         "required": ["message"]
-      },
-      "LoginUserDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "Email user",
-            "nullable": false
-          },
-          "password": {
-            "type": "string",
-            "description": "Password user",
-            "nullable": false
-          }
-        },
-        "required": ["email", "password"]
       },
       "FileSchema": {
         "type": "object",
@@ -1117,6 +1392,57 @@
           "save"
         ]
       },
+      "RecordEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "clinicId": {
+            "type": "object"
+          },
+          "patientId": {
+            "type": "string"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "servicePrices": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "notice": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserEntity"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "clinicId",
+          "patientId",
+          "startTime",
+          "endTime",
+          "status",
+          "servicePrices",
+          "user"
+        ]
+      },
       "UserEntity": {
         "type": "object",
         "properties": {
@@ -1197,6 +1523,12 @@
           "updatedAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecordEntity"
+            }
           }
         },
         "required": [
@@ -1222,7 +1554,8 @@
           "patients",
           "clinic",
           "createdAt",
-          "updatedAt"
+          "updatedAt",
+          "records"
         ]
       },
       "RoleEntity": {
@@ -1620,7 +1953,7 @@
             "nullable": true
           },
           "files": {
-            "description": "Notice about personal",
+            "description": "Files personal",
             "nullable": true,
             "type": "array",
             "items": {
@@ -1629,7 +1962,7 @@
           },
           "image": {
             "type": "string",
-            "description": "Notice about personal",
+            "description": "Image personal",
             "nullable": true
           },
           "newImage": {
@@ -1749,20 +2082,230 @@
           "dateOfBirth"
         ]
       },
-      "GetPatientsSchema": {
+      "UpdatePatientDto": {
         "type": "object",
         "properties": {
-          "totalCount": {
-            "type": "number"
+          "id": {
+            "type": "string",
+            "description": "Id patient",
+            "nullable": false
           },
-          "patients": {
+          "fullName": {
+            "type": "string",
+            "description": "Full name of the patient",
+            "nullable": false
+          },
+          "passport": {
+            "type": "string",
+            "description": "Patient passport id",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Patient country",
+            "nullable": false
+          },
+          "city": {
+            "type": "string",
+            "description": "Patient city",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Patient address",
+            "nullable": false
+          },
+          "passportIssuingAuthority": {
+            "type": "string",
+            "description": "passport issuing authority",
+            "nullable": false
+          },
+          "sex": {
+            "enum": ["man", "woman"],
+            "type": "string",
+            "description": "Patient sex",
+            "nullable": false
+          },
+          "tin": {
+            "type": "string",
+            "description": "Passport issued by",
+            "nullable": false
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the patient",
+            "nullable": false
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the patient",
+            "nullable": false
+          },
+          "dateOfBirth": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of birth of the patient"
+          },
+          "notice": {
+            "type": "string",
+            "description": "Notice about patient",
+            "nullable": true
+          },
+          "files": {
+            "description": "files patient",
+            "nullable": true,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PatientEntity"
+              "type": "object"
+            }
+          },
+          "image": {
+            "type": "string",
+            "description": "Image patient",
+            "nullable": true
+          },
+          "newImage": {
+            "type": "string",
+            "format": "binary",
+            "description": "Patient photo"
+          },
+          "newFiles": {
+            "type": "string",
+            "format": "binary",
+            "description": "Patient document scan"
+          }
+        },
+        "required": [
+          "id",
+          "fullName",
+          "passport",
+          "country",
+          "city",
+          "address",
+          "passportIssuingAuthority",
+          "sex",
+          "tin",
+          "email",
+          "phone",
+          "dateOfBirth",
+          "files"
+        ]
+      },
+      "CreateRecordDto": {
+        "type": "object",
+        "properties": {
+          "patientId": {
+            "type": "string",
+            "description": "Patient id"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Doctor id"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of start record"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of end record"
+          },
+          "notice": {
+            "type": "string",
+            "description": "Notice record"
+          },
+          "servicePrices": {
+            "description": "Price list",
+            "type": "array",
+            "items": {
+              "type": "object"
             }
           }
         },
-        "required": ["totalCount", "patients"]
+        "required": [
+          "patientId",
+          "userId",
+          "startTime",
+          "endTime",
+          "notice",
+          "servicePrices"
+        ]
+      },
+      "UpdateRecordDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Record id"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Doctor id"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of start record"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of end record"
+          },
+          "notice": {
+            "type": "string",
+            "description": "Notice record"
+          },
+          "servicePrices": {
+            "description": "Price list",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "startTime",
+          "endTime",
+          "notice",
+          "servicePrices"
+        ]
+      },
+      "CreateServicePriceDto": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "number",
+            "description": "Price service"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name Service"
+          }
+        },
+        "required": ["price", "name"]
+      },
+      "ServicePriceEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "object"
+          },
+          "clinicId": {
+            "type": "object"
+          }
+        },
+        "required": ["id", "name", "price", "clinicId"]
       }
     }
   }
