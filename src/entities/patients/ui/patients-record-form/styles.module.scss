@@ -1,22 +1,12 @@
-.root {
-  padding: 28px 31px;
-  max-width: 660px;
-}
-
-.formContainer{ 
-  width: max-content;
-  margin-top: 54px;
-  margin-left: 10%;
-}
-
 .container {
   display: flex;
   flex-direction: column;
+  width: max-content;
+  min-width: 100%;
   padding: 32px 45px;
   border-radius: 20px;
   border: 1px solid #B2E3FF;
   background: #F9FDFF;
-  margin: 0 auto;
 }
 
 .select,

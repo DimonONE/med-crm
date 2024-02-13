@@ -16,6 +16,9 @@ export const patientsKeys = {
   listOfPatients: () => [...patientsKeys.root, 'list-of-patients'],
   create: () => [...patientsKeys.root, 'create'],
   patientId: () => [...patientsKeys.root, 'patient-id'],
+  createRecord: () => [...patientsKeys.root, 'create-record'],
+  updateRecord: () => [...patientsKeys.root, 'update-record'],
+  deleteRecord: () => [...patientsKeys.root, 'delete-record'],
 };
 
 
@@ -73,3 +76,45 @@ export function useCreatePatient() {
     },
   });
 }
+
+// Records
+
+export function useCreateRecord()  {
+  return useMutation({
+    mutationKey: patientsKeys.createRecord(),
+    mutationFn: async (data: Api.CreateRecordDtoDto) => {
+      const response = await axiosInstance({ url: '/record/create', method: 'POST', data }); 
+      return response.data;
+    },
+  });
+}
+
+export function useUpdateRecord()  {
+  return useMutation({
+    mutationKey: patientsKeys.updateRecord(),
+    mutationFn: async (data: Api.CreateRecordDtoDto) => {
+      const response = await axiosInstance({ url: '/record/update', method: 'POST', data }); 
+      return response.data;
+    },
+  });
+}
+
+export function useDeleteRecord()  {
+  return useMutation({
+    mutationKey: patientsKeys.deleteRecord(),
+    mutationFn: async (id: string) => {
+      const response = await axiosInstance({ url: `/record/delete-record/${id}`, method: 'DELETE' }); 
+      return response.data;
+    },
+  });
+}
+
+// export function useAllRecords()  {
+//   return useQuery({
+//     queryKey: patientsKeys.(),
+//     queryFn: async () => {
+//       const response = await axiosInstance({ url: '/record/get-all-records', method: 'GET' }); 
+//       return response.data;
+//     },
+//   });
+// }

@@ -21,7 +21,6 @@ export const getNavigateList = (
       return [
         { value: PATH_PAGE.patients.records, label: 'Пациенты' },
         { value: PATH_PAGE.patients.add, label: 'Добавить' },
-        { value: PATH_PAGE.patients.editRecord, label: 'Запись' },
       ];
 
     default:

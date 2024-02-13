@@ -1,7 +1,7 @@
 
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { usePatientId } from '~entities/patients';
 import { useRoleUser } from '~entities/session';
 import { LoadImage } from '~features/patients';
@@ -19,6 +19,7 @@ type PatientInfoProps = {
 };
 
 export function PatientInfo({ patientId }: PatientInfoProps) {
+  const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
   const { data, isLoading } = usePatientId(patientId);
 
@@ -48,7 +49,10 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
         <div className={s.image}>
           <LoadImage className={s.userImage} defaultImage={data.image} />
 
-          <Button className={classNames(s.button, s.buttonSuccess, s.buttonRecord)} onClick={() => false}>
+          <Button
+            className={classNames(s.button, s.buttonSuccess, s.buttonRecord)}
+            onClick={() => navigate(PATH_PAGE.patients.editRecord(patientId))}
+          >
             Записать
           </Button>
           <Button className={classNames(s.button, s.buttonCancel)} onClick={() => false}>

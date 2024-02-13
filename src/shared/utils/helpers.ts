@@ -26,3 +26,20 @@ export function filterObject(obj: FilterObject) {
     Object.entries(obj).filter(([, value]) => ![undefined, null,  ''].includes(value?.toString())),
   );
 }
+
+export function generateTimeList() {
+  const times: {
+    value: string;
+    label: string;
+  }[] = [];
+
+  Array.from({ length: 24 }).forEach((_, hour) => {
+    Array.from({ length: 2 }).forEach((__, index) => {
+      const minute = index * 30;
+      const formattedHour = hour.toString().padStart(2, '0');
+      const formattedMinute = minute.toString().padStart(2, '0');
+      times.push({ value: `${formattedHour}:${formattedMinute}`, label: `${formattedHour}:${formattedMinute}` });
+    });
+  });
+  return times;
+}
