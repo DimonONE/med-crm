@@ -25,6 +25,7 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
   const { checkUserRole } = useRoleUser();
   const [isOpen, setOpen] = useState(false);
   const [selectServices, setServices] = useState<Api.ServicePriceEntityDto[]>([]);
+  const [price, setPrice] = useState<number>(0);
 
   const { data, isLoading } = usePatientId(patientId);
 
@@ -157,6 +158,8 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
           <Button className={classNames(s.button, s.buttonCancel)} onClick={() => false}>
             Отмена
           </Button>
+
+          <span className={s.priceAll}>₽ {price}  </span>
         </div>
       </div>
       <div className={s.blockInfo}>
@@ -192,8 +195,9 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
       <PatientAddServicesForm
         isOpen={isOpen}
         onClose={() => setOpen(false)}
-        onSuccess={({ services }) => {
+        onSuccess={({ services, price: priceServices }) => {
           setServices(services);
+          setPrice(priceServices);
         }}
       />
     </div>
