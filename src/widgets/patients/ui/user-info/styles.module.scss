@@ -72,8 +72,6 @@
   }
 }
 
-
-
 .userInfo {
   display: flex;
   flex-direction: column;
@@ -120,6 +118,12 @@
   }
 }
 
+.recording, .note {
+  .contentInfo {
+    margin-left: 20px;
+  }
+}
+
 .recording {
   margin-bottom: 20px ;
   line-height: 160%;
@@ -142,8 +146,6 @@
   font-size: 12px;
   font-weight: 500;
 }
-
-
 
 .buttonSuccess,
 .buttonAttendance,

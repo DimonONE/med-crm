@@ -43,6 +43,7 @@ export function SelectField(props: SelectFieldProps) {
   return (
     <div className={classNames(s.selectField, className)} >
       <Select
+        open={isOpen}
         sx={{
           boxShadow: 'none',
           '.MuiOutlinedInput-notchedOutline': { border: 0 },
@@ -64,7 +65,6 @@ export function SelectField(props: SelectFieldProps) {
             horizontal: 'center',
           },
         }}
-        placeholder='test'
         {...propsSpread}
       >
         {

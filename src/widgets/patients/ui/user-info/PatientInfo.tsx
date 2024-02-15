@@ -1,10 +1,12 @@
 
+import { useState } from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { usePatientId } from '~entities/patients';
+import { PatientAddServicesForm, usePatientId } from '~entities/patients';
 import { useRoleUser } from '~entities/session';
 import { LoadImage } from '~features/patients';
+import { Api } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import { FileLoader } from '~shared/ui/file-loader';
@@ -21,6 +23,9 @@ type PatientInfoProps = {
 export function PatientInfo({ patientId }: PatientInfoProps) {
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
+  const [isOpen, setOpen] = useState(false);
+  const [selectServices, setServices] = useState<Api.ServicePriceEntityDto[]>([]);
+
   const { data, isLoading } = usePatientId(patientId);
 
   const dateOfBirth = dayjs().diff(dayjs(data?.dateOfBirth), 'year');
@@ -107,19 +112,37 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
             Запись:
             <EditICO />
           </div>
-          <div>{dayjs(data.user.createdBy).format('mm')} 14:30 четверг</div>
-          <div>
-            <span>Стоматолог:</span>
-            <span className={s.textValue}>{data.user.fullName}</span>
+          <div className={s.contentInfo}>
+            <div>{dayjs(data.user.createdBy).format('mm')} 14:30 четверг</div>
+            <div>
+              <span>Стоматолог:</span>
+              <span className={s.textValue}>{data.user.fullName}</span>
+            </div>
           </div>
+        </div>
 
-          <div className={s.nameDisease}>Установка брекетов</div>
-          <div className={s.nameDisease}>Косметическая чистка</div>
+        <div className={s.recording}>
+          <div className={classNames(s.textBold, 'd-flex')}>
+            Услуги:
+            <button type='button' onClick={() => setOpen(true)}>
+              <EditICO />
+            </button>
+          </div>
+          <div className={s.contentInfo}>
+            {
+              selectServices.map(({ id, name }) => (
+                <div key={id} className={s.nameDisease}>{name}</div>
+              ))
+            }
+          </div>
         </div>
 
         <div className={s.note}>
           <div className={s.textBold}>Жалоба:</div>
-          <div className={s.noteInfo}>Болят зубы, желтый налет, смешение швардевита.</div>
+
+          <div className={s.contentInfo}>
+            <div className={s.noteInfo}>Болят зубы, желтый налет, смешение швардевита.</div>
+          </div>
         </div>
 
         <div className='d-flex'>
@@ -165,6 +188,14 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
       <div className={s.tableInfo}>
         История платажей
       </div>
+
+      <PatientAddServicesForm
+        isOpen={isOpen}
+        onClose={() => setOpen(false)}
+        onSuccess={({ services }) => {
+          setServices(services);
+        }}
+      />
     </div>
   );
 }

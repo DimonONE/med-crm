@@ -1,0 +1,116 @@
+.root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(105, 147, 170, 0.50);
+  backdrop-filter: blur(24.5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal {
+  position: relative;
+  padding: 40px 50px 40px;
+  max-width: 620px;
+  width: 100%;
+  border-radius: 4px;
+  background: var(--color-white);
+  box-shadow: 0px 0px 15px 0px rgba(5, 58, 74, 0.25);
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 21px;
+}
+
+.dropdown {
+  width: 100%;
+  max-width: none;
+  margin-top: 40px;
+}
+
+.label {
+  color: var(--color-font);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 107%;
+  margin-bottom: 5px;
+}
+
+.servicesList {
+  max-height: 155px ;
+  overflow-y: auto;
+  margin: 20px 0px 10px;
+  font-size: 16px;
+  font-weight: 600;
+
+  .servicesItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 13px;
+
+    .price {
+      margin-right: 16px;
+      color: var(--color-success);
+    }
+
+    .info {
+      margin-right: 8px;
+      color: var(--color-base);
+    }
+  }
+}
+
+.priceAll {
+  width: max-content;
+  margin: 0 auto;
+  color: #029B64;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 26px;
+
+  .priceText {
+    color: #229CE1;
+    font-size: 18px;
+  }
+}
+
+.buttonsSubmit {
+  display: flex;
+  justify-content: center;
+  margin-top: 23px;
+
+  .button {
+    width: 200px;
+    font-size: 18px;
+  
+    
+    &:nth-child(1) {
+      border: 1px solid #0E5F8C;
+      color: #0E5F8C;
+    }
+  
+    &:nth-child(2) {
+      background: var(--color-success);
+      margin-left: 10px;
+    }
+  }
+}
