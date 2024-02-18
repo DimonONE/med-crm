@@ -88,7 +88,7 @@ export  const daysWork = [
     isWork: false,
   },
   {
-    id: 7,
+    id: 0,
     day: 'ВС',
     isWork: false,
   },

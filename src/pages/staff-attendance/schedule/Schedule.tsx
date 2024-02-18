@@ -46,7 +46,7 @@ export function Schedule() {
               <div className={s.label}>Выберите дни работы</div>
               <WorkDay
                 daysWork={daysWork}
-                handleChange={(id) => setValues(prev => ({ ...prev, dayWork: id }))}
+                handleChange={(date) => setValues(prev => ({ ...prev, dayWork: dayjs(date).day() }))}
                 className={s.workDay} />
 
               <div className={s.workTimeBlock}>
@@ -87,7 +87,7 @@ export function Schedule() {
                     paddingRight: '5px',
                   },
                 }}
-                  onChange={(time) => setValues(prev => ({ ...prev, startVacation: dayjs(time as string).toString() }))}
+                  onChange={(time) => setValues(prev => ({ ...prev, startVacation: dayjs(time).toString() }))}
                 />
 
                 До
@@ -112,7 +112,7 @@ export function Schedule() {
                     paddingRight: '5px',
                   },
                 }}
-                  onChange={(time) => setValues(prev => ({ ...prev, endVacation: dayjs(time as string).toString() }))}
+                  onChange={(time) => setValues(prev => ({ ...prev, endVacation: dayjs(time).toString() }))}
                 />
               </div>
 

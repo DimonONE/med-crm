@@ -1,44 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { MenuItem, SelectChangeEvent } from '@mui/material';
 import classNames from 'classnames';
 import { SelectField } from '../select-field';
 import s from './styles.module.scss';
 
-type SelectOption = {
+export type TimeSelectOption = {
   value: string | number,
   label: string
 };
 
 interface TimeSelectProps {
   title?: string
-  selectOptions: SelectOption[]
+  value: string | number | undefined
+  onChange: (value: TimeSelectOption) => void
+  selectOptions: TimeSelectOption[]
   className?: string
-  handleChange?: (value: SelectOption) => void
 }
 
 export function TimeSelect(props: TimeSelectProps) {
-  const [value, setValue] = useState<string | number>('');
+  const { title, selectOptions, value, onChange, className } = props;
 
-  const { title, selectOptions, handleChange, className } = props;
-
-  const onChange = (event: SelectChangeEvent<string | number>) => {
-    setValue(event.target.value);
-
-    if (handleChange) handleChange(selectOptions[0]);
+  const handleChange = (event: SelectChangeEvent<string | number>) => {
+    const selectTime = selectOptions.find(({ value: valueId }) => valueId === event.target.value);
+    if (selectTime)
+      onChange(selectTime);
   };
 
   useEffect(() => {
-    setValue(selectOptions[0].value);
-    if (handleChange) handleChange(selectOptions[0]);
-  }, [selectOptions]);
+    onChange(selectOptions[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   return (
     <div className={classNames(s.root, className)}>
       <span className={s.label}>{title}</span>
       <SelectField
-        value={value}
-        onChange={onChange}
+        value={value ?? 0}
+        onChange={handleChange}
         className={classNames('form-input', s.selectTime)}
         selectNavigate
         defaultOption={selectOptions[0].label}

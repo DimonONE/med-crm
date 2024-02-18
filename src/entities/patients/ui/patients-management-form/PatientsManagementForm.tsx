@@ -286,7 +286,7 @@ export function PatientsManagementForm({ patientId, isCreate }: Props) {
                     className={s.datePicker}
                     value={meta.value}
                     onChange={(date) =>
-                      date && form.setFieldValue('dateOfBirth', dayjs(date as string).toISOString())
+                      date && form.setFieldValue('dateOfBirth', dayjs(date).toISOString())
                     } />
                   }
                 </Field>

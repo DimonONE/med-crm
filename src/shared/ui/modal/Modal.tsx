@@ -15,7 +15,8 @@ interface ModalProps {
   type: 'info' | 'warn' | 'warn-info'
 }
 
-export function Modal({ isOpen, onSuccess, onClose, type, children }: ModalProps) {
+export function Modal(props: ModalProps) {
+  const { isOpen, onSuccess, onClose, type, children } = props;
   if (!isOpen) return null;
 
   return (

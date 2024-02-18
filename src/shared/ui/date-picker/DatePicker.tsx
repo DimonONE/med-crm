@@ -1,17 +1,18 @@
-import { DatePicker, DateValidationError, PickerChangeHandlerContext } from '@mui/x-date-pickers';
+import { DatePicker, DatePickerProps, DateValidationError, PickerChangeHandlerContext } from '@mui/x-date-pickers';
 import classNames from 'classnames';
 import './styles.scss';
+import { Dayjs } from 'dayjs';
 
-type Props = {
-  onChange: (value: string | null, context: PickerChangeHandlerContext<DateValidationError>) => void
+interface Props extends Omit<DatePickerProps<unknown>, 'onChange'> {
+  onChange: (value: Dayjs, context: PickerChangeHandlerContext<DateValidationError>) => void
   className?: string
-} & React.ComponentProps<typeof DatePicker>;
+}
 
 export function DatePickerCustom({ onChange, className, ...props }: Props) {
   return (
     <DatePicker
       className={classNames('date-input', className)}
-      onChange={onChange}
+      onChange={(value, context) => onChange(value as Dayjs, context)}
       {...props}
     />
   );

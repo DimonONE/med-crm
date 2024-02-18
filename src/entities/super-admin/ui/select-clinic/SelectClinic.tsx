@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import classNames from 'classnames';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { UserEntityDto } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
@@ -19,7 +19,7 @@ export function SelectClinic({ selectClinic }: Props) {
   const navigate = useNavigate();
 
   const [isOpen, setOpen] = useState(false);
-  const [, setPaidTo] = useState('');
+  const [, setPaidTo] = useState<Dayjs | null>(null);
 
   if (!selectClinic) {
     navigate(PATH_PAGE.root);
@@ -78,7 +78,7 @@ export function SelectClinic({ selectClinic }: Props) {
           <span className={s.subTitle}>
             <DatePicker
               defaultValue={dayjs(selectClinic.clinic.endPaidDate)}
-              onChange={(event) => event && setPaidTo(event as string)}
+              onChange={(event) => event && setPaidTo(event)}
             />
           </span>
         </div>

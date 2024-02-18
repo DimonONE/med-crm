@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import classNames from 'classnames';
+import dayjs, { Dayjs } from 'dayjs';
 import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import { toast } from 'react-toastify';
-import { object } from 'yup';
+import { object, string } from 'yup';
 import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
@@ -18,19 +20,32 @@ type Props = {
 };
 
 export function PatientRecordForm({ patientId }: Props) {
+  const [dateValue, setDateValue] = useState<Dayjs | null>(null);
+
   const { mutate: createMutate } = useCreateRecord();
   const { mutate: deleteMutate } = useDeleteRecord();
 
-  const selectOptions = [{ value: '0', label: 'Имя врача' }, { value: '1', label: 'Dima' }, { value: '2', label: 'Ivan' }];
+  const selectOptions = [{ value: -1, label: 'Имя врача' },
+  { value: '13a1bd72-1b1e-4868-9255-53f909b5bc3f', label: 'Dima' },
+  { value: '13a1bd72-1b1e-4868-9255-53f909b5bc3f', label: 'Ivan' }];
+
   const timesOptions = generateTimeList();
 
   const onSubmit = async (
     values: Api.CreateRecordDtoDto,
     { setSubmitting }: FormikHelpers<Api.CreateRecordDtoDto>,
   ) => {
-    createMutate(values, {
+    const [startHours, startMinutes] = values.startTime.split(':').map(Number);
+    const [endHours, endMinutes] = values.endTime.split(':').map(Number);
+
+    createMutate({
+      ...values,
+      startTime: dayjs(dateValue).hour(startHours).minute(startMinutes).toISOString(),
+      endTime: dayjs(dateValue).hour(endHours).minute(endMinutes).toISOString(),
+    }, {
       onSuccess: (response) => {
         console.log('response', response);
+        toast('Success!', { type: 'success' });
       },
       onSettled: () => {
         setSubmitting(false);
@@ -42,7 +57,8 @@ export function PatientRecordForm({ patientId }: Props) {
   };
 
   const handleDelete = () => {
-    deleteMutate(patientId, {
+    // id с самого списка созданых записей
+    deleteMutate('id', {
       onSuccess: (response) => {
         console.log('response', response);
       },
@@ -55,22 +71,21 @@ export function PatientRecordForm({ patientId }: Props) {
   return (
     <Formik
       initialValues={{
-        patientId: 'f6c52af2-87f5-4243-8f80-9dc80f11c8e9',
-        startTime: '2024-02-12T21:17:28.917Z',
+        patientId,
         userId: '',
-        endTime: '2024-02-12T21:17:28.917Z',
+        startTime: '',
+        endTime: '',
         notice: '',
-        servicePrices: [
-          {},
-        ],
+        servicePrices: [{}],
       }}
       validationSchema={object().shape({
-        // fullName: string().min(5).required(),
-        // email: string().email().required(),
+        userId: string().required(),
+        startTime: string().required(),
+        endTime: string().required(),
       })}
       onSubmit={onSubmit}
     >
-      {({ isSubmitting, values }) => (
+      {({ isSubmitting, values, setFieldValue }) => (
         <Form className={classNames(s.container, 'full-width')}>
           <div className={s.label}>Имя врача</div>
           <Field
@@ -90,16 +105,27 @@ export function PatientRecordForm({ patientId }: Props) {
                 <div className={s.label}>График приема</div>
                 <div className={s.dateWork}>
                   <DatePicker
+                    value={dateValue}
                     className={s.datePicker}
-                    onChange={() => false}
+                    onChange={(date) => setDateValue(date)}
                   />
                   <WorkDay daysWork={daysWork} handleChange={() => false} className={s.workDay} />
                 </div>
                 <WorkTime className={s.workTime} timesWork={timesWork} handleChange={() => false} />
 
                 <div className={s.times}>
-                  <TimeSelect title='Время от' selectOptions={timesOptions} />
-                  <TimeSelect title='Время до' selectOptions={timesOptions} />
+                  <TimeSelect
+                    title='Время от'
+                    value={values.startTime}
+                    onChange={(time) => setFieldValue('startTime', time.value)}
+                    selectOptions={timesOptions}
+                  />
+                  <TimeSelect
+                    title='Время до'
+                    value={values.endTime}
+                    onChange={(time) => setFieldValue('endTime', time.value)}
+                    selectOptions={timesOptions}
+                  />
                 </div>
 
                 <fieldset className={classNames(s.complaint, 'full-width')}>

@@ -285,7 +285,7 @@ export function PersonnelManagementForm({ personnelId, isCreate }: Props) {
                     <DatePicker
                       defaultValue={dayjs(meta.value)}
                       onChange={(value) => {
-                        form.setFieldValue('dateOfBirth', dayjs(value as string).toISOString());
+                        form.setFieldValue('dateOfBirth', dayjs(value).toISOString());
                       }}
                       className={s.datePicker}
                       sx={{

@@ -109,12 +109,4 @@ export function useDeleteRecord()  {
   });
 }
 
-// export function useAllRecords()  {
-//   return useQuery({
-//     queryKey: patientsKeys.(),
-//     queryFn: async () => {
-//       const response = await axiosInstance({ url: '/record/get-all-records', method: 'GET' }); 
-//       return response.data;
-//     },
-//   });
-// }
+

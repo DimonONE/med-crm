@@ -779,7 +779,7 @@ export function CreatingReception() {
                       }}
                       value={meta.value}
                       onChange={(date) =>
-                        date && form.setFieldValue('toothPainDateOfBirth', dayjs(date as string).toISOString())
+                        date && form.setFieldValue('toothPainDateOfBirth', dayjs(date).toISOString())
                       } />
                     }
                   </Field>
@@ -2858,7 +2858,7 @@ export function CreatingReception() {
                         }}
                         value={meta.value}
                         onChange={(date) =>
-                          date && form.setFieldValue('test', dayjs(date as string).toISOString())
+                          date && form.setFieldValue('test', dayjs(date).toISOString())
                         } />
                       }
                     </Field>

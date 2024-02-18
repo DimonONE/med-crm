@@ -1,22 +1,31 @@
 import { useState } from 'react';
 import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
+import { Dayjs } from 'dayjs';
 import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
 import { SelectField } from '~shared/ui/select-field';
-import { TimeSelect } from '~shared/ui/time-select';
+import { TimeSelect, TimeSelectOption } from '~shared/ui/time-select';
 import s from './styles.module.scss';
+
+type TimesSelect = {
+  startTime: TimeSelectOption | null,
+  endTime: TimeSelectOption | null,
+};
 
 type IProps = {
   patientId: string
 };
 
 export function WriteDown({ patientId }: IProps) {
-
-  const [, setPaidTo] = useState('11/12/2023');
+  const [, setPaidTo] = useState<Dayjs | null>(null);
+  const [timesSelect, setTimesSelect] = useState<TimesSelect>({
+    startTime: null,
+    endTime: null,
+  });
 
   const [value, setValue] = useState<string>('');
   const selectOptions = [{ value: '1', label: 'Имя врача' }];
@@ -49,14 +58,24 @@ export function WriteDown({ patientId }: IProps) {
       <div className='d-flex'>
         <DatePicker
           className={s.datePicker}
-          onChange={(event) => event && setPaidTo(event as string)}
+          onChange={(event) => event && setPaidTo(event)}
         />
         <WorkDay daysWork={daysWork} handleChange={() => false} className={s.workDay} />
       </div>
       <WorkTime editTimes timesWork={timesWork} handleChange={() => false} />
       <div className={s.times}>
-        <TimeSelect title='Время от' selectOptions={selectOptions} />
-        <TimeSelect title='Время до' selectOptions={selectOptions} />
+        <TimeSelect
+          title='Время от'
+          value={timesSelect.startTime?.value}
+          onChange={(time) => setTimesSelect(prev => ({ ...prev, startTime: time }))}
+          selectOptions={selectOptions}
+        />
+        <TimeSelect
+          title='Время до'
+          value={timesSelect.endTime?.value}
+          onChange={(time) => setTimesSelect(prev => ({ ...prev, endTime: time }))}
+          selectOptions={selectOptions}
+        />
       </div>
       <Button type='submit' className={s.writeButton}>Записать</Button>
     </div>
