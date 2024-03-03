@@ -1,0 +1,111 @@
+.container {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  flex-direction: column;
+  padding: 70px 25px 32px;
+  border-radius: 20px;
+  border: 1px solid #B2E3FF;
+  background: #F9FDFF;
+  color: #0E5F8C;
+}
+
+.navBar {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  .navigate {
+    width: 50%;
+    padding-block: 18px;
+    text-align: center;
+    color: #0E5F8C;
+    font-weight: 400;
+    font-size: 18px;
+    border-bottom: 1px solid #48BDFF;
+
+    &.active {
+      color: #FFFFFF;
+      background-color: #48BDFF;
+      font-weight: 600;
+    }
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-block: 17px;
+  border-bottom: 1px solid #D0EEFF;
+  gap: 10px;
+
+  .date {
+    color: #0E5F8C;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .notes {
+    color: #229CE1;
+    font-size: 18px;
+    font-weight: 800;
+    font-style: italic;
+  }
+
+  .complaint {
+    color: var(--color-error);
+  }
+
+}
+
+.loadFails {
+  display: flex;
+  flex-direction: column;
+  margin-block: 10px;
+
+  .title {
+    margin-bottom: 26px;
+    color: var(--color-font);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 107%;
+  }
+}
+
+.downloadButton {
+  justify-content: center;
+  width: 125px;
+  padding-block: 8px;
+  border-radius: 24px;
+  background: var(--color-success);
+  color: #fff;
+
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submit,
+.delete {
+  width: 178px;
+  margin-top: 35px;
+  margin-bottom: 0;
+  padding-block: 12px;
+  float: right;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.delete {
+  background-color: var(--color-error);
+  margin-right: 11px;
+}
+
+.comment {
+  max-width: none;
+  margin-bottom: 20px;
+}

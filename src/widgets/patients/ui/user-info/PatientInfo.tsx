@@ -192,6 +192,9 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
       <div className={s.tableInfo}>
         История платажей
       </div>
+      <NavLink to={PATH_PAGE.patients.files('shared')} className={s.tableInfo}>
+        Файлы
+      </NavLink>
 
       <PatientAddServicesForm
         isOpen={isOpen}

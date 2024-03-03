@@ -4,4 +4,5 @@ export { usePatientsListInfinity, useCreatePatient, usePatientId } from './api/p
 export { PatientsManagementForm } from './ui/patients-management-form/PatientsManagementForm';
 export { PatientRecordForm } from './ui/patients-record-form/PatientRecordForm';
 export { PatientAddServicesForm } from './ui/patients-add-services-form/PatientAddServicesForm';
+export { PatientsFilesForm } from './ui/patients-files-form/PatientsFilesForm';
 

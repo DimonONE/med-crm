@@ -23,6 +23,7 @@ export const PATH_PAGE = {
     details: (patientsId: string) => `/patients/records/${patientsId}`,
     add: '/patients/member',
     edit: (patientsId: string) => `/patients/member/${patientsId}`,
+    files: (status: 'shared' | 'move') => `/patients/files/${status}`,
   },
   personnel: {
     root: 'personnel',

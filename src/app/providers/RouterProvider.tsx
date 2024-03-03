@@ -26,6 +26,7 @@ const PersonnelManagementPage = Loadable(lazy(() => import('~pages/personnel/emp
 const PatientsRecordsPage = Loadable(lazy(() => import('~pages/patients/records')));
 const PatientManagementPage = Loadable(lazy(() => import('~pages/patients/employee-management')));
 const PatientEditRecord = Loadable(lazy(() => import('~pages/patients/record-patient')));
+const PatientFilesPage = Loadable(lazy(() => import('~pages/patients/files')));
 
 // Reception Table
 const ReceptionTablePage = Loadable(lazy(() => import('~pages/reception-table/details')));
@@ -85,6 +86,7 @@ export function Router() {
       { path: 'patients/records/:patientId?', element: <PatientsRecordsPage /> },
       { path: 'patients/record/:patientId', element: <PatientEditRecord /> },
       { path: 'patients/member/:patientId?', element: <PatientManagementPage /> },
+      { path: 'patients/files/:status', element: <PatientFilesPage /> },
     ],
   });
   const personnel = PersonnelGuard({
@@ -100,6 +102,7 @@ export function Router() {
       { path: 'patients/member/:patientId?', element: <PatientManagementPage /> },
       { path: 'patients/record/:patientId', element: <PatientEditRecord /> },
       { path: 'patients/records/:patientId?', element: <PatientsRecordsPage /> },
+      { path: 'patients/files/:status', element: <PatientFilesPage /> },
     ],
   });
   return useRoutes([
