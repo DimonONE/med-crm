@@ -8,7 +8,7 @@ import s from './styles.module.scss';
 type Values = {
   id: string | number,
   time: string,
-  isWork: boolean
+  isActive: boolean
 };
 
 type IProps = {
@@ -44,15 +44,15 @@ export function WorkTime(props: IProps) {
           <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(21)} />
         ) : (
           <div className={s.times}>
-            {timesWork.map(({ id, time, isWork }) => (
+            {timesWork.map(({ id, time, isActive }) => (
               <div
                 key={id}
                 className={classNames(s.timeBlock, {
-                  [s.timeWork]: !editTimes && isWork,
+                  [s.timeWork]: !editTimes && isActive,
                   [s.selected]: editTimes && selectedTimes.includes(id.toString()),
                 })}
               >
-                <button type='button' className={s.time} onClick={() => handleTime({ id, time, isWork })}>{time}</button>
+                <button type='button' className={s.time} onClick={() => handleTime({ id, time, isActive })}>{time}</button>
                 {
                   editTimes && handleDelete && (
                     <Button

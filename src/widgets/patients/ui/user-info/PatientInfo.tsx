@@ -18,9 +18,10 @@ import PhoneICO from './svg/phone-ico.svg';
 
 type PatientInfoProps = {
   patientId: string
+  backButtonLink?: string
 };
 
-export function PatientInfo({ patientId }: PatientInfoProps) {
+export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
   const [isOpen, setOpen] = useState(false);
@@ -38,7 +39,7 @@ export function PatientInfo({ patientId }: PatientInfoProps) {
   return (
     <div className={classNames(s.root, 'container')}>
       <div className={s.navigateInfo}>
-        <NavLink to={PATH_PAGE.patients.records}>
+        <NavLink to={backButtonLink ?? PATH_PAGE.patients.records}>
           <BackICO />
         </NavLink>
         <span className={s.name}>{data.fullName}</span>
