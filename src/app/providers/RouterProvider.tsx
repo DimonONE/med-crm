@@ -42,6 +42,10 @@ const TariffsPage = Loadable(lazy(() => import('~pages/tariffs')));
 const AttendancePage = Loadable(lazy(() => import('~pages/staff-attendance/attendance')));
 const AttendanceSchedulePage = Loadable(lazy(() => import('~pages/staff-attendance/schedule')));
 
+// Med Info
+const MedInfoPage = Loadable(lazy(() => import('~pages/medical-informations/med-info')));
+const MedInfoDetailPage = Loadable(lazy(() => import('~pages/medical-informations/med-info-detail')));
+
 
 // Auth
 const LoginPage = Loadable(lazy(() => import('~pages/login')));
@@ -134,6 +138,16 @@ export function Router() {
               index: true,
             },
             { path: 'schedule/:id', element: <AttendanceSchedulePage /> },
+          ],
+        },
+        {
+          path: PATH_PAGE.medInfo.root,
+          children: [
+            {
+              element: <MedInfoPage />,
+              index: true,
+            },
+            { path: `${PATH_PAGE.medInfo.root}/:id`, element: <MedInfoDetailPage /> },
           ],
         },
         { path: 'services', element: <ServicesPage /> },

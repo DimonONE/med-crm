@@ -1,11 +1,12 @@
 
 import { ReactElement } from 'react';
+import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import s from './styles.module.scss';
 
 export type TCard = {
   id: number
-  title: string
+  title: string | JSX.Element
   link: string
   ico?: ReactElement
   notification?: boolean
@@ -13,13 +14,14 @@ export type TCard = {
 
 type TCardsNavigate = {
   cards: TCard[]
+  className?: string
 };
 
 export function CardsNavigate(props: TCardsNavigate) {
-  const { cards } = props;
+  const { cards, className } = props;
 
   return (
-    <div className={s.root}>
+    <div className={classNames(s.root, className)}>
       {
         cards.map(({ id, title, ico, link, notification }) => (
           <NavLink key={id} to={link} className={s.card}>

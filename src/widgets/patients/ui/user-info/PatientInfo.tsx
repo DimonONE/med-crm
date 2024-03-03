@@ -186,9 +186,9 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
       <NavLink to={PATH_PAGE.receptionTable.root} className={s.tableInfo}>
         Таблица приема
       </NavLink>
-      <div className={s.tableInfo}>
+      <NavLink to={PATH_PAGE.medInfo.root} className={s.tableInfo}>
         Медицинская информация
-      </div>
+      </NavLink>
       <div className={s.tableInfo}>
         История платажей
       </div>

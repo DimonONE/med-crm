@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormGroup, Grid, MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -9,58 +9,13 @@ import { Button } from '~shared/ui/button';
 import { Checkbox } from '~shared/ui/checkbox';
 import { DatePicker } from '~shared/ui/date-picker';
 import { SelectField } from '~shared/ui/select-field';
+import { UnderlineText } from '~shared/ui/underline-text';
 import s from './styles.module.scss';
-
-
-interface UnderlineTextProps {
-  name: string
-  onChange: (value: React.ChangeEvent<HTMLTextAreaElement>) => void
-  width?: string
-  className?: string
-}
 
 interface RootChannelProps {
   title: string
   isDefault?: boolean
 }
-
-
-function UnderlineText(props: UnderlineTextProps): JSX.Element {
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [value, setValue] = useState('');
-
-  const { width, className, onChange, ...prevProps } = props;
-  const fontSize = 18;
-
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
-    onChange(event);
-  };
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
-
-      if (inputRef.current.scrollHeight > fontSize) {
-        inputRef.current.classList.remove('border');
-      } else {
-        inputRef.current.classList.add('border');
-      }
-    }
-  }, [value]);
-
-  return (
-    <textarea
-      ref={inputRef}
-      value={value}
-      onChange={handleChange}
-      className={classNames(s.border, className)}
-      style={{ width: value ? `${value.length}ch` : width || 'auto' }}
-      {...prevProps}
-    />
-  );
-}
-
 
 function RootChannel({ title, isDefault }: RootChannelProps): JSX.Element {
   const [isHidden, setHidden] = useState(true);

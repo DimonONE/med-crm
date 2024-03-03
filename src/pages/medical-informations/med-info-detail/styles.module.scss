@@ -1,5 +1,13 @@
-.root {
+.root{
   padding: 28px 37px;
+
+  .titleName {
+    display: flex;
+    margin: 0 auto 48px;
+    width: max-content;
+    font-weight: 600;
+    color: var(--color-font);
+  }
 }
 
 .cardBlock {
@@ -22,6 +30,10 @@
     }
   }
 
+  .italic {
+    font-style: italic;
+  }
+
   .valueInfo {
     padding-inline: 10px;
     color: var(--color-error);
@@ -33,8 +45,6 @@
     color: var(--color-font);
     line-height: 107%;
   }
-
- 
 
   .head {
     display: flex;
@@ -108,63 +118,3 @@
 .horizontalGap {
   margin-left: 10px;
 }
-
-.checkboxes {
-  margin-left: 20px;
-  color: var(--color-font);
-  font-weight: 400;
-}
-
-.defaultInput {
-  margin-inline: 5px;
-  padding-inline: 5px;
-  max-width: 100%;
-  min-width: 10ch;
-  height: 18px;
-  min-height: 18px;
-  resize: none;
-  overflow: hidden;
-
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  line-height: 110%;
-
-  &.border {
-    border-bottom: 0.5px solid var(--color-font);
-  }
-}
-
-.ul {
-  li {
-    margin-left: 30px;
-  }
-
-  .li {
-    list-style-type: initial;
-
-    .optionInfo {
-      margin-left: 10px;
-    }
-
-    &::marker {
-      font-size: 1.1em;
-      color: var(--color-font);
-    }
-  }
-}
-
-
-.w-auto{
-  width: auto;
-}
-
-// Root canal
-
-
-.submit {
-  float: right;
-  margin-top: 40px;
-  padding: 12px 40px ;
-  width: auto;
-}
-

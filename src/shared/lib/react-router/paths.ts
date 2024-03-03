@@ -38,6 +38,10 @@ export const PATH_PAGE = {
     root: '/reception-table',
     create: '/reception-table/create',
   },
+  medInfo: {
+    root: '/med-info',
+    detail: (id: string) => `/med-info/${id}`,
+  },
   services: '/services',
   tariffs: '/tariffs',
   page404: '/404',
