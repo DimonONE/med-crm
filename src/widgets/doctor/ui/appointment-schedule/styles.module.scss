@@ -1,4 +1,30 @@
-.root {
+.filters {
+  margin-left: clamp(0px, 4vw, 66px);
+  padding: 25px 0 13px 0;
+}
+
+.datePicker {
+  margin-left: 13px;
+}
+
+.workDay {
+  margin-left: 22px;
+}
+
+.presentDay, .nextDay {
+  color: var(--color-base);
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration-line: underline;
+}
+
+.presentDay {
+  margin-left: 43px;
+  margin-right: 26px;
+}
+
+.schedule {
   .header {
     display: flex;
     height: 68px;
@@ -60,6 +86,7 @@
       align-items: start;
       justify-content: end;
       border-bottom: 1px solid #A1B6C1;
+      border-right: 1px solid #A1B6C1;
 
       .timeScale {
         height: auto;
@@ -82,21 +109,33 @@
     }
 
     .patientInfo {
+      position: relative;
       align-items: center;
       border: 1px solid #A1B6C1;
-      border-top: none;
+      border-block: none;
       color: #578695;
       font-size: 14px;
       font-weight: 500;
       line-height: 107%;
 
+      .active, 
+      &.select,
+      &.passed {
+        border-bottom: 1px solid #A1B6C1;
+      }
+
+      .active {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        align-items: center;
+        width: 100%;
+        background: #D5FFE8;
+      }
       
       &.passed {
         background: #EAEAEA;
-      }
-
-      &.active {
-        background: #D5FFE8;
       }
 
       &.select {

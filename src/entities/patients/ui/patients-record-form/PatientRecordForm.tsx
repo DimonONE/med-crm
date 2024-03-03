@@ -22,8 +22,11 @@ type Props = {
 export function PatientRecordForm({ patientId }: Props) {
   const [dateValue, setDateValue] = useState<Dayjs | null>(null);
 
+  // const { data: doctors } = useDoctors();
   const { mutate: createMutate } = useCreateRecord();
   const { mutate: deleteMutate } = useDeleteRecord();
+
+  // console.log('doctors', doctors);
 
   const selectOptions = [{ value: -1, label: 'Имя врача' },
   { value: '13a1bd72-1b1e-4868-9255-53f909b5bc3f', label: 'Dima' },
