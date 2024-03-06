@@ -10,7 +10,29 @@
   }
 }
 
+
+.ul {
+  li {
+    margin-left: 30px;
+  }
+
+  .li {
+    list-style-type: initial;
+
+    .optionInfo {
+      margin-left: 10px;
+    }
+
+    &::marker {
+      font-size: 1.1em;
+      color: var(--color-font);
+    }
+  }
+}
+
 .cardBlock {
+  display: grid;
+  gap: 20px;
   overflow: hidden;
   max-width: 1200px;
   margin: 15px auto 0;

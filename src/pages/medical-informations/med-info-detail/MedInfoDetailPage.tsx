@@ -1,5 +1,7 @@
+import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
+import { SelectField } from '~shared/ui/select-field';
 import { UnderlineText } from '~shared/ui/underline-text';
 import s from './styles.module.scss';
 
@@ -21,21 +23,6 @@ export function MedInfoDetailPage() {
   return (
     <Formik
       initialValues={{
-        statusReception: 1,
-        complaint: true,
-        smoking: false,
-        epidemiologicalHistory: '',
-        presenceOfSpontaneousPain: 0,
-
-        toothNumber: '',
-        foreignObjects: -1,
-
-        periapicalSpace_1: false,
-        periapicalSpace_2: false,
-        periapicalSpace_3: false,
-        periapicalSpace_4: false,
-
-        previouslyTreated: -1,
       }}
       // validationSchema={object().shape({
       //   email: string().email().required(),
@@ -47,10 +34,10 @@ export function MedInfoDetailPage() {
         <Form
           className={s.root}
         >
-          <span className={s.titleName}> Медицинская информация больного</span>
           <div className={s.cardBlock}>
+            <span className={s.titleName}> Медицинская информация больного</span>
 
-            <div className={classNames(s.title, s.verticalGap)}>
+            <div className={classNames(s.title)}>
               № <span className={s.redHighlight}>345346356456</span> от
               «
               <Field
@@ -65,14 +52,94 @@ export function MedInfoDetailPage() {
               </Field>
               »
             </div>
-            <div className={classNames(s.title, s.verticalGap)}>
+            <div className={classNames(s.title)}>
               1. Фамилия, имя, отчество:
               <span className={classNames(s.redHighlight, s.italic)}> Пупкин Василий Васильевич</span>
             </div>
-            <div className={classNames(s.title, s.verticalGap)}>2. <span className={s.redHighlight}> Мужчина</span> </div>
-            <div className={classNames(s.title, s.verticalGap)}>3. Адрес:   <span className={classNames(s.redHighlight, s.italic)}> ул. Пушкина д27, кв 65</span> </div>
-            <div className={classNames(s.title, s.verticalGap)}>4. Телефон: <span className={classNames(s.redHighlight, s.italic)}> +380966528347</span> </div>
-            <div className={classNames(s.title, s.verticalGap)}>5. Возраст: <span className={classNames(s.redHighlight, s.italic)}> 55</span> </div>
+            <div className={classNames(s.title)}>2. <span className={s.redHighlight}> Мужчина</span> </div>
+            <div className={classNames(s.title)}>3. Адрес:   <span className={classNames(s.redHighlight, s.italic)}> ул. Пушкина д27, кв 65</span> </div>
+            <div className={classNames(s.title)}>4. Телефон: <span className={classNames(s.redHighlight, s.italic)}> +380966528347</span> </div>
+            <div className={classNames(s.title)}>5. Возраст: <span className={classNames(s.redHighlight, s.italic)}> 55</span> </div>
+            <div className={classNames(s.title)}>6. Профессия:
+              <Field
+                name="test"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test'
+                    className={classNames(s.defaultInput, s.title)}
+                    onChange={props.field.onChange} />}
+              </Field>
+            </div>
+            <div className={classNames(s.title)}>7. Диагноз:
+              <Field
+                name="test"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test'
+                    className={classNames(s.defaultInput, s.title)}
+                    onChange={props.field.onChange} />}
+              </Field>
+            </div>
+            <div className={classNames(s.title)}>8. Диагноз по МКБ -10:
+              <Field
+                name="test"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test'
+                    className={classNames(s.defaultInput, s.title)}
+                    onChange={props.field.onChange} />}
+              </Field>
+            </div>
+            <div className={classNames(s.title)}>9. Жалобы:
+              <Field
+                name="test"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test'
+                    className={classNames(s.defaultInput, s.title)}
+                    onChange={props.field.onChange} />}
+              </Field>
+            </div>
+
+            <div>
+              12. Внешний осмотр:
+              <ul className={s.ul}>
+                <li className={s.li}>
+                  <span className={s.filterOptions}>
+                    Лицо
+                    <Field name="previouslyTreated">
+                      {(props: FieldProps) =>
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={[{ value: 1, label: 'Симметричное' }]}
+                          {...props}
+                        >
+                          {[{ value: 1, label: 'Симметричное' }].map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>}
+                    </Field>
+                  </span>
+                </li>
+              </ul>
+
+            </div>
           </div>
         </Form>
       )}

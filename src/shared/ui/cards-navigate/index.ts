@@ -1,6 +1,6 @@
 export { CardsNavigate } from './CardsNavigate';
 
-export type { TCard } from './CardsNavigate';
+export type { TCard, TCardEvent } from './CardsNavigate';
 
 // Icons
 export { default as RatesICO } from './svg/rates.svg';
