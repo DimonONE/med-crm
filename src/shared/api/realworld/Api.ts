@@ -50,7 +50,7 @@ export interface FileSchemaDto {
 }
 
 export interface PatientEntityDto {
-  files: FileSchemaDto;
+  files: FileSchemaDto[];
   id: string;
   fullName: string;
   passport: string;

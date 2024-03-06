@@ -96,15 +96,20 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
           <div className={s.textInfo}>{data.passportIssuingAuthority}</div>
         </div>
 
-        <div>
-          <div className={s.textBold}>Прикрепленные документы</div>
-          <FileLoader
-            id="patient-info-files"
-            title='Загрузить'
-            hiddenButton
-          // filesData={data.files}
-          />
-        </div>
+        {
+          data.files ? (
+            <div>
+              <div className={s.textBold}>Прикрепленные документы</div><br />
+              <FileLoader
+                id="patient-info-files"
+                title='Загрузить'
+                hiddenButton
+                filesData={data.files}
+              />
+            </div>
+          ) : null
+        }
+
 
       </div>
 
@@ -197,6 +202,7 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
       </NavLink>
 
       <PatientAddServicesForm
+        userInfo={data.user}
         isOpen={isOpen}
         onClose={() => setOpen(false)}
         onSuccess={({ services, price: priceServices }) => {
