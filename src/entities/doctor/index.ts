@@ -1,1 +1,1 @@
-export { useAllRecords, useDoctors } from './api/doctorApi';
+export { useAllRecords, useDoctors, useAllRecordsPatient } from './api/doctorApi';

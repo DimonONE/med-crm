@@ -16,33 +16,6 @@ export interface LoginUserDtoDto {
   password: string;
 }
 
-export interface CreateClinicUserDtoDto {
-  /** Name clinic */
-  name?: string;
-  /** Short description clinic */
-  description?: string;
-  /** Phone of the clinic */
-  phone?: string;
-  /** Address of the clinic */
-  address?: string;
-  /** Country of the clinic */
-  country?: string;
-  /** Country of the clinic */
-  city?: string;
-  /** Type of the clinic (category) */
-  type?: string;
-  /** First name of the user */
-  fullName: string;
-  /** Password of the user */
-  password: string;
-  /** Email of the user */
-  email: string;
-}
-
-export interface MessageResponseDto {
-  message: string;
-}
-
 export interface FileSchemaDto {
   name: string;
   path: string;
@@ -100,6 +73,11 @@ export interface ClinicEntityDto {
   save: object;
 }
 
+export interface IPriceDto {
+  price: number;
+  name: string;
+}
+
 export interface RecordEntityDto {
   id: number;
   userId: string;
@@ -110,7 +88,7 @@ export interface RecordEntityDto {
   /** @format date-time */
   endTime: string;
   status: string;
-  servicePrices: object[];
+  servicePrices: IPriceDto[];
   notice?: string;
   user: UserEntityDto;
 }
@@ -167,6 +145,33 @@ export interface UserResponseEntityDto {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
+}
+
+export interface CreateClinicUserDtoDto {
+  /** Name clinic */
+  name?: string;
+  /** Short description clinic */
+  description?: string;
+  /** Phone of the clinic */
+  phone?: string;
+  /** Address of the clinic */
+  address?: string;
+  /** Country of the clinic */
+  country?: string;
+  /** Country of the clinic */
+  city?: string;
+  /** Type of the clinic (category) */
+  type?: string;
+  /** First name of the user */
+  fullName: string;
+  /** Password of the user */
+  password: string;
+  /** Email of the user */
+  email: string;
+}
+
+export interface MessageResponseDto {
+  message: string;
 }
 
 export interface UpdateUserDtoDto {
@@ -427,7 +432,7 @@ export interface CreateRecordDtoDto {
   /** Notice record */
   notice: string;
   /** Price list */
-  servicePrices: object[];
+  servicePrices: IPriceDto[] |object[];
 }
 
 export interface UpdateRecordDTODto {
@@ -448,7 +453,7 @@ export interface UpdateRecordDTODto {
   /** Notice record */
   notice: string;
   /** Price list */
-  servicePrices: object[];
+  servicePrices: IPriceDto[] ;
 }
 
 export interface CreateServicePriceDtoDto {
@@ -737,6 +742,21 @@ export class Api<
         method: 'POST',
         body: data,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerGetAllDoctors
+     * @request GET:/users/doctors
+     */
+    usersControllerGetAllDoctors: (params: RequestParams = {}) =>
+      this.request<UserResponseEntityDto[], any>({
+        path: `/users/doctors`,
+        method: 'GET',
         format: 'json',
         ...params,
       }),
@@ -1286,11 +1306,37 @@ export class Api<
          * @format date-time
          */
         date: string;
+        /** Need user */
+        userId: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<RecordEntityDto[], any>({
         path: `/record/get-all-records`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Record
+     * @name RecordControllerGetAllRecordsPatient
+     * @request GET:/record/get-all-records-patient
+     * @secure
+     */
+    recordControllerGetAllRecordsPatient: (
+      query: {
+        /** Patient id */
+        patientId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<RecordEntityDto[], any>({
+        path: `/record/get-all-records-patient`,
         method: 'GET',
         query: query,
         secure: true,

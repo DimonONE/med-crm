@@ -1,31 +1,36 @@
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
+import { toast } from 'react-toastify';
 import { useListOfServices } from '~entities/services';
 import { Api } from '~shared/api/realworld';
+import { errorHandler } from '~shared/lib/react-query';
 import CloseICO from '~shared/svg/close-gray-ico.svg';
 import { Button } from '~shared/ui/button';
 import { MenuItemProps, SelectField } from '~shared/ui/select-field';
+import { useUpdateRecord } from '../../api/patientsApi';
 import s from './styles.module.scss';
 
 type Success = {
   services: Api.ServicePriceEntityDto[],
-  price: number
 };
 
 type Props = {
   isOpen: boolean
   onSuccess: (data: Success) => void
   onClose: () => void
+  record: Api.RecordEntityDto
 };
 
-export function PatientAddServicesForm({ isOpen, onSuccess, onClose }: Props) {
+export function PatientAddServicesForm(props: Props) {
+  const { isOpen, record, onSuccess, onClose } = props;
   const [selectServices, setServices] = useState<Api.ServicePriceEntityDto[]>([]);
   const [selectOptions, setSelectOptions] = useState<MenuItemProps[]>([]);
   const { data } = useListOfServices();
+  const { mutate } = useUpdateRecord();
 
-  const priceServices = useMemo(() => selectServices.reduce((acc, next) => acc + next.price, 0), [selectServices]);
+  const priceServices = selectServices.reduce((acc, next) => acc + next.price, 0);
 
   const handleServices = (serviceId: number | string) => {
     const findService = data?.find(({ id }) => serviceId === id);
@@ -47,11 +52,32 @@ export function PatientAddServicesForm({ isOpen, onSuccess, onClose }: Props) {
   };
 
   const success = () => {
-    onSuccess({
-      services: selectServices,
-      price: priceServices,
+    const servicePrices = selectServices.map(({ name, price }) => ({
+      price,
+      name,
+    }));
+
+    const updateData = {
+      'id': record.id,
+      'userId': record.userId,
+      'startTime': record.startTime,
+      'endTime': record.endTime,
+      'notice': record.notice ?? '',
+      'servicePrices': servicePrices,
+    };
+
+    mutate(updateData, {
+      onSuccess: () => {
+        onSuccess({
+          services: selectServices,
+        });
+        onClose();
+      },
+
+      onError: (error) => {
+        toast(errorHandler(error), { type: 'error' });
+      },
     });
-    onClose();
   };
 
   useEffect(() => {
@@ -60,6 +86,7 @@ export function PatientAddServicesForm({ isOpen, onSuccess, onClose }: Props) {
       : [];
 
     setSelectOptions(options);
+
     setServices([]);
   }, [data, isOpen]);
 

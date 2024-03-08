@@ -30,6 +30,28 @@
         "tags": ["Users"]
       }
     },
+    "/users/doctors": {
+      "get": {
+        "operationId": "UsersController_getAllDoctors",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"]
+      }
+    },
     "/users/create": {
       "post": {
         "operationId": "UsersController_makeProposal",
@@ -988,6 +1010,52 @@
               "format": "date-time",
               "type": "string"
             }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "description": "Need user",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecordEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Record"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/record/get-all-records-patient": {
+      "get": {
+        "operationId": "RecordController_getAllRecordsPatient",
+        "parameters": [
+          {
+            "name": "patientId",
+            "required": true,
+            "in": "query",
+            "description": "Patient id",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1140,69 +1208,6 @@
           }
         },
         "required": ["email", "password"]
-      },
-      "CreateClinicUserDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name clinic",
-            "nullable": false
-          },
-          "description": {
-            "type": "string",
-            "description": "Short description clinic"
-          },
-          "phone": {
-            "type": "string",
-            "description": "Phone of the clinic",
-            "nullable": false
-          },
-          "address": {
-            "type": "string",
-            "description": "Address of the clinic",
-            "nullable": false
-          },
-          "country": {
-            "type": "string",
-            "description": "Country of the clinic",
-            "nullable": false
-          },
-          "city": {
-            "type": "string",
-            "description": "Country of the clinic",
-            "nullable": false
-          },
-          "type": {
-            "type": "string",
-            "description": "Type of the clinic (category)",
-            "nullable": false
-          },
-          "fullName": {
-            "type": "string",
-            "description": "First name of the user",
-            "nullable": false
-          },
-          "password": {
-            "type": "string",
-            "description": "Password of the user"
-          },
-          "email": {
-            "type": "string",
-            "description": "Email of the user",
-            "nullable": false
-          }
-        },
-        "required": ["fullName", "password", "email"]
-      },
-      "MessageResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": ["message"]
       },
       "FileSchema": {
         "type": "object",
@@ -1392,6 +1397,18 @@
           "save"
         ]
       },
+      "IPrice": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["price", "name"]
+      },
       "RecordEntity": {
         "type": "object",
         "properties": {
@@ -1421,7 +1438,7 @@
           "servicePrices": {
             "type": "array",
             "items": {
-              "type": "object"
+              "$ref": "#/components/schemas/IPrice"
             }
           },
           "notice": {
@@ -1635,6 +1652,69 @@
           "createdAt",
           "updatedAt"
         ]
+      },
+      "CreateClinicUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name clinic",
+            "nullable": false
+          },
+          "description": {
+            "type": "string",
+            "description": "Short description clinic"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the clinic",
+            "nullable": false
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the clinic",
+            "nullable": false
+          },
+          "country": {
+            "type": "string",
+            "description": "Country of the clinic",
+            "nullable": false
+          },
+          "city": {
+            "type": "string",
+            "description": "Country of the clinic",
+            "nullable": false
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the clinic (category)",
+            "nullable": false
+          },
+          "fullName": {
+            "type": "string",
+            "description": "First name of the user",
+            "nullable": false
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user",
+            "nullable": false
+          }
+        },
+        "required": ["fullName", "password", "email"]
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -2220,7 +2300,7 @@
             "description": "Price list",
             "type": "array",
             "items": {
-              "type": "object"
+              "$ref": "#/components/schemas/IPrice"
             }
           }
         },
@@ -2262,7 +2342,7 @@
             "description": "Price list",
             "type": "array",
             "items": {
-              "type": "object"
+              "$ref": "#/components/schemas/IPrice"
             }
           }
         },

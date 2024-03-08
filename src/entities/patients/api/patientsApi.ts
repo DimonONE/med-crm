@@ -92,7 +92,7 @@ export function useCreateRecord()  {
 export function useUpdateRecord()  {
   return useMutation({
     mutationKey: patientsKeys.updateRecord(),
-    mutationFn: async (data: Api.CreateRecordDtoDto) => {
+    mutationFn: async (data: Api.UpdateRecordDTODto) => {
       const response = await axiosInstance({ url: '/record/update', method: 'POST', data }); 
       return response.data;
     },

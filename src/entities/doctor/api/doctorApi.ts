@@ -5,6 +5,7 @@ export const doctorKeys = {
   root: ['doctor'],
   doctors: () => [...doctorKeys.root, 'users-doctors'],
   records: () => [...doctorKeys.root, 'all-records'],
+  recordsPatient: () => [...doctorKeys.root, 'all-records-patient'],
 };
 
 export function useDoctors()  {
@@ -22,6 +23,16 @@ export function useAllRecords(date: string, userId: string): UseQueryResult<Api.
     queryKey: doctorKeys.records(),
     queryFn: async () => {
       const response = await axiosInstance({ url: '/record/get-all-records', params: { date, userId }, method: 'GET' }); 
+      return response.data;
+    },
+  });
+}
+
+export function useAllRecordsPatient(patientId: string): UseQueryResult<Api.RecordEntityDto[]>   {
+  return useQuery({
+    queryKey: doctorKeys.recordsPatient(),
+    queryFn: async () => {
+      const response = await axiosInstance({ url: '/record/get-all-records-patient', params: { patientId  }, method: 'GET' }); 
       return response.data;
     },
   });

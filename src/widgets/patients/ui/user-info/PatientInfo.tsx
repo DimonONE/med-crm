@@ -1,8 +1,9 @@
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useAllRecordsPatient } from '~entities/doctor';
 import { PatientAddServicesForm, usePatientId } from '~entities/patients';
 import { useRoleUser } from '~entities/session';
 import { LoadImage } from '~features/patients';
@@ -24,13 +25,17 @@ type PatientInfoProps = {
 export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
-  const [isOpen, setOpen] = useState(false);
-  const [selectServices, setServices] = useState<Api.ServicePriceEntityDto[]>([]);
-  const [price, setPrice] = useState<number>(0);
+  const [selectRecord, setSelectRecord] = useState<Api.RecordEntityDto | null>(null);
 
   const { data, isLoading } = usePatientId(patientId);
+  const { data: recordsPatient, refetch } = useAllRecordsPatient(patientId);
 
   const dateOfBirth = dayjs().diff(dayjs(data?.dateOfBirth), 'year');
+  const priceServices = useMemo(() => recordsPatient ? recordsPatient.reduce((accRecord, nextRecord) => {
+    const servicePrices = nextRecord.servicePrices.reduce((acc, next) => acc + next.price, 0);
+    return accRecord + servicePrices;
+  }, 0) : 0, [recordsPatient]);
+
 
   if ((!data && !isLoading) || !data) {
     return null;
@@ -109,65 +114,72 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
             </div>
           ) : null
         }
-
-
       </div>
 
-      <div className={s.blockInfo}>
-        <div className={s.recording}>
-          <div className={classNames(s.textBold, s.textSuccess, 'd-flex')}>
-            Запись:
-            <EditICO />
-          </div>
-          <div className={s.contentInfo}>
-            <div>{dayjs(data.user.createdBy).format('mm')} 14:30 четверг</div>
-            <div>
-              <span>Стоматолог:</span>
-              <span className={s.textValue}>{data.user.fullName}</span>
+      {
+        recordsPatient?.map((record) => (
+          <div key={record.id} className={s.blockInfo}>
+            <div className={s.recording}>
+              <div className={classNames(s.textBold, s.textSuccess, 'd-flex')}>
+                Запись:
+                <button type='button' onClick={() => false}>
+                  <EditICO />
+                </button>
+              </div>
+              <div className={s.contentInfo}>
+                <div>{`${dayjs(record.startTime).format('DD.MM.YYYY')} | ${dayjs(record.startTime).format('HH:mm dddd')}`} </div>
+                <div>
+                  <span>Стоматолог:</span>
+                  <span className={s.textValue}>{data.user.fullName}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={s.recording}>
+              <div className={classNames(s.textBold, 'd-flex')}>
+                Услуги:
+                <button type='button' onClick={() => {
+                  setSelectRecord(record);
+                }}>
+                  <EditICO />
+                </button>
+              </div>
+              <div className={s.contentInfo}>
+                {
+                  record.servicePrices.map(({ price, name }) => (
+                    <div key={`${name}-${price}`} className={s.nameDisease}>{name}</div>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div className={s.note}>
+              <div className={s.textBold}>Жалоба:</div>
+
+              <div className={s.contentInfo}>
+                <div className={s.noteInfo}>Болят зубы, желтый налет, смешение швардевита.</div>
+              </div>
+            </div>
+
+            <div className='d-flex'>
+              <Button className={classNames(s.button, s.buttonSuccess)} onClick={() => false}>
+                В оплату
+              </Button>
+
+              <Button className={classNames(s.button, s.buttonAttendance)} onClick={() => false}>
+                Неявка
+              </Button>
+
+              <Button className={classNames(s.button, s.buttonCancel)} onClick={() => false}>
+                Отмена
+              </Button>
+
+              <span className={s.priceAll}>₽ {priceServices}  </span>
             </div>
           </div>
-        </div>
+        ))
+      }
 
-        <div className={s.recording}>
-          <div className={classNames(s.textBold, 'd-flex')}>
-            Услуги:
-            <button type='button' onClick={() => setOpen(true)}>
-              <EditICO />
-            </button>
-          </div>
-          <div className={s.contentInfo}>
-            {
-              selectServices.map(({ id, name }) => (
-                <div key={id} className={s.nameDisease}>{name}</div>
-              ))
-            }
-          </div>
-        </div>
-
-        <div className={s.note}>
-          <div className={s.textBold}>Жалоба:</div>
-
-          <div className={s.contentInfo}>
-            <div className={s.noteInfo}>Болят зубы, желтый налет, смешение швардевита.</div>
-          </div>
-        </div>
-
-        <div className='d-flex'>
-          <Button className={classNames(s.button, s.buttonSuccess)} onClick={() => false}>
-            В оплату
-          </Button>
-
-          <Button className={classNames(s.button, s.buttonAttendance)} onClick={() => false}>
-            Неявка
-          </Button>
-
-          <Button className={classNames(s.button, s.buttonCancel)} onClick={() => false}>
-            Отмена
-          </Button>
-
-          <span className={s.priceAll}>₽ {price}  </span>
-        </div>
-      </div>
       <div className={s.blockInfo}>
         <div >
           <span>Всего посещений:</span>
@@ -201,15 +213,19 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
         Файлы
       </NavLink>
 
-      <PatientAddServicesForm
-        userInfo={data.user}
-        isOpen={isOpen}
-        onClose={() => setOpen(false)}
-        onSuccess={({ services, price: priceServices }) => {
-          setServices(services);
-          setPrice(priceServices);
-        }}
-      />
+      {
+        selectRecord && (
+          <PatientAddServicesForm
+            record={selectRecord}
+            isOpen={!!selectRecord}
+            onClose={() => setSelectRecord(null)}
+            onSuccess={() => {
+              refetch();
+            }}
+          />
+        )
+      }
+
     </div>
   );
 }
