@@ -30,7 +30,7 @@ export function useAllRecords(date: string, userId: string): UseQueryResult<Api.
 
 export function useAllRecordsPatient(patientId: string): UseQueryResult<Api.RecordEntityDto[]>   {
   return useQuery({
-    queryKey: doctorKeys.recordsPatient(),
+    queryKey: [doctorKeys.recordsPatient(), patientId],
     queryFn: async () => {
       const response = await axiosInstance({ url: '/record/get-all-records-patient', params: { patientId  }, method: 'GET' }); 
       return response.data;
