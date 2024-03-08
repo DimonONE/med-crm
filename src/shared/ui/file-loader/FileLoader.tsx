@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { API_URL } from '~shared/api/realworld';
+import { API_URL, Api } from '~shared/api/realworld';
 import CloseICO from '../../svg/close-gray-ico.svg';
 import { Modal } from '../modal';
 import s from './styles.module.scss';
 import DownloadICO from './svg/download-ico.svg';
 
-export type FileValues = File[] | null;
+export type FileValues = (File | Api.FileSchemaDto)[] | null;
 
 type FileLoaderProps = {
   id: string
@@ -16,7 +16,7 @@ type FileLoaderProps = {
   accept?: 'pdf' | 'png'
   multiple?: boolean
   onDownload?: (link: string) => void
-  onDelete?: (files: FileValues, file: File[]) => void
+  onDelete?: (files: FileValues, file: FileValues) => void
   onChange?: (files: FileValues) => void
   hiddenFileInfo?: boolean
   hiddenButton?: boolean

@@ -29,8 +29,8 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
 
   const handleChange = (files: FileValues) => {
     if (files && onChange) {
-      setImage(files[0]);
-      onChange(files[0]);
+      setImage(files[0] as File);
+      onChange(files[0] as File);
     }
   };
 
@@ -57,6 +57,7 @@ export function LoadImage({ defaultImage, isLoad, onChange, className }: LoadIma
       }
     });
   }, [image]);
+
 
   return (
     <div className={classNames(s.root, className)}>
