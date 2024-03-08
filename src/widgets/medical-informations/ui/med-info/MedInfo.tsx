@@ -2,45 +2,46 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
-import { CardsNavigate, CheckListICO, ClientsICO, FinanceICO, OfficesICO, SettingsICO, TCardEvent } from '~shared/ui/cards-navigate';
+import { CardsNavigate, TCardEvent } from '~shared/ui/cards-navigate';
 import s from './styles.module.scss';
+import DocumentCardICO from './svg/document-card-ico.svg';
 import DocumentICO from './svg/document-ico.svg';
 
 const cards = [
   {
     id: 1,
     title: <>Медицинская карта <br /> 043-У</>,
-    ico: <ClientsICO />,
+    ico: <DocumentCardICO />,
     link: PATH_PAGE.patients.records,
   },
   {
     id: 2,
     title: <>Медицинская карта <br /> 043-1/У</>,
-    ico: <OfficesICO />,
+    ico: <DocumentCardICO />,
     link: PATH_PAGE.doctor.root,
   },
   {
     id: 3,
     title: 'Лист учета дозовых нагрузок',
-    ico: <FinanceICO />,
+    ico: <DocumentCardICO />,
     link: '/',
   },
   {
     id: 4,
     title: 'Гарантийные сроки и сертификат',
-    ico: <CheckListICO />,
+    ico: <DocumentCardICO />,
     link: PATH_PAGE.attendance.root,
   },
   {
     id: 5,
     title: <>Зубная <br /> формула</>,
-    ico: <SettingsICO />,
+    ico: <DocumentCardICO />,
     link: '/',
   },
   {
     id: 6,
     title: <>Таблица <br /> приема</>,
-    ico: <SettingsICO />,
+    ico: <DocumentCardICO />,
     link: '#',
   },
 ];
