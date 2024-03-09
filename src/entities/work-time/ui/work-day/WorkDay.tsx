@@ -27,7 +27,7 @@ export function WorkDay({ daysWork, defaultValue = dayjs(), handleChange, classN
     if (skip === 'next') {
       skipped = arrayLength < activeId + 1 ? 1 : activeId + 1;
     } else {
-      skipped = activeId - 1 < 1 ? arrayLength : activeId - 1;
+      skipped = ((activeId - 1 < 1) && activeId - 1 !== -1) ? 0 : activeId - 1;
     }
     setActiveId(skipped);
     handleChange(dayjs(defaultValue).day(skipped));
