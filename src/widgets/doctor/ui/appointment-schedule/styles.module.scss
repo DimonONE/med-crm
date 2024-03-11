@@ -27,9 +27,12 @@
 .schedule {
   .header {
     display: flex;
-    height: 68px;
+    // height: 68px !important;
     background: #F3FBFF;
     border-block: 1px solid #578695;
+    align-items: center;
+    border-right: 1px solid #A1B6C1;
+
 
     .name  {
       color:  #578695;
@@ -69,10 +72,11 @@
   }
 
   .doctorInfo {
+    height: 100%;
     flex-direction: column;
     justify-content: center;
-    border-right: 1px solid #A1B6C1;
-    border-left: 1px solid #A1B6C1;
+    text-align: left;
+    text-transform: capitalize;
   }
 
   .container {
@@ -108,40 +112,45 @@
       }
     }
 
-    .patientInfo {
-      position: relative;
-      align-items: center;
-      border: 1px solid #A1B6C1;
-      border-block: none;
-      color: #578695;
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 107%;
+    .patientInfoBlock {
+      background-color: #fff;
 
-      .active, 
-      &.select,
-      &.passed {
-        border-bottom: 1px solid #A1B6C1;
-      }
-
-      .active {
-        display: flex;
-        position: absolute;
-        top: 0;
-        left: 0;
+      .patientInfo {
+        position: relative;
+        height: 100%;
         align-items: center;
-        width: 100%;
-        background: #D5FFE8;
-      }
-      
-      &.passed {
-        background: #EAEAEA;
-      }
-
-      &.select {
-        background: #876AFF;
-        color: #FFF;
-        font-weight: 600;
+        border: 1px solid #A1B6C1;
+        color: #578695;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 107%;
+  
+        &.active, 
+        &.select,
+        &.passed {
+          border-bottom: 1px solid #A1B6C1;
+        }
+  
+        &.active {
+          display: flex;
+          position: absolute;
+          top: 0;
+          left: 0;
+          align-items: center;
+          width: 100%;
+          background: #D5FFE8;
+        }
+        
+        &.passed {
+          background: #EAEAEA;
+        }
+  
+        &.select {
+          background: #876AFF;
+          color: #FFF;
+          font-weight: 600;
+        }
       }
     }
   }

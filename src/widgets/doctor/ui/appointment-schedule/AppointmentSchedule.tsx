@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { TimeTable } from 'react-timetable-events';
+import { HourPreviewProps, DayHeaderPreviewProps, Event } from 'react-timetable-events/dist/types';
 import { useAllRecords } from '~entities/doctor';
 import { WorkDay, WorkTime, daysWork, timesWork as times } from '~entities/work-time';
 import { PATH_PAGE } from '~shared/lib/react-router';
@@ -14,20 +16,53 @@ type IProps = {
   patientId?: string;
 };
 
-function calculateInterval(time: string): number {
-  const dateTime = dayjs(time);
-  const minutes = dateTime.minute();
+function RenderDayHeader({ day, rowHeight, ...defaultAttributes }: DayHeaderPreviewProps) {
+  return (
+    <div  {...defaultAttributes} style={{ height: rowHeight }}>
+      <div className={s.doctorInfo}>
+        <span className={s.name}>Цой Антонионович</span>
+        <span className={s.status}>Дантист</span>
+      </div>
+    </div >
+  );
+}
 
-  switch (true) {
-    case minutes <= 15:
-      return 25;
-    case minutes <= 30:
-      return 50;
-    case minutes <= 45:
-      return 75;
-    default:
-      return 100;
-  }
+function RenderEvent(eventProps: any) {
+  const { event, defaultAttributes, classNames: cn, patientSelect, selectId } = eventProps;
+
+  return (
+    < div
+      {...defaultAttributes}
+      key={event.id}
+      title={event.name}
+      className={classNames(defaultAttributes.className, s.patientInfoBlock)}
+    >
+      <button
+        type='button'
+        onClick={patientSelect}
+        className={
+          classNames(
+            cn.event_info,
+            s.patientInfo,
+            { [s.active]: true },
+            { [s.passed]: false },
+            { [s.select]: selectId === `${event.userId}---${event.id}` },
+          )
+        }
+      >
+        Билл Клинтон Валерьевич
+      </button>
+    </ div >
+  );
+}
+
+function RenderHour({ hour, ...defaultAttributes }: HourPreviewProps) {
+  return (
+    <div {...defaultAttributes} key={hour} className={s.time}>
+      {hour}
+      <div className={s.timeScale} />
+    </div>
+  );
 }
 
 export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps) {
@@ -35,9 +70,7 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
 
   const [paidTo, setPaidTo] = useState<Dayjs>(dayjs());
   const [selectId, setSelectId] = useState<string | null>(null);
-
   const { data, refetch } = useAllRecords(dayjs(paidTo).toISOString(), userId);
-  console.log('AppointmentSchedule', data);
 
   const timesWork = useMemo(() =>
     data?.length && selectId
@@ -46,12 +79,27 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
         const patientsDoctor = data.filter(({ userId: doctorId }) => doctorId === selectDoctorId);
         const isActiveTime = patientsDoctor.filter(({ startTime }) =>
           dayjs(startTime).hour() === Number(timeWork.time.split(':')[0]));
-        console.log('isActiveTime', isActiveTime);
-
         return isActiveTime?.length ? { ...timeWork, isActive: true } : timeWork;
       },
       )
       : [], [data, selectId]);
+  const doctors = useMemo(() => {
+    const doctorsByUserId = !data ? {} : data.reduce((acc, current) => {
+      const { userId: id } = current;
+      if (!acc[id]) {
+        acc[id] = [];
+      }
+      acc[id].push({
+        ...current,
+        type: 'custom',
+        name: current.userId,
+        startTime: new Date(current.startTime),
+        endTime: new Date(current.endTime),
+      });
+      return acc;
+    }, {} as { [key: string]: Event[] });
+    return doctorsByUserId;
+  }, [data]);
 
   const patientSelect = (id: string, patientId: string) => {
     const link = selectId === id ? PATH_PAGE.doctor.root : PATH_PAGE.doctor.patient(patientId);
@@ -70,6 +118,8 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paidTo]);
 
+
+
   return (
     <div className={s.root}>
       <div className={s.filters}>
@@ -87,60 +137,29 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
       </div>
 
       <div className={s.schedule}>
-        <div className={s.header}>
-          <div className={s.time}>
-            <TimeICO />
-          </div>
-          {
-            data?.map(({ id }) => (
-              <div key={id} className={s.doctorInfo}>
-                <span className={s.name}>Цой Антонионович</span>
-                <span className={s.status}>Дантист</span>
-              </div>
-            ))
-          }
-        </div>
         <div className={s.container}>
-          {
-            times.map(({ id, time }) => (
-              <div key={id} className='d-flex'>
-                <div className={s.time}>
-                  {time}
-                  <div className={s.timeScale} />
-                </div>
-                {
-                  data?.map(({ id: recordId, patientId, userId: doctorId, startTime, endTime }) => (
-                    <div
-                      className={classNames(
-                        s.patientInfo,
-                        // { [s.active]: false },
-                        { [s.passed]: true },
-                        { [s.select]: selectId === `${doctorId}---${time}` },
-                      )}>
-                      {
-                        dayjs(startTime).hour() === Number(time.split(':')[0]) && (
-                          <button
-                            key={recordId}
-                            type='button'
-                            onClick={() => patientSelect(`${doctorId}---${time}`, patientId)}
-
-                          >
-                            <div className={s.active} style={{
-                              height: `${calculateInterval(endTime)}%`,
-                            }} >
-                              Билл Клинтон Валерьевич
-                            </div>
-                          </button>
-                        )
-                      }
-                    </div>
-                  ))
-                }
-              </div>
-            ))
-          }
+          <TimeTable
+            // @ts-ignore
+            timeLabel={<TimeICO />}
+            events={doctors}
+            renderDayHeader={RenderDayHeader}
+            renderHour={RenderHour}
+            renderEvent={(eventProps) =>
+              <RenderEvent
+                selectId={selectId}
+                patientSelect={() => patientSelect(
+                  `${eventProps.event.userId}---${eventProps.event.id}`,
+                  eventProps.event.patientId as string,
+                )}
+                {...eventProps}
+              />}
+            hoursInterval={{ from: 5, to: 22 }}
+            style={{ height: '2000px', width: 'max-content' }}
+            headerAttributes={{ className: s.header }}
+            bodyAttributes={{ style: { minWidth: 192, backgroundImage: 'none' } }}
+          />
         </div>
       </div>
-    </div>
+    </div >
   );
 }
