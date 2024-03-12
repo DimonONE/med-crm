@@ -6,11 +6,7 @@ import { UnderlineText } from '~shared/ui/underline-text';
 import s from './styles.module.scss';
 
 
-// type Params = {
-//   patientId: string | undefined
-// };
-
-export function MedInfoDetailPage() {
+export function MedInfoDetail() {
 
   const handleSubmit = async (
     values: any,
@@ -108,6 +104,31 @@ export function MedInfoDetailPage() {
                     onChange={props.field.onChange} />}
               </Field>
             </div>
+            <div className={classNames(s.title)}>10. Перенесенные и сопутствующие заболевания:
+              <Field
+                name="test"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test'
+                    className={classNames(s.defaultInput, s.title)}
+                    onChange={props.field.onChange} />}
+              </Field>
+            </div>
+            <div className={classNames(s.title)}>11. Развитие настоящего заболевания:
+              <Field
+                name="test"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test'
+                    className={classNames(s.defaultInput, s.title)}
+                    onChange={props.field.onChange} />}
+              </Field>
+            </div>
+
 
             <div>
               12. Внешний осмотр:
@@ -137,8 +158,45 @@ export function MedInfoDetailPage() {
                     </Field>
                   </span>
                 </li>
+
+                <li className={s.li}>
+                  <span>Комментарий</span>
+                  <Field
+                    name="test"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='test'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                </li>
               </ul>
 
+            </div>
+
+            <div className={classNames(s.title)}>13. Состояние зубов: <span>налет на зубах</span>
+              <Field name="test">
+                {(props: FieldProps) =>
+                  <SelectField
+                    className={s.optionInfo}
+                    selectNavigate
+                    selectOptions={[{ value: 1, label: 'Нет' }]}
+                    {...props}
+                  >
+                    {[{ value: 1, label: 'Симметричное' }].map(({ label, value: link }) => (
+                      <MenuItem
+                        key={link}
+                        value={link}
+                        className='select-link'
+                      >
+                        {label}
+                      </MenuItem>
+                    ))
+                    }
+                  </SelectField>}
+              </Field>
             </div>
           </div>
         </Form>

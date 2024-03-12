@@ -44,8 +44,8 @@ const AttendancePage = Loadable(lazy(() => import('~pages/staff-attendance/atten
 const AttendanceSchedulePage = Loadable(lazy(() => import('~pages/staff-attendance/schedule')));
 
 // Med Info
-const MedInfoPage = Loadable(lazy(() => import('~pages/medical-informations/med-info')));
-const MedInfoDetailPage = Loadable(lazy(() => import('~pages/medical-informations/med-info-detail')));
+const MedInfoPage = Loadable(lazy(() => import('~pages/medical-information/med-info')));
+const MedInfoDetailPage = Loadable(lazy(() => import('~pages/medical-information/med-info-detail')));
 
 
 // Auth
