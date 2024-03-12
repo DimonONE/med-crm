@@ -896,6 +896,35 @@
         "tags": ["Patients"]
       }
     },
+    "/patients/create-update-med-info": {
+      "post": {
+        "operationId": "PatientsController_medInfoCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedInfoPatientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatientEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Patients"]
+      }
+    },
     "/record/create": {
       "post": {
         "operationId": "RecordController_createRecord",
@@ -1276,6 +1305,12 @@
           "image": {
             "type": "string"
           },
+          "medInfo": {
+            "type": "object"
+          },
+          "medInfoPath": {
+            "type": "string"
+          },
           "user": {
             "$ref": "#/components/schemas/UserEntity"
           },
@@ -1305,6 +1340,8 @@
           "email",
           "phone",
           "image",
+          "medInfo",
+          "medInfoPath",
           "user",
           "createdAt",
           "updatedAt"
@@ -2270,6 +2307,22 @@
           "dateOfBirth",
           "files"
         ]
+      },
+      "MedInfoPatientDto": {
+        "type": "object",
+        "properties": {
+          "info": {
+            "type": "string",
+            "description": "med info in json",
+            "nullable": false
+          },
+          "patientId": {
+            "type": "string",
+            "description": "PatientId",
+            "nullable": false
+          }
+        },
+        "required": ["info", "patientId"]
       },
       "CreateRecordDto": {
         "type": "object",

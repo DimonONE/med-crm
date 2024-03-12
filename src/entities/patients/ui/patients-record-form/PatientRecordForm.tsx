@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
 import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
+import { useDoctors } from '~entities/doctor';
 import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
@@ -22,15 +23,22 @@ type Props = {
 export function PatientRecordForm({ patientId }: Props) {
   const [dateValue, setDateValue] = useState<Dayjs | null>(null);
 
-  // const { data: doctors } = useDoctors();
+  const { data: doctors } = useDoctors();
   const { mutate: createMutate } = useCreateRecord();
   const { mutate: deleteMutate } = useDeleteRecord();
 
-  // console.log('doctors', doctors);
-
-  const selectOptions = [{ value: -1, label: 'Имя врача' },
-  { value: '13a1bd72-1b1e-4868-9255-53f909b5bc3f', label: 'Dima' },
-  { value: '13a1bd72-1b1e-4868-9255-53f909b5bc3f', label: 'Ivan' }];
+  const selectOptions = useMemo(() => {
+    const defaultValue = { value: -1, label: 'Имя врача' };
+    const doctorsOptions = doctors?.map(({ id, fullName }) => ({
+      value: id, label: fullName,
+    }));
+    return doctorsOptions?.length
+      ? [
+        defaultValue,
+        ...doctorsOptions,
+      ]
+      : [defaultValue];
+  }, [doctors]);
 
   const timesOptions = generateTimeList();
 
@@ -46,8 +54,7 @@ export function PatientRecordForm({ patientId }: Props) {
       startTime: dayjs(dateValue).hour(startHours).minute(startMinutes).toISOString(),
       endTime: dayjs(dateValue).hour(endHours).minute(endMinutes).toISOString(),
     }, {
-      onSuccess: (response) => {
-        console.log('response', response);
+      onSuccess: () => {
         toast('Success!', { type: 'success' });
       },
       onSettled: () => {
@@ -62,8 +69,7 @@ export function PatientRecordForm({ patientId }: Props) {
   const handleDelete = () => {
     // id с самого списка созданых записей
     deleteMutate('id', {
-      onSuccess: (response) => {
-        console.log('response', response);
+      onSuccess: () => {
       },
       onError: (error) => {
         toast(errorHandler(error), { type: 'error' });

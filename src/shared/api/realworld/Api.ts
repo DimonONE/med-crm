@@ -40,6 +40,8 @@ export interface PatientEntityDto {
   email: string;
   phone: string;
   image: string;
+  medInfo: object;
+  medInfoPath: string;
   user: UserEntityDto;
   /** @format date-time */
   createdAt: string;
@@ -414,6 +416,13 @@ export interface UpdatePatientDtoDto {
   newFiles?: File;
 }
 
+export interface MedInfoPatientDtoDto {
+  /** med info in json */
+  info: string;
+  /** PatientId */
+  patientId: string;
+}
+
 export interface CreateRecordDtoDto {
   /** Patient id */
   patientId: string;
@@ -453,7 +462,7 @@ export interface UpdateRecordDTODto {
   /** Notice record */
   notice: string;
   /** Price list */
-  servicePrices: IPriceDto[] ;
+  servicePrices: IPriceDto[];
 }
 
 export interface CreateServicePriceDtoDto {
@@ -1225,6 +1234,26 @@ export class Api<
         path: `/patients`,
         method: 'GET',
         query: query,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Patients
+     * @name PatientsControllerMedInfoCreate
+     * @request POST:/patients/create-update-med-info
+     */
+    patientsControllerMedInfoCreate: (
+      data: MedInfoPatientDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<PatientEntityDto, any>({
+        path: `/patients/create-update-med-info`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),

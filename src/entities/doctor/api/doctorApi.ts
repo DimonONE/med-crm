@@ -8,7 +8,7 @@ export const doctorKeys = {
   recordsPatient: () => [...doctorKeys.root, 'all-records-patient'],
 };
 
-export function useDoctors()  {
+export function useDoctors(): UseQueryResult<Api.UserResponseEntityDto[]>  {
   return useQuery({
     queryKey: doctorKeys.doctors(),
     queryFn: async () => {
