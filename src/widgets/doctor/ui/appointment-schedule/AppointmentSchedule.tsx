@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import dayjs, { Dayjs } from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { TimeTable } from 'react-timetable-events';
-import { HourPreviewProps, DayHeaderPreviewProps, Event } from 'react-timetable-events/dist/types';
+import { HourPreviewProps, DayHeaderPreviewProps, Event, EventPreviewProps } from 'react-timetable-events/dist/types';
 import { useAllRecords } from '~entities/doctor';
 import { WorkDay, WorkTime, daysWork, timesWork as times } from '~entities/work-time';
 import { PATH_PAGE } from '~shared/lib/react-router';
@@ -16,20 +16,39 @@ type IProps = {
   patientId?: string;
 };
 
+
+interface RenderEventProps extends EventPreviewProps {
+  selectId: string | null
+  patientSelect: () => void
+}
+
+function createNumberArray(from: number, to: number): number[] {
+  return Array.from({ length: to - from + 1 }, (_, index) => index + from);
+}
+
 function RenderDayHeader({ day, rowHeight, ...defaultAttributes }: DayHeaderPreviewProps) {
   return (
     <div  {...defaultAttributes} style={{ height: rowHeight }}>
       <div className={s.doctorInfo}>
-        <span className={s.name}>Цой Антонионович</span>
-        <span className={s.status}>Дантист</span>
+        {
+          day !== 'default' && (
+            <>
+              <span className={s.name}>Цой Антонионович</span>
+              <span className={s.status}>Дантист</span>
+            </>
+          )
+        }
       </div>
     </div >
   );
 }
 
-function RenderEvent(eventProps: any) {
+function RenderEvent(eventProps: RenderEventProps) {
   const { event, defaultAttributes, classNames: cn, patientSelect, selectId } = eventProps;
 
+  const currentTime = dayjs();
+  const isActive = event.type !== 'default';
+  const isPassed = event.type === 'default' && dayjs(event.startTime).isBefore(currentTime);
   return (
     < div
       {...defaultAttributes}
@@ -39,18 +58,22 @@ function RenderEvent(eventProps: any) {
     >
       <button
         type='button'
-        onClick={patientSelect}
+        onClick={isActive ? patientSelect : () => undefined}
         className={
           classNames(
             cn.event_info,
             s.patientInfo,
-            { [s.active]: true },
-            { [s.passed]: false },
+            { [s.active]: isActive },
+            { [s.passed]: isPassed },
             { [s.select]: selectId === `${event.userId}---${event.id}` },
           )
         }
       >
-        Билл Клинтон Валерьевич
+        {isActive && (
+          <>
+            Билл Клинтон Валерьевич
+          </>
+        )}
       </button>
     </ div >
   );
@@ -64,6 +87,9 @@ function RenderHour({ hour, ...defaultAttributes }: HourPreviewProps) {
     </div>
   );
 }
+
+const HOUR_FROM = 5;
+const HOUR_TO = 24;
 
 export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps) {
   const navigate = useNavigate();
@@ -83,21 +109,57 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
       },
       )
       : [], [data, selectId]);
+
   const doctors = useMemo(() => {
-    const doctorsByUserId = !data ? {} : data.reduce((acc, current) => {
-      const { userId: id } = current;
-      if (!acc[id]) {
-        acc[id] = [];
+    const doctorsByUserId = !data?.length ?
+      {
+        'default': [{
+          id: 0,
+          type: 'default',
+          name: '',
+          startTime: new Date(),
+          endTime: new Date(),
+        }],
+        tuesday: [],
+        wednesday: [],
+        thursday: [],
+        friday: [],
+        'ss': [],
+        'wenesday': [],
+        'thursd': [],
+        'frid': [],
       }
-      acc[id].push({
-        ...current,
-        type: 'custom',
-        name: current.userId,
-        startTime: new Date(current.startTime),
-        endTime: new Date(current.endTime),
-      });
-      return acc;
-    }, {} as { [key: string]: Event[] });
+      : data.reduce((acc, current) => {
+        const { userId: id } = current;
+        const numbersArray = createNumberArray(HOUR_FROM, HOUR_TO);
+
+        if (!acc[id]) {
+          acc[id] = [];
+
+          numbersArray.forEach((hour) => {
+            const startTime = new Date();
+            const endTime = new Date();
+            startTime.setHours(hour, 0, 0, 0);
+            endTime.setHours(hour + 1, 0, 0, 0);
+
+            return acc[id].push({
+              id: `${hour}-default`,
+              type: 'default',
+              name: '',
+              startTime,
+              endTime,
+            });
+          });
+        }
+        acc[id].push({
+          ...current,
+          type: 'custom',
+          name: current.userId,
+          startTime: new Date(current.startTime),
+          endTime: new Date(current.endTime),
+        });
+        return acc;
+      }, {} as { [key: string]: Event[] });
     return doctorsByUserId;
   }, [data]);
 
@@ -117,8 +179,6 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paidTo]);
-
-
 
   return (
     <div className={s.root}>
@@ -153,7 +213,7 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
                 )}
                 {...eventProps}
               />}
-            hoursInterval={{ from: 5, to: 22 }}
+            hoursInterval={{ from: HOUR_FROM, to: HOUR_TO }}
             style={{ height: '2000px', width: 'max-content' }}
             headerAttributes={{ className: s.header }}
             bodyAttributes={{ style: { minWidth: 192, backgroundImage: 'none' } }}
@@ -163,3 +223,4 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
     </div >
   );
 }
+
