@@ -120,14 +120,6 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
           startTime: new Date(),
           endTime: new Date(),
         }],
-        tuesday: [],
-        wednesday: [],
-        thursday: [],
-        friday: [],
-        'ss': [],
-        'wenesday': [],
-        'thursd': [],
-        'frid': [],
       }
       : data.reduce((acc, current) => {
         const { userId: id } = current;
