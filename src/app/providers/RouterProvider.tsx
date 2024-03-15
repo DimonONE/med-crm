@@ -146,11 +146,8 @@ export function Router() {
         {
           path: PATH_PAGE.medInfo.root,
           children: [
-            {
-              element: <MedInfoPage />,
-              index: true,
-            },
-            { path: `${PATH_PAGE.medInfo.root}/:id`, element: <MedInfoDetailPage /> },
+            { path: ':patientId/:id?', element: <MedInfoPage /> },
+            { path: 'edit/:patientId/:id', element: <MedInfoDetailPage /> },
           ],
         },
         { path: 'services', element: <ServicesPage /> },

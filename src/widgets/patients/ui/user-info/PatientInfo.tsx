@@ -203,7 +203,7 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
       <NavLink to={PATH_PAGE.receptionTable.root} className={s.tableInfo}>
         Таблица приема
       </NavLink>
-      <NavLink to={PATH_PAGE.medInfo.root} className={s.tableInfo}>
+      <NavLink to={PATH_PAGE.medInfo.cards(patientId)} className={s.tableInfo}>
         Медицинская информация
       </NavLink>
       <div className={s.tableInfo}>

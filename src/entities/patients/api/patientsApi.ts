@@ -19,6 +19,7 @@ export const patientsKeys = {
   createRecord: () => [...patientsKeys.root, 'create-record'],
   updateRecord: () => [...patientsKeys.root, 'update-record'],
   deleteRecord: () => [...patientsKeys.root, 'delete-record'],
+  createUpdateMedInfo: () => [...patientsKeys.root, 'create-update-med-info'],
 };
 
 
@@ -109,4 +110,14 @@ export function useDeleteRecord()  {
   });
 }
 
+// Med info
 
+export function useCreateUpdateMedInfo()  {
+  return useMutation({
+    mutationKey: patientsKeys.createUpdateMedInfo(),
+    mutationFn: async (data: Api.MedInfoPatientDtoDto) => {
+      const response = await axiosInstance({ url: '/patients/create-update-med-info', method: 'POST', data }); 
+      return response.data;
+    },
+  });
+}

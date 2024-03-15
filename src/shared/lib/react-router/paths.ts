@@ -41,7 +41,9 @@ export const PATH_PAGE = {
   },
   medInfo: {
     root: '/med-info',
-    detail: (id: string) => `/med-info/${id}`,
+    cards: (patientId: string) => `/med-info/${patientId}`,
+    detail: (patientId: string, id: string) => `/med-info/${patientId}/${id}`,
+    edit: (patientId: string, id: string) => `/med-info/edit/${patientId}/${id}`,
   },
   services: '/services',
   tariffs: '/tariffs',
