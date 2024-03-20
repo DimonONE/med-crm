@@ -111,8 +111,8 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
       : [], [data, selectId]);
 
   const doctors = useMemo(() => {
-    const doctorsByUserId = !data?.length ?
-      {
+    const doctorsByUserId = !data?.length
+      ? {
         'default': [{
           id: 0,
           type: 'default',
@@ -208,7 +208,7 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
             hoursInterval={{ from: HOUR_FROM, to: HOUR_TO }}
             style={{ height: '2000px', width: 'max-content' }}
             headerAttributes={{ className: s.header }}
-            bodyAttributes={{ style: { minWidth: 192, backgroundImage: 'none' } }}
+            bodyAttributes={{ className: s.bodyAttributes }}
           />
         </div>
       </div>
