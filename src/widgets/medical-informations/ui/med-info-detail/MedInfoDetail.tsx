@@ -1,17 +1,14 @@
-import { Grid, MenuItem } from '@mui/material';
+import { FormGroup, Grid, MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import { toast } from 'react-toastify';
 import { useCreateUpdateMedInfo } from '~entities/patients';
+import { API_URL } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { Button } from '~shared/ui/button';
 import { Checkbox } from '~shared/ui/checkbox';
 import { SelectField } from '~shared/ui/select-field';
 import { UnderlineText } from '~shared/ui/underline-text';
-import Paragraph14 from './images/paragraph-14.jpg';
-import Paragraph21 from './images/paragraph-21.jpg';
-import Paragraph22 from './images/paragraph-22.jpg';
-import Paragraph23 from './images/paragraph-23.jpg';
 import s from './styles.module.scss';
 
 type MedInfoDetailProps = {
@@ -316,6 +313,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
     <Formik
       initialValues={{
         test16: '',
+        test_atrofia: '',
       }}
       // validationSchema={object().shape({
       //   email: string().email().required(),
@@ -817,7 +815,6 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     );
                   }}
                 </Field>
-
                 <Grid className={s.filterOptions} >
                   <Grid >
                     <Field
@@ -850,7 +847,6 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     </Field>
                   </Grid>
                 </Grid>
-
                 <Grid className={s.filterOptions} >
                   <Grid marginRight={2}>Количество</Grid>
 
@@ -879,9 +875,6 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     }}
                   </Field>
                 </Grid>
-
-
-
                 <Field
                   name="test14"
                 >
@@ -893,20 +886,944 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       onChange={props.field.onChange} />}
                 </Field>
               </Grid>
+            </div>
+            <div className={classNames(s.title)}>14. Зубная формула
+              <Grid marginBlock={2} className={s.insertedPicture}>
+                <img src={`${API_URL}/static/2.jpg`} alt='14' />
+              </Grid>
+            </div>
+            <div className={s.title}>
+              <Grid marginBlock={2}>15. Состояние слизистой оболочки рта, десен, альвеолярных отростков и неба:</Grid>
+              <ul className={s.ul}>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    <Grid marginRight={1}>Слизистая оболочка рта</Grid>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'бледно-розового цвета' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
 
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'не отечна' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    <Grid marginRight={1}>кровоточивость при зондировании</Grid>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    <Grid marginRight={1}>наличие рубцов</Grid>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'нет' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    <Grid marginRight={1}>пародонтальные карманы </Grid>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'нет' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    *ком. для врача: если ДА, заполните парадонтограмму
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    <Grid marginRight={1}>выделение экссудата из кармана</Grid>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'нет' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
 
+                    <Field
+                      name="test7"
+                    >
+                      {(props: FieldProps) =>
+                        <UnderlineText
+                          width='100%'
+                          name='test7'
+                          className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} />}
+                    </Field>
+                  </Grid>
+                </li>
+                <li className={s.li} >
+                  <Grid marginBlock={2} >
+                    Альвеолярный отросток:
+                  </Grid>
+                  <Grid marginInline={1} marginBlock={4}>
+                    Верхняя челюсть
+                    <Grid marginInline={2} marginBlock={2}>
+                      <Grid marginBlock={1} className={s.filterOptions}>
+                        Экзостоз
+                        <Field name="test16">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: -1, label: 'нет' }];
+                            return (
+                              <SelectField
+                                className={s.optionInfo}
+                                selectNavigate
+                                selectOptions={selectOptions}
+                                {...props}
+                              >
+                                {selectOptions.map(({ label, value: link }) => (
+                                  <MenuItem
+                                    key={link}
+                                    value={link}
+                                    className='select-link'
+                                  >
+                                    {label}
+                                  </MenuItem>
+                                ))
+                                }
+                              </SelectField>
+                            );
+                          }}
+                        </Field>
+                        <Field
+                          name="test7"
+                        >
+                          {(props: FieldProps) =>
+                            <UnderlineText
+                              width='100%'
+                              name='test7'
+                              className={classNames(s.defaultInput, s.title)}
+                              onChange={props.field.onChange} />}
+                        </Field>
+                      </Grid>
+                    </Grid>
+                    <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
+                      «болтающийся» гребень
+                      <Field name="test16">
+                        {(props: FieldProps) => {
+                          const selectOptions = [{ value: -1, label: 'нет' }];
+                          return (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          );
+                        }}
+                      </Field>
+                      <Field
+                        name="test7"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='100%'
+                            name='test7'
+                            className={classNames(s.defaultInput, s.title)}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                    </Grid>
+                    <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
+                      атрофия
+                      <Field name="test_atrofia">
+                        {(props: FieldProps) => {
+                          const selectOptions = [{ value: -1, label: 'нет' }];
+                          return (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          );
+                        }}
+                      </Field>
+                      {
+                        values.test_atrofia && (
+                          <>
+                            <Field
+                              name="1"
+                            >
+                              {({ field, form }: FieldProps) =>
+                                <Checkbox
+                                  className={s.checkbox}
+                                  checked={field.value}
+                                  onChange={() => form.setFieldValue('1', !field.value)}
+                                >
+                                  не выражена
+                                </Checkbox>
+                              }
+                            </Field>
+                            <Field
+                              name="1"
+                            >
+                              {({ field, form }: FieldProps) =>
+                                <Checkbox
+                                  className={s.checkbox}
+                                  checked={field.value}
+                                  onChange={() => form.setFieldValue('1', !field.value)}
+                                >
+                                  выражена
+                                </Checkbox>
+                              }
+                            </Field>
+                          </>
+                        )
+                      }
+                      <Field
+                        name="test7"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='100%'
+                            name='test7'
+                            className={classNames(s.defaultInput, s.title)}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                    </Grid>
+                  </Grid>
+                  <Grid marginInline={1} marginBlock={4}>
+                    Нижняя челюсть
+                    <Grid marginInline={2} marginBlock={2}>
+                      <Grid marginBlock={1} className={s.filterOptions}>
+                        Экзостоз
+                        <Field name="test16">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: -1, label: 'нет' }];
+                            return (
+                              <SelectField
+                                className={s.optionInfo}
+                                selectNavigate
+                                selectOptions={selectOptions}
+                                {...props}
+                              >
+                                {selectOptions.map(({ label, value: link }) => (
+                                  <MenuItem
+                                    key={link}
+                                    value={link}
+                                    className='select-link'
+                                  >
+                                    {label}
+                                  </MenuItem>
+                                ))
+                                }
+                              </SelectField>
+                            );
+                          }}
+                        </Field>
+                        <Field
+                          name="test7"
+                        >
+                          {(props: FieldProps) =>
+                            <UnderlineText
+                              width='100%'
+                              name='test7'
+                              className={classNames(s.defaultInput, s.title)}
+                              onChange={props.field.onChange} />}
+                        </Field>
+                      </Grid>
+                    </Grid>
+                    <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
+                      «болтающийся» гребень
+                      <Field name="test16">
+                        {(props: FieldProps) => {
+                          const selectOptions = [{ value: -1, label: 'нет' }];
+                          return (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          );
+                        }}
+                      </Field>
+                      <Field
+                        name="test7"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='100%'
+                            name='test7'
+                            className={classNames(s.defaultInput, s.title)}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                    </Grid>
+                    <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
+                      атрофия
+                      <Field name="test_atrofia">
+                        {(props: FieldProps) => {
+                          const selectOptions = [{ value: -1, label: 'нет' }];
+                          return (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          );
+                        }}
+                      </Field>
+                      {
+                        values.test_atrofia && (
+                          <>
+                            <Field
+                              name="1"
+                            >
+                              {({ field, form }: FieldProps) =>
+                                <Checkbox
+                                  className={s.checkbox}
+                                  checked={field.value}
+                                  onChange={() => form.setFieldValue('1', !field.value)}
+                                >
+                                  не выражена
+                                </Checkbox>
+                              }
+                            </Field>
+                            <Field
+                              name="1"
+                            >
+                              {({ field, form }: FieldProps) =>
+                                <Checkbox
+                                  className={s.checkbox}
+                                  checked={field.value}
+                                  onChange={() => form.setFieldValue('1', !field.value)}
+                                >
+                                  выражена
+                                </Checkbox>
+                              }
+                            </Field>
+                          </>
+                        )
+                      }
+                      <Field
+                        name="test7"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='100%'
+                            name='test7'
+                            className={classNames(s.defaultInput, s.title)}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                    </Grid>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    Слюнная железа
+                  </Grid>
+                  <Grid marginInline={1} marginBlock={2} className={s.filterOptions}>
+                    Подчелюстная при пальпации
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'однородная' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'безболезненная' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'симметричная' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field
+                      name="test7"
+                    >
+                      {(props: FieldProps) =>
+                        <UnderlineText
+                          width='100%'
+                          name='test7'
+                          className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} />}
+                    </Field>
+                  </Grid>
+                  <Grid marginInline={1} marginBlock={2} className={s.filterOptions}>
+                    Околоушная при пальпации
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'однородная' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'безболезненная' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'симметричная' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field
+                      name="test7"
+                    >
+                      {(props: FieldProps) =>
+                        <UnderlineText
+                          width='100%'
+                          name='test7'
+                          className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} />}
+                    </Field>
+                  </Grid>
+                </li>
+              </ul>
             </div>
-            <div className={s.insertedPicture}>
-              <img src={Paragraph14} alt='14' />
+
+            <div className={s.title}>
+              <Grid marginBlock={2}>16. Осмотр губ:</Grid>
+              <ul className={s.ul}>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    <Grid marginRight={1}>красная кайма губ</Grid>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'бледно-розовая' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'влажная' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} className={s.filterOptions}>
+                    <Grid marginRight={1}>наличие чешуек</Grid>
+                    <Field name="test16">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} >
+                    <Grid marginRight={1}>Трещины:</Grid>
+                    <FormGroup className={s.filterOptions} >
+                      <Grid container  >
+                        <Grid item xs={4} >
+                          <Field
+                            name="complaint"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('complaint', !field.value)}
+                              >
+                                Верхняя губа
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Field
+                            name="2"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('2', !field.value)}
+                              >
+                                Нижняя губа
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Field
+                            name="3"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('3', !field.value)}
+                              >
+                                коммисуральная
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Field
+                            name="4"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('4', !field.value)}
+                              >
+                                Головная боль
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Field
+                            name="5"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('5', !field.value)}
+                              >
+                                симптом «выросшего зуба»
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Field
+                            name="6"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('6', !field.value)}
+                              >
+                                боль при накусывании
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Field
+                            name="7"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('7', !field.value)}
+                              >
+                                Повышение температуры тела
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                      </Grid>
+                    </FormGroup>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={1} >
+                    <Grid className={s.filterOptions}>
+                      Трещина в анамнезе
+                      <Field name="test16">
+                        {(props: FieldProps) => {
+                          const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
+                          return (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          );
+                        }}
+                      </Field>
+                    </Grid>
+                    <Field
+                      name="test17"
+                    >
+                      {(props: FieldProps) =>
+                        <UnderlineText
+                          width='100%'
+                          name='test17'
+                          className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} />}
+                    </Field>
+                  </Grid>
+                </li>
+              </ul>
             </div>
-            <div className={s.insertedPicture}>
-              <img src={Paragraph21} alt='21' />
+
+            <div className={classNames(s.title)}>21. Данные рентгенологического и лабораторного исследования:
+              <Field
+                name="test21"
+              >
+                {(props: FieldProps) =>
+                  <UnderlineText
+                    width='100%'
+                    name='test7'
+                    className={classNames(s.defaultInput, s.title)}
+                    onChange={props.field.onChange} />}
+              </Field>
             </div>
-            <div className={s.insertedPicture}>
-              <img src={Paragraph22} alt='22' />
+            <div className={classNames(s.title)}>22. Бланк онкологического профилактического медицинского осмотра:
+              <Grid marginBlock={2} className={s.insertedPicture}>
+                <img src={`${API_URL}/static/1.jpg`} alt='22' />
+              </Grid>
             </div>
-            <div className={s.insertedPicture}>
-              <img src={Paragraph23} alt='23' />
+            <div className={classNames(s.title)}>23. Бланк обследования на венерические заболивания:
+              <Grid marginBlock={2} className={s.insertedPicture}>
+                <img src={`${API_URL}/static/3.jpg`} alt='23' />
+              </Grid>
+            </div>
+            <div className={classNames(s.title)}>24. Предварительное планирование лечения:
+              <Grid marginTop={2} className={s.insertedPicture}>
+                <img src={`${API_URL}/static/4.jpg`} alt='24.1' />
+              </Grid>
+              <div className={s.insertedPicture}>
+                <img src={`${API_URL}/static/5.jpg`} alt='24.2' />
+              </div>
+            </div>
+
+            <div className={classNames(s.title)}>25. Установеленные импланты:
             </div>
           </div>
           <Button
@@ -917,7 +1834,8 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             Сохранить
           </Button>
         </Form>
-      )}
+      )
+      }
     </Formik >
   );
 }
