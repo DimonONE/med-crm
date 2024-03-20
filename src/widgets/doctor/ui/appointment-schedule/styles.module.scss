@@ -25,6 +25,29 @@
 }
 
 .schedule {
+  width: 100vw;
+  height: calc(100vh - 50vh + var(--header-height) - var(--width-scrollbar) + 37px)  ;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    display: block;
+    width: var(--width-scrollbar);
+    height: var(--width-scrollbar);
+    overflow: auto;
+    background-color: #A1B6C1;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #0E5F8C;
+    border-radius: 9px;
+  }
+
+  .tets {
+    width: 4000px;
+    height: 500px;
+    background: #029B64;
+  }
+
   .header {
     display: flex;
     background: #F3FBFF;
@@ -81,7 +104,6 @@
   .container {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 
     .bodyAttributes {
       min-width: 192px;
