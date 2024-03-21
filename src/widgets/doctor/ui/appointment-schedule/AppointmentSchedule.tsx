@@ -112,15 +112,7 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
 
   const doctors = useMemo(() => {
     const doctorsByUserId = !data?.length
-      ? {
-        'default': [{
-          id: 0,
-          type: 'default',
-          name: '',
-          startTime: new Date(),
-          endTime: new Date(),
-        }],
-      }
+      ? { 'default': [] }
       : data.reduce((acc, current) => {
         const { userId: id } = current;
         const numbersArray = createNumberArray(HOUR_FROM, HOUR_TO);
@@ -190,6 +182,7 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
 
       <div className={s.schedule}>
         <div className={s.container}>
+          <div className={s.defaultHeader} />
           <TimeTable
             // @ts-ignore
             timeLabel={<TimeICO />}
