@@ -6,6 +6,7 @@ import { TimeTable } from 'react-timetable-events';
 import { HourPreviewProps, DayHeaderPreviewProps, Event, EventPreviewProps } from 'react-timetable-events/dist/types';
 import { useAllRecords } from '~entities/doctor';
 import { WorkDay, WorkTime, daysWork, timesWork as times } from '~entities/work-time';
+import { Api, UserEntityDto } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import TimeICO from '~shared/svg/time-ico.svg';
 import { DatePicker } from '~shared/ui/date-picker';
@@ -17,8 +18,13 @@ type IProps = {
 };
 
 
+interface RenderDayHeaderProps extends DayHeaderPreviewProps {
+  user: Api.UserEntityDto
+}
+
 interface RenderEventProps extends EventPreviewProps {
   selectId: string | null
+  user: Api.UserEntityDto
   patientSelect: () => void
 }
 
@@ -26,15 +32,15 @@ function createNumberArray(from: number, to: number): number[] {
   return Array.from({ length: to - from + 1 }, (_, index) => index + from);
 }
 
-function RenderDayHeader({ day, rowHeight, ...defaultAttributes }: DayHeaderPreviewProps) {
+function RenderDayHeader({ day, rowHeight, user, ...defaultAttributes }: RenderDayHeaderProps) {
   return (
     <div  {...defaultAttributes} style={{ height: rowHeight }}>
       <div className={s.doctorInfo}>
         {
           day !== 'default' && (
             <>
-              <span className={s.name}>Цой Антонионович</span>
-              <span className={s.status}>Дантист</span>
+              <span className={s.name}>{user.fullName}</span>
+              <span className={s.status}>{user.specialization ?? 'specialization'}</span>
             </>
           )
         }
@@ -44,11 +50,12 @@ function RenderDayHeader({ day, rowHeight, ...defaultAttributes }: DayHeaderPrev
 }
 
 function RenderEvent(eventProps: RenderEventProps) {
-  const { event, defaultAttributes, classNames: cn, patientSelect, selectId } = eventProps;
+  const { event, user, defaultAttributes, classNames: cn, patientSelect, selectId } = eventProps;
 
   const currentTime = dayjs();
   const isActive = event.type !== 'default';
   const isPassed = event.type === 'default' && dayjs(event.startTime).isBefore(currentTime);
+
   return (
     < div
       {...defaultAttributes}
@@ -70,9 +77,9 @@ function RenderEvent(eventProps: RenderEventProps) {
         }
       >
         {isActive && (
-          <>
-            Билл Клинтон Валерьевич
-          </>
+          <span>
+            {user.clinic.name}
+          </span>
         )}
       </button>
     </ div >
@@ -187,11 +194,15 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
             // @ts-ignore
             timeLabel={<TimeICO />}
             events={doctors}
-            renderDayHeader={RenderDayHeader}
+            renderDayHeader={event => {
+              const user: UserEntityDto | undefined = doctors[event.day].find(doctor => doctor.userId === event.day)?.user as UserEntityDto;
+              return <RenderDayHeader user={user} {...event} />;
+            }}
             renderHour={RenderHour}
             renderEvent={(eventProps) =>
               <RenderEvent
                 selectId={selectId}
+                user={eventProps.event.user as UserEntityDto}
                 patientSelect={() => patientSelect(
                   `${eventProps.event.userId}---${eventProps.event.id}`,
                   eventProps.event.patientId as string,
