@@ -95,8 +95,8 @@ function RenderHour({ hour, ...defaultAttributes }: HourPreviewProps) {
   );
 }
 
-const HOUR_FROM = 5;
-const HOUR_TO = 24;
+const HOUR_FROM = 0;
+const HOUR_TO = 25;
 
 export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps) {
   const navigate = useNavigate();
