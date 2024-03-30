@@ -617,18 +617,18 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
         previousConcomitantDiseases: '',
         developmentDisease: '',
         visualInspection: '',
-        faceSelect: '',
+        faceSelect: 'cимметричное',
         faceText: '',
-        skinSelect: '',
+        skinSelect: 'чистые',
         skinText: '',
-        propertiesOne: '',
-        propertiesTwo: '',
-        propertiesThree: '',
+        propertiesOne: 'не увеличены',
+        propertiesTwo: 'безболезненные',
+        propertiesThree: 'не спаяны с окружающики тканями',
         propertiesInfo: '',
-        consistency: '',
-        chinFolds: '',
-        nasolabialFolds: '',
-        lowerFace: '',
+        consistency: 'однородная',
+        chinFolds: 'не выражены',
+        nasolabialFolds: 'не выражены',
+        lowerFace: 'не выражены',
         externalInspectionComment: '',
         plaqueOnTeeth: 'Нет',
         plaqueOnTeethText: '',
@@ -772,14 +772,16 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   <Grid marginBlock={2} className={s.filterOptions}>
                     Лицо
                     <Field name="faceSelect">
-                      {(props: FieldProps) =>
-                        <SelectField
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: 'cимметричное', label: 'Симметричное' }];
+
+                        return <SelectField
                           className={s.optionInfo}
                           selectNavigate
-                          selectOptions={[{ value: 1, label: 'Симметричное' }]}
+                          selectOptions={selectOptions}
                           {...props}
                         >
-                          {[{ value: 1, label: 'Симметричное' }].map(({ label, value: link }) => (
+                          {selectOptions.map(({ label, value: link }) => (
                             <MenuItem
                               key={link}
                               value={link}
@@ -789,7 +791,8 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                             </MenuItem>
                           ))
                           }
-                        </SelectField>}
+                        </SelectField>;
+                      }}
                     </Field>
                     <Field
                       name="faceText"
@@ -807,14 +810,15 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   <Grid marginBlock={2} className={s.filterOptions}>
                     Кожные покровы:
                     <Field name="skinSelect">
-                      {(props: FieldProps) =>
-                        <SelectField
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: 'чистые', label: 'Чистые' }];
+                        return <SelectField
                           className={s.optionInfo}
                           selectNavigate
-                          selectOptions={[{ value: 1, label: 'Чистые' }]}
+                          selectOptions={selectOptions}
                           {...props}
                         >
-                          {[{ value: 1, label: 'Чистые' }].map(({ label, value: link }) => (
+                          {selectOptions.map(({ label, value: link }) => (
                             <MenuItem
                               key={link}
                               value={link}
@@ -824,7 +828,8 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                             </MenuItem>
                           ))
                           }
-                        </SelectField>}
+                        </SelectField>;
+                      }}
                     </Field>
                     <Field
                       name="skinText"
@@ -845,7 +850,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       <span> Свойства </span>
                       <Field name="propertiesOne">
                         {(props: FieldProps) => {
-                          const selectOptions = [{ value: 1, label: 'Не увеличены' }, { value: 2, label: 'Увеличены слева' }, { value: 3, label: 'Увеличены справа' }, { value: 4, label: 'Увеличены с обеих сторон' }, { value: 5, label: 'Увеличены с одной стороны' }];
+                          const selectOptions = [{ value: 'не увеличены', label: 'Не увеличены' }, { value: 'увеличены слева', label: 'Увеличены слева' }, { value: 'увеличены справа', label: 'Увеличены справа' }, { value: 'увеличены с обеих сторон', label: 'Увеличены с обеих сторон' }, { value: 'увеличены с одной стороны', label: 'Увеличены с одной стороны' }];
                           return (
                             <SelectField
                               className={s.optionInfo}
@@ -869,7 +874,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       </Field>
                       <Field name="propertiesTwo">
                         {(props: FieldProps) => {
-                          const selectOptions = [{ value: 1, label: 'Безболезненные' }];
+                          const selectOptions = [{ value: 'безболезненные', label: 'Безболезненные' }];
                           return (
                             <SelectField
                               className={s.optionInfo}
@@ -893,7 +898,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       </Field>
                       <Field name="propertiesThree">
                         {(props: FieldProps) => {
-                          const selectOptions = [{ value: 1, label: 'Не спаяны с окружающики тканями' }];
+                          const selectOptions = [{ value: 'не спаяны с окружающики тканями', label: 'Не спаяны с окружающики тканями' }];
                           return (
                             <SelectField
                               className={s.optionInfo}
@@ -930,7 +935,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       <span> Консистенция </span>
                       <Field name="consistency">
                         {(props: FieldProps) => {
-                          const selectOptions = [{ value: 1, label: 'Однородная' }];
+                          const selectOptions = [{ value: 'однородная', label: 'Однородная' }];
                           return (
                             <SelectField
                               className={s.optionInfo}
@@ -960,7 +965,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     Подбородочные складки
                     <Field name="chinFolds">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: 1, label: 'Не выражены' }];
+                        const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -989,7 +994,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     Носогубные складки
                     <Field name="nasolabialFolds">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: 1, label: 'Не выражены' }];
+                        const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1018,7 +1023,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     Нижняя треть лица
                     <Field name="lowerFace">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: 1, label: 'Не выражены' }];
+                        const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
