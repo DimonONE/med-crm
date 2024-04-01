@@ -1,16 +1,19 @@
+import { useState } from 'react';
 import { FormGroup, Grid, MenuItem } from '@mui/material';
 import classNames from 'classnames';
-import { Field, FieldProps, Form, Formik } from 'formik';
+import dayjs from 'dayjs';
+import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
-import { useCreateUpdateMedInfo } from '~entities/patients';
-import { sessionApi } from '~entities/session';
+import { useCreateUpdateMedInfo, usePatientId } from '~entities/patients';
 import { API_URL } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { Button } from '~shared/ui/button';
 import { Checkbox } from '~shared/ui/checkbox';
+import { Modal } from '~shared/ui/modal';
 import { SelectField } from '~shared/ui/select-field';
 import { UnderlineText } from '~shared/ui/underline-text';
+import { biteConditionOptions, jawOpeningSelect1Options1, jawOpeningSelect1Options2, jawOpeningSelect1Options3, selectOptionsYesOrNot } from './lib/utils';
 import s from './styles.module.scss';
 
 type MedInfoDetailProps = {
@@ -55,286 +58,119 @@ type InitialValues = {
   plaqueOnTeethCheckbox1: string
   plaqueOnTeethCheckbox2: string
   plaqueOnTeethInputField: string
+  oralMucosa1: string,
+  oralMucosa2: string,
+  bleedingDuringEndotherapy: string,
+  presenceOfScars: string,
+  periodontalPockets: string,
+  dischargeExudatePocket: string,
+  dischargeExudatePocketText: string,
+  upperJawExostosis: number,
+  upperJawExostosisText: string,
+  danglingComb: number,
+  danglingCombText: string,
+  upperJawAtrophy: number,
+  upperJawAtrophyText: string,
+  upperJawAtrophyNo?: string,
+  upperJawAtrophyYes?: string,
+  lowerJawExostosis: number,
+  lowerJawExostosisText: string,
+  lowerDanglingComb: number,
+  lowerDanglingCombText: string,
+  lowerJawAtrophy: number,
+  lowerJawAtrophyText: string,
+  lowerJawAtrophyNo?: string,
+  lowerJawAtrophyYes?: string,
+  salivaryGlandSelect1: string
+  salivaryGlandSelect2: string
+  salivaryGlandSelect3: string
+  salivaryGlandText: string
+  parotidPalpationSelect1: string
+  parotidPalpationSelect2: string
+  parotidPalpationSelect3: string
+  parotidPalpationText: string
+  redBorderOfLipsSelect1: string
+  redBorderOfLipsSelect2: string
+  presenceOfScales: number
+  crackedUpper: boolean
+  crackedUpperCenter?: string
+  crackedUpperParacentral?: string
+  crackedLower: boolean
+  crackedLowerCenter?: string
+  crackedLowerParacentral?: string
+  crackedCommissural: string
+  crackInHistory: number
+  lipExaminationText: string
+  tongueExaminationSelect1: string
+  tongueExaminationSelect2: string
+  tongueExaminationText: string
+  epithelialDesquamation: number
+  teetImprintsTheTongue: number
+  frenulumTongue: string
+  severityGagReflex: number
+  examinationTonguePapillae: string
+  tongueExaminationField: string
+  examinationVestibuleMouth: string
+  attachedGingivalHeight: string
+  presenceOfRecessions: number
+  presenceOfRecessionsText: string
+  frenulumLowerLip: string
+  frenulumUpperLip: string
+  presenceSurgicalScar: string
+  biteCondition: number
+  biteConditionField: string
+  overlapSelect: string
+  overlapField: string
+  tremesSelect: number
+  tremesField: string
+  diastemasSelect: number
+  diastemasField: string
+  anomaliesIndividualTeeth: string
+  toothWearSelect: string
+  toothWearField: string
+  dentoalveolarAdvancementSelect: number
+  dentoalveolarAdvancementField: string
+  signPopovGodonSelect: number
+  signPopovGodonField: string
+  overlappingLowerIncisorsUpper: string
+  speechDefectSelect: number
+  speechDefectField: string
+  jawOpeningSelect1: number
+  jawOpeningSelect2: number
+  jawOpeningSelect3: number
+  jawOpeningField: string
+  movementArticularHeadsSelect: string
+  movementArticularHeadsField: string
+  additionallyClick: boolean
+  additionallyCrunch: boolean
+  additionallyCrepitusJoint: boolean
+  additionallyField: string
+  masticatoryMuscleToneSelect: string
+  masticatoryMuscleToneField: string
+  examinationField: string
+  additionallyClickRight: boolean
+  additionallyClickLeft: boolean
+  additionallyClickUponOpening: boolean
+  additionallyClickWhenClosing: boolean
+  additionallyCrunchRight: boolean
+  additionallyCrunchLeft: boolean
+  additionallyCrunchUponOpening: boolean
+  additionallyCrunchWhenClosing: boolean
+  additionallyCrepitusJointRight: boolean
+  additionallyCrepitusJointLeft: boolean
+  additionallyCrepitusJointUponOpening: boolean
+  additionallyCrepitusJointWhenClosing: boolean
+  laboratoryData: string
 };
 
-// const tstArray = [
-//   {
-//     name: '',
-//     type: 'string',
-//     value: '№ 149219192 от 10.10.2014',
-//   },
-//   {
-//     name: 'Фамилия, имя, отчество',
-//     type: 'string',
-//     value: 'Гайхел Іван Іванович',
-//   },
-//   {
-//     name: '',
-//     type: 'string',
-//     value: 'Мужчина',
-//   },
-//   {
-//     name: 'Адресс',
-//     type: 'string',
-//     value: 'Ужгород',
-//   },
-//   {
-//     name: 'Возраст',
-//     type: 'string',
-//     value: '55',
-//   },
-//   {
-//     name: 'Професия',
-//     type: 'string',
-//     value: 'Програмист',
-//   },
-//   {
-//     name: 'Диагноз',
-//     type: 'string',
-//     value: 'Дебил',
-//   },
-//   {
-//     name: 'Диагноз по МКБ - 10',
-//     type: 'empty',
-//     value: 'Дебил',
-//   },
-//   {
-//     name: 'Жалобы',
-//     type: 'string',
-//     value: 'Жутко хочу спать',
-//   },
-//   {
-//     name: 'Перенесенные и сопуствующие заболевания',
-//     type: 'string',
-//     value: 'Пянство',
-//   },
-//   {
-//     name: 'Развитие настоящего заболевания',
-//     type: 'empty',
-//     value: '',
-//   },
-//   {
-//     name: 'Внешний вид',
-//     type: 'array',
-//     value: JSON.stringify([{
-//       name: 'Лицо',
-//       type: 'string',
-//       value: 'Симетричное чутка ебанутое',
-//     }, {
-//       name: 'кожные покровы',
-//       type: 'string',
-//       value: 'чистые',
-//     }, {
-//       name: 'подчелюстыне лимфатические узлы',
-//       type: 'array',
-//       value: JSON.stringify([{
-//         name: 'Ствойства',
-//         type: 'string',
-//         value: 'не увеличены',
-//       }, {
-//         name: 'Консистенция',
-//         type: 'string',
-//         value: 'Однородная',
-//       }]),
-//     }, {
-//       name: 'Подбородочные складки',
-//       type: 'string',
-//       value: 'не выражены',
-//     }, {
-//       name: 'нособные складки',
-//       type: 'string',
-//       value: 'не выраженые',
-//     }, {
-//       name: 'нижняя треть лица',
-//       type: 'string',
-//       value: 'не снижена',
-//     }]),
-//   },
-//   {
-//     name: '', // коментарий
-//     type: 'string',
-//     value: 'всьо збс',
-//   },
-//   {
-//     name: 'Состояния зубов',
-//     type: 'string',
-//     value: 'налет на зубах нет', ///
-//   },
-//   {
-//     name: 'Зубная формула',
-//     type: 'image',
-//     value: 'https://689f-31-41-94-255.ngrok-free.app/images/photo_2024-03-11_19-55-31.jpg',
-//   },
-// {
-//   name: 'Состояние слизистой оболочки рта, десен, альвеолярных отростков и неба',
-//   type: 'array',
-//   value: JSON.stringify([
-//     {
-//       name: 'Слизистая оболочка рта',
-//       type: 'string',
-//       value: 'бледно-розового цвета не отечна',
-//     },
-//     {
-//       name: 'кровоточивость при эондировании',
-//       type: 'string',
-//       value: 'нет',
-//     },
-//     {
-//       name: 'наличие рубцов',
-//       type: 'string',
-//       value: 'нет',
-//     },
-//     {
-//       name: 'пародантальные карманы',
-//       type: 'string',
-//       value: 'нет',
-//     },
-//     {
-//       name: 'выделение экссудата из кармана',
-//       type: 'string',
-//       value: 'нет коментарий',
-//     },
-//     {
-//       name: 'Альвеолярный отросток',
-//       type: 'array',
-//       value: JSON.stringify([
-//         {
-//           name: 'Верхняя челюсть',
-//           type: 'array',
-//           value: JSON.stringify([{
-//             name: 'Экзостоз',
-//             type: 'string',
-//             value: 'нет',
-//           },
-//           {
-//             name: '«болтающийся» гребень ',
-//             type: 'string',
-//             value: 'нет',
-//           },
-//           {
-//             name: 'атрофия',
-//             type: 'string',
-//             value: 'нет',
-//           },
-//           ]),
-//         },
-//       ]),
-//     },
-//     {
-//       name: 'Нижняя челюсть',
-//       type: 'array',
-//       value: JSON.stringify([
-//         {
-//           name: 'Верхняя челюсть',
-//           type: 'array',
-//           value: JSON.stringify([{
-//             name: 'Экзостоз',
-//             type: 'string',
-//             value: 'нет',
-//           },
-//           {
-//             name: '«болтающийся» гребень ',
-//             type: 'string',
-//             value: 'нет',
-//           },
-//           {
-//             name: 'атрофия',
-//             type: 'string',
-//             value: 'нет',
-//           },
-//           ]),
-//         },
-//       ]),
-//     },
-//     {
-//       name: 'Слюнная железа',
-//       type: 'array',
-//       value: JSON.stringify([
-//         {
-//           name: 'Подчелюстная при пальпации',
-//           type: 'string',
-//           value: 'однородная безболезненая симеттрическая коментарий',
-//         },
-//         {
-//           name: 'Околоушная при пальпации',
-//           type: 'string',
-//           value: 'однородная безболезненая симеттрическая коментарий',
-//         },
-//       ]),
-//     },
-//     {
-//       name: 'Осмотр губ',
-//       type: 'array',
-//       value: JSON.stringify([{
-//         name: 'Красный кайма губ',
-//         type: 'string',
-//         value: 'бледно-розовая влажная',
-//       },
-
-//       {
-//         name: 'Наличия чешуек',
-//         type: 'string',
-//         value: 'нет',
-//       },
-//       {
-//         name: 'Наличия чешуек',
-//         type: 'string',
-//         value: 'нет',
-//       },
-//       {
-//         name: 'Трещины',
-//         type: 'checkboks',
-//         value: JSON.stringify([{
-//           name: 'Верхняя губа',
-//           type: 'checkboks',
-//           value: JSON.stringify([{
-//             name: 'Центральная',
-//             type: 'boks',
-//             value: true,
-//           },
-//           {
-//             name: 'парацентральная',
-//             type: 'boks',
-//             value: true,
-//           }]),
-//         },
-
-
-//         {
-//           name: 'Нижняя губа',
-//           type: 'checkboks',
-//           value: JSON.stringify([{
-//             name: 'Центральная',
-//             type: 'boks',
-//             value: true,
-//           },
-//           {
-//             name: 'парацентральная',
-//             type: 'boks',
-//             value: true,
-//           }]),
-//         },
-
-//         {
-//           name: 'Коммисуральная',
-//           type: 'boks',
-//           value: true,
-//         },
-//         ]),
-//       },
-//       ]),
-//     },
-//   ]),
-// },
-// ];
-
 export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
-  const { data: patientInfo, isLoading } = sessionApi.useGetUserId(patientId);
+  const { data: patientInfo, isLoading } = usePatientId(patientId);
   const { mutate } = useCreateUpdateMedInfo();
+  const [isOpen, setOpen] = useState(false);
 
   const handleSubmit = async (
     values: InitialValues,
-    // { resetForm }: FormikHelpers<any>,
+    { resetForm }: FormikHelpers<InitialValues>,
   ) => {
 
     const medInfoData = [
@@ -453,7 +289,6 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
         type: 'image',
         value: `${API_URL}/static/2.jpg`,
       },
-
       {
         name: '15. Состояние слизистой оболочки рта, десен, альвеолярных отростков и неба:',
         type: 'array',
@@ -461,27 +296,27 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
           {
             name: 'Слизистая оболочка рта',
             type: 'string',
-            value: 'бледно-розового цвета не отечна',
+            value: `${values.oralMucosa1} ${values.oralMucosa2}`,
           },
           {
-            name: 'кровоточивость при эондировании',
+            name: 'Кровоточивость при эондировании',
             type: 'string',
-            value: 'нет',
+            value: values.bleedingDuringEndotherapy,
           },
           {
-            name: 'наличие рубцов',
+            name: 'Наличие рубцов',
             type: 'string',
-            value: 'нет',
+            value: values.presenceOfScars,
           },
           {
-            name: 'пародантальные карманы',
+            name: 'Пародантальные карманы',
             type: 'string',
-            value: 'нет',
+            value: `${values.periodontalPockets} *ком. для врача: если ДА, заполните парадонтограмму`,
           },
           {
-            name: 'выделение экссудата из кармана',
+            name: 'Выделение экссудата из кармана',
             type: 'string',
-            value: 'нет коментарий',
+            value: `${values.dischargeExudatePocket} ${values.dischargeExudatePocketText}`,
           },
           {
             name: 'Альвеолярный отросток',
@@ -493,43 +328,44 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 value: JSON.stringify([{
                   name: 'Экзостоз',
                   type: 'string',
-                  value: 'нет',
+                  value: `${selectOptionsYesOrNot.find(select => select.value === values.upperJawExostosis)?.label} ${values.upperJawExostosisText}`,
                 },
                 {
                   name: '«болтающийся» гребень ',
                   type: 'string',
-                  value: 'нет',
+                  value: `${selectOptionsYesOrNot.find(select => select.value === values.danglingComb)?.label} ${values.danglingCombText}`,
                 },
                 {
                   name: 'атрофия',
                   type: 'string',
-                  value: 'нет',
+                  value: (() => {
+                    const selectOptions = selectOptionsYesOrNot.find(select => select.value === values.upperJawAtrophy);
+                    return `${selectOptions?.value! > 0 ? (values.upperJawAtrophyNo || values.upperJawAtrophyYes) : selectOptions?.label} ${values.upperJawAtrophyText}`;
+                  })(),
                 },
                 ]),
               },
-            ]),
-          },
-          {
-            name: 'Нижняя челюсть',
-            type: 'array',
-            value: JSON.stringify([
               {
-                name: 'Верхняя челюсть',
+                name: 'Нижняя челюсть',
                 type: 'array',
                 value: JSON.stringify([{
                   name: 'Экзостоз',
                   type: 'string',
-                  value: 'нет',
+                  value: `${selectOptionsYesOrNot.find(select => select.value === values.lowerJawExostosis)?.label} ${values.lowerJawExostosisText}`,
+
                 },
                 {
                   name: '«болтающийся» гребень ',
                   type: 'string',
-                  value: 'нет',
+                  value: `${selectOptionsYesOrNot.find(select => select.value === values.lowerDanglingComb)?.label} ${values.lowerDanglingCombText}`,
                 },
                 {
                   name: 'атрофия',
                   type: 'string',
-                  value: 'нет',
+                  value: (() => {
+                    const selectOptions = selectOptionsYesOrNot.find(select => select.value === values.lowerJawAtrophy);
+                    return `${selectOptions?.value! > 0 ? (values.lowerJawAtrophyNo || values.lowerJawAtrophyYes) : selectOptions?.label} ${values.lowerJawAtrophyText}`;
+                  })(),
                 },
                 ]),
               },
@@ -542,18 +378,316 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
               {
                 name: 'Подчелюстная при пальпации',
                 type: 'string',
-                value: 'однородная безболезненая симеттрическая коментарий',
+                value: `${values.salivaryGlandSelect1} ${values.salivaryGlandSelect2} ${values.salivaryGlandSelect3} ${values.salivaryGlandText}`,
               },
               {
                 name: 'Околоушная при пальпации',
                 type: 'string',
-                value: 'однородная безболезненая симеттрическая коментарий',
+                value: `${values.parotidPalpationSelect1} ${values.parotidPalpationSelect2} ${values.parotidPalpationSelect3} ${values.parotidPalpationText}`,
               },
             ]),
           },
         ]),
       },
+      {
+        name: '16. Осмотр губ:',
+        type: 'array',
+        value: JSON.stringify([{
+          name: 'Красная кайма губ',
+          type: 'string',
+          value: `${values.redBorderOfLipsSelect1}, ${values.redBorderOfLipsSelect2}`,
+        }, {
+          name: 'Наличие чешуек',
+          type: 'string',
+          value: selectOptionsYesOrNot.find(select => select.value === values.presenceOfScales)?.label,
+        },
+        {
+          name: 'Трещины',
+          type: 'checkboks',
+          value: JSON.stringify([{
+            name: 'Верхняя губа',
+            type: 'checkboks',
+            value: JSON.stringify([{
+              name: 'Центральная',
+              type: 'boks',
+              value: values.crackedUpperCenter,
+            },
+            {
+              name: 'парацентральная',
+              type: 'boks',
+              value: values.crackedUpperParacentral,
+            }]),
+          },
+          {
+            name: 'Нижняя губа',
+            type: 'checkboks',
+            value: JSON.stringify([{
+              name: 'Центральная',
+              type: 'boks',
+              value: values.crackedLowerCenter,
+            },
+            {
+              name: 'парацентральная',
+              type: 'boks',
+              value: values.crackedUpperParacentral,
+            }]),
+          },
 
+          {
+            name: 'Коммисуральная',
+            type: 'boks',
+            value: values.crackedCommissural,
+          },
+          ]),
+        },
+        {
+          name: 'Трещина в анамнезе',
+          type: 'string',
+          value: selectOptionsYesOrNot.find(select => select.value === values.crackInHistory)?.label,
+        }, {
+          name: '',
+          type: 'string',
+          value: `${values.lipExaminationText}`,
+        }]),
+      },
+      {
+        name: `17. Осмотр языка: ${values.tongueExaminationSelect1}, ${values.tongueExaminationSelect2} ${values.tongueExaminationText}`,
+        type: 'array',
+        value: JSON.stringify([
+          {
+            name: 'десквамация эпителия',
+            type: 'string',
+            value: selectOptionsYesOrNot.find(select => select.value === values.epithelialDesquamation)?.label,
+          },
+          {
+            name: 'отпечатки зубов на боковой поверхности языка',
+            type: 'string',
+            value: selectOptionsYesOrNot.find(select => select.value === values.teetImprintsTheTongue)?.label,
+          },
+          {
+            name: 'уздечка языка',
+            type: 'string',
+            value: values.frenulumTongue,
+          },
+          {
+            name: 'выраженность рвотного рефлекса',
+            type: 'string',
+            value: selectOptionsYesOrNot.find(select => select.value === values.severityGagReflex)?.label,
+          },
+          {
+            name: 'сосочки',
+            type: 'string',
+            value: values.examinationTonguePapillae,
+          },
+          {
+            name: '',
+            type: 'string',
+            value: values.tongueExaminationField,
+          },
+        ]),
+      },
+      {
+        name: `18. Осмотр преддверия рта: ${values.examinationVestibuleMouth}`,
+        type: 'array',
+        value: JSON.stringify([
+          {
+            name: 'высота прикрепленной десны (мм)',
+            type: 'string',
+            value: values.attachedGingivalHeight || '__________',
+          },
+          {
+            name: 'наличие рецессий',
+            type: 'string',
+            value: `${values.presenceOfRecessions > 0 ? values.presenceOfRecessionsText : selectOptionsYesOrNot.find(select => select.value === values.presenceOfScales)?.label}`,
+          },
+          {
+            name: 'уздечка нижней губы',
+            type: 'string',
+            value: values.frenulumLowerLip || '________________________________________',
+          },
+          {
+            name: 'уздечка верхней губы',
+            type: 'string',
+            value: values.frenulumUpperLip || '________________________________________',
+          },
+          {
+            name: 'наличие рубца операций',
+            type: 'string',
+            value: values.presenceSurgicalScar || '________________________________________',
+          },
+        ]),
+      },
+      {
+        name: `19. Состояние прикуса: ${biteConditionOptions.find(select => select.value === values.biteCondition)?.label}`,
+        type: 'array',
+        value: JSON.stringify([
+          {
+            name: '',
+            type: 'string',
+            value: values.biteConditionField,
+          },
+          {
+            name: 'перекрытие',
+            type: 'string',
+            value: `${values.overlapSelect} ${values.overlapField}`,
+          },
+          {
+            name: 'Тремы',
+            type: 'string',
+            value: `${selectOptionsYesOrNot.find(select => select.value === values.tremesSelect)?.label} ${values.tremesField}`,
+          },
+          {
+            name: 'Диастемы',
+            type: 'string',
+            value: `${selectOptionsYesOrNot.find(select => select.value === values.diastemasSelect)?.label} ${values.diastemasField}`,
+          },
+          {
+            name: 'Аномалии отдельных зубов',
+            type: 'string',
+            value: values.anomaliesIndividualTeeth || '________________________________________',
+          },
+          {
+            name: 'Стираемость зубов',
+            type: 'string',
+            value: `${values.toothWearSelect} ${values.toothWearField}`,
+          },
+          {
+            name: 'зубо-альвеолярное выдвижение',
+            type: 'string',
+            value: `${selectOptionsYesOrNot.find(select => select.value === values.dentoalveolarAdvancementSelect)?.label} ${values.dentoalveolarAdvancementField}`,
+          },
+          {
+            name: 'симптом Попова-Годона',
+            type: 'string',
+            value: `${selectOptionsYesOrNot.find(select => select.value === values.signPopovGodonSelect)?.label} ${values.signPopovGodonField}`,
+          },
+          {
+            name: 'Перекрытие нижних резцов верхними (мм)',
+            type: 'string',
+            value: values.overlappingLowerIncisorsUpper || '________________________________________',
+          },
+          {
+            name: 'дефект речи',
+            type: 'string',
+            value: `${selectOptionsYesOrNot.find(select => select.value === values.speechDefectSelect)?.label} ${values.speechDefectField}`,
+          },
+        ]),
+      },
+      {
+        name: '20. Осмотр ВНЧС:',
+        type: 'array',
+        value: JSON.stringify([
+          {
+            name: 'открывание челюсти',
+            type: 'string',
+            value: `${jawOpeningSelect1Options1.find(select => select.value === values.jawOpeningSelect1)?.label}` +
+              `${jawOpeningSelect1Options2.find(select => select.value === values.jawOpeningSelect2)?.label}` +
+              `${jawOpeningSelect1Options3.find(select => select.value === values.jawOpeningSelect3)?.label}${values.jawOpeningField}`,
+          },
+          {
+            name: 'движение суставных головок при пальпации',
+            type: 'string',
+            value: `${values.movementArticularHeadsSelect} ${values.movementArticularHeadsField}`,
+          },
+          {
+            name: 'Дополнительно',
+            type: 'checkboks',
+            value: JSON.stringify([{
+              name: 'Щелчок',
+              type: 'checkboks',
+              value: JSON.stringify([{
+                name: 'справа',
+                type: 'boks',
+                value: values.additionallyClickRight,
+              },
+              {
+                name: 'слева',
+                type: 'boks',
+                value: values.additionallyClickLeft,
+              },
+              {
+                name: 'при открывании',
+                type: 'boks',
+                value: values.additionallyClickUponOpening,
+              },
+              {
+                name: 'при закрывании',
+                type: 'boks',
+                value: values.additionallyClickWhenClosing,
+              }]),
+            },
+            {
+              name: 'Хруст',
+              type: 'checkboks',
+              value: JSON.stringify([{
+                name: 'справа',
+                type: 'boks',
+                value: values.additionallyCrunchRight,
+              },
+              {
+                name: 'слева',
+                type: 'boks',
+                value: values.additionallyCrunchLeft,
+              },
+              {
+                name: 'при открывании',
+                type: 'boks',
+                value: values.additionallyCrunchUponOpening,
+              },
+              {
+                name: 'при закрывании',
+                type: 'boks',
+                value: values.additionallyCrunchWhenClosing,
+              }]),
+            },
+            {
+              name: 'Крепитация в суставе',
+              type: 'checkboks',
+              value: JSON.stringify([{
+                name: 'справа',
+                type: 'boks',
+                value: values.additionallyCrepitusJointRight,
+              },
+              {
+                name: 'слева',
+                type: 'boks',
+                value: values.additionallyCrepitusJointLeft,
+              },
+              {
+                name: 'при открывании',
+                type: 'boks',
+                value: values.additionallyCrepitusJointUponOpening,
+              },
+              {
+                name: 'при закрывании',
+                type: 'boks',
+                value: values.additionallyCrepitusJointWhenClosing,
+              }]),
+            },
+            {
+              name: '',
+              type: 'string',
+              value: values.additionallyField,
+            },
+            ]),
+          },
+          {
+            name: 'тонус жевательных мышц',
+            type: 'string',
+            value: `${values.masticatoryMuscleToneSelect} ${values.masticatoryMuscleToneField}`,
+          },
+          {
+            name: '',
+            type: 'string',
+            value: values.examinationField,
+          },
+        ]),
+      },
+      {
+        name: '21. Данные рентгенологического и лабораторного исследования:',
+        type: 'string',
+        value: values.laboratoryData,
+      },
       {
         name: '22. Бланк онкологического профилактического медицинского осмотра',
         type: 'image',
@@ -574,18 +708,19 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
         type: 'image',
         value: `${API_URL}/static/5.jpg`,
       },
+      {
+        name: '25. Установеленные импланты:',
+        type: 'image',
+        value: '',
+      },
     ];
-
 
     const info = JSON.stringify(medInfoData);
 
     await mutate({ info, patientId }, {
-      onSuccess: (data) => {
-        window.open(`${API_URL}/${data.medInfoPath}`);
-
-        console.log('data', data);
-
-        // resetForm();
+      onSuccess: () => {
+        setOpen(true);
+        resetForm();
       },
       onError: (error) => {
         toast(errorHandler(error), { type: 'error' });
@@ -593,9 +728,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
     });
   };
 
-  console.log('patientInfo', patientInfo);
-
-  if (isLoading) {
+  if (!patientInfo || isLoading) {
     return null;
   }
 
@@ -638,9 +771,101 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
         plaqueOnTeethCheckbox1: '',
         plaqueOnTeethCheckbox2: '',
         plaqueOnTeethInputField: '',
-
-        test16: '',
-        test_atrofia: '',
+        oralMucosa1: 'бледно-розового цвета',
+        oralMucosa2: 'не отечна',
+        bleedingDuringEndotherapy: 'нет',
+        presenceOfScars: 'нет',
+        periodontalPockets: 'нет',
+        dischargeExudatePocket: 'нет',
+        dischargeExudatePocketText: '',
+        upperJawExostosis: -1,
+        upperJawExostosisText: '',
+        danglingComb: -1,
+        danglingCombText: '',
+        upperJawAtrophy: -1,
+        upperJawAtrophyText: '',
+        lowerJawExostosis: -1,
+        lowerJawExostosisText: '',
+        lowerDanglingComb: -1,
+        lowerDanglingCombText: '',
+        lowerJawAtrophy: -1,
+        lowerJawAtrophyText: '',
+        salivaryGlandSelect1: 'однородная',
+        salivaryGlandSelect2: 'безболезненная',
+        salivaryGlandSelect3: 'симметричная',
+        salivaryGlandText: '',
+        parotidPalpationSelect1: 'однородная',
+        parotidPalpationSelect2: 'безболезненная',
+        parotidPalpationSelect3: 'симметричная',
+        parotidPalpationText: '',
+        redBorderOfLipsSelect1: 'бледно-розовая',
+        redBorderOfLipsSelect2: 'влажная',
+        presenceOfScales: -1,
+        crackedUpper: false,
+        crackedLower: false,
+        crackedCommissural: '',
+        crackInHistory: -1,
+        lipExaminationText: '',
+        tongueExaminationSelect1: 'не увеличен',
+        tongueExaminationSelect2: 'бледно-розовый',
+        tongueExaminationText: '',
+        epithelialDesquamation: -1,
+        teetImprintsTheTongue: -1,
+        frenulumTongue: 'длинная',
+        severityGagReflex: -1,
+        examinationTonguePapillae: 'не гипертрофированы',
+        tongueExaminationField: '',
+        examinationVestibuleMouth: 'среднее',
+        attachedGingivalHeight: '',
+        presenceOfRecessions: -1,
+        presenceOfRecessionsText: '',
+        frenulumLowerLip: '',
+        frenulumUpperLip: '',
+        presenceSurgicalScar: '',
+        biteCondition: -1,
+        biteConditionField: '',
+        overlapSelect: 'горизонтальное',
+        overlapField: '',
+        tremesSelect: -1,
+        tremesField: '',
+        diastemasSelect: -1,
+        diastemasField: '',
+        anomaliesIndividualTeeth: '',
+        toothWearSelect: 'не имеется',
+        toothWearField: '',
+        dentoalveolarAdvancementSelect: -1,
+        dentoalveolarAdvancementField: '',
+        signPopovGodonSelect: -1,
+        signPopovGodonField: '',
+        overlappingLowerIncisorsUpper: '',
+        speechDefectSelect: -1,
+        speechDefectField: '',
+        jawOpeningSelect1: -1,
+        jawOpeningSelect2: -1,
+        jawOpeningSelect3: -1,
+        jawOpeningField: '',
+        movementArticularHeadsSelect: 'симметричное',
+        movementArticularHeadsField: '',
+        additionallyClick: false,
+        additionallyCrunch: false,
+        additionallyCrepitusJoint: false,
+        additionallyField: '',
+        masticatoryMuscleToneSelect: 'нормальный',
+        masticatoryMuscleToneField: '',
+        examinationField: '',
+        additionallyClickRight: false,
+        additionallyClickLeft: false,
+        additionallyClickUponOpening: false,
+        additionallyClickWhenClosing: false,
+        additionallyCrunchRight: false,
+        additionallyCrunchLeft: false,
+        additionallyCrunchUponOpening: false,
+        additionallyCrunchWhenClosing: false,
+        additionallyCrepitusJointRight: false,
+        additionallyCrepitusJointLeft: false,
+        additionallyCrepitusJointUponOpening: false,
+        additionallyCrepitusJointWhenClosing: false,
+        laboratoryData: '',
       }}
       // validationSchema={object().shape({
       //   email: string().email().required(),
@@ -662,8 +887,8 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 name="startDay"
               >
                 {(props: FieldProps) =>
-                  <InputMask name="startDay" style={{ width: 16 }} className={s.defaultInput}
-                    onChange={props.field.onChange} mask="99" placeholder='__.' maskChar="_" />}
+                  <InputMask name="startDay" style={{ width: 20, textAlign: 'center' }} className={s.defaultInput}
+                    onChange={props.field.onChange} mask="99" placeholder='__' maskChar="_" />}
               </Field>
               »{' '}
               <Field
@@ -687,13 +912,13 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             </div>
             <div className={classNames(s.title)}>
               1. Фамилия, имя, отчество:
-              <span className={classNames(s.redHighlight, s.italic)}>{patientInfo?.fullName}</span>
+              <span className={classNames(s.redHighlight, s.italic)}>{patientInfo.fullName}</span>
             </div>
             <div className={classNames(s.title)}>2. <span className={s.redHighlight}> Мужчина</span> </div>
-            <div className={classNames(s.title)}>3. Адрес:   <span className={classNames(s.redHighlight, s.italic)}> ул. Пушкина д27, кв 65</span> </div>
-            <div className={classNames(s.title)}>4. Телефон: <span className={classNames(s.redHighlight, s.italic)}> +380966528347</span> </div>
-            <div className={classNames(s.title)}>5. Возраст: <span className={classNames(s.redHighlight, s.italic)}> 55</span> </div>
-            <div className={classNames(s.title)}>6. Профессия:
+            <div className={classNames(s.title)}>3. Адрес:   <span className={classNames(s.redHighlight, s.italic)}> {patientInfo.address}</span> </div>
+            <div className={classNames(s.title)}>4. Телефон: <span className={classNames(s.redHighlight, s.italic)}> {patientInfo.phone}</span> </div>
+            <div className={classNames(s.title)}>5. Возраст: <span className={classNames(s.redHighlight, s.italic)}> {dayjs().diff(dayjs(patientInfo.dateOfBirth), 'year')}</span> </div>
+            <div className={classNames(s.title, s.filterOptions)}>6. Профессия:
               <Field
                 name="specialization"
               >
@@ -705,7 +930,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     onChange={props.field.onChange} />}
               </Field>
             </div>
-            <div className={classNames(s.title)}>7. Диагноз:
+            <div className={classNames(s.title, s.filterOptions)}>7. Диагноз:
               <Field
                 name="diagnosis"
               >
@@ -717,7 +942,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     onChange={props.field.onChange} />}
               </Field>
             </div>
-            <div className={classNames(s.title)}>8. Диагноз по МКБ -10:
+            <div className={classNames(s.title, s.filterOptions)}>8. Диагноз по МКБ -10:
               <Field
                 name="diagnosisICD"
               >
@@ -729,7 +954,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     onChange={props.field.onChange} />}
               </Field>
             </div>
-            <div className={classNames(s.title)}>9. Жалобы:
+            <div className={classNames(s.title, s.filterOptions)}>9. Жалобы:
               <Field
                 name="complaints"
               >
@@ -741,7 +966,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     onChange={props.field.onChange} />}
               </Field>
             </div>
-            <div className={classNames(s.title)}>10. Перенесенные и сопутствующие заболевания:
+            <div className={classNames(s.title, s.filterOptions)}>10. Перенесенные и сопутствующие заболевания:
               <Field
                 name="previousConcomitantDiseases"
               >
@@ -753,7 +978,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     onChange={props.field.onChange} />}
               </Field>
             </div>
-            <div className={classNames(s.title)}>11. Развитие настоящего заболевания:
+            <div className={classNames(s.title, s.filterOptions)}>11. Развитие настоящего заболевания:
               <Field
                 name="developmentDisease"
               >
@@ -1240,9 +1465,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>Слизистая оболочка рта</Grid>
-                    <Field name="test16">
+                    <Field name="oralMucosa1">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'бледно-розового цвета' }];
+                        const selectOptions = [{ value: 'бледно-розового цвета', label: 'бледно-розового цвета' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1264,10 +1489,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-
-                    <Field name="test16">
+                    <Field name="oralMucosa2">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'не отечна' }];
+                        const selectOptions = [{ value: 'не отечна', label: 'не отечна' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1294,9 +1518,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>кровоточивость при зондировании</Grid>
-                    <Field name="test16">
+                    <Field name="bleedingDuringEndotherapy">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
+                        const selectOptions = [{ value: 'нет', label: 'нет' }, { value: 'да', label: 'да' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1323,9 +1547,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>наличие рубцов</Grid>
-                    <Field name="test16">
+                    <Field name="presenceOfScars">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
+                        const selectOptions = [{ value: 'нет', label: 'нет' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1352,9 +1576,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>пародонтальные карманы </Grid>
-                    <Field name="test16">
+                    <Field name="periodontalPockets">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
+                        const selectOptions = [{ value: 'нет', label: 'нет' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1376,15 +1600,14 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-                    *ком. для врача: если ДА, заполните парадонтограмму
                   </Grid>
                 </li>
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>выделение экссудата из кармана</Grid>
-                    <Field name="test16">
+                    <Field name="dischargeExudatePocket">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
+                        const selectOptions = [{ value: 'нет', label: 'нет' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1406,14 +1629,13 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-
                     <Field
-                      name="test7"
+                      name="dischargeExudatePocketText"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test7'
+                          name='dischargeExudatePocketText'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -1428,37 +1650,34 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     <Grid marginInline={2} marginBlock={2}>
                       <Grid marginBlock={1} className={s.filterOptions}>
                         Экзостоз
-                        <Field name="test16">
-                          {(props: FieldProps) => {
-                            const selectOptions = [{ value: -1, label: 'нет' }];
-                            return (
-                              <SelectField
-                                className={s.optionInfo}
-                                selectNavigate
-                                selectOptions={selectOptions}
-                                {...props}
-                              >
-                                {selectOptions.map(({ label, value: link }) => (
-                                  <MenuItem
-                                    key={link}
-                                    value={link}
-                                    className='select-link'
-                                  >
-                                    {label}
-                                  </MenuItem>
-                                ))
-                                }
-                              </SelectField>
-                            );
-                          }}
+                        <Field name="upperJawExostosis">
+                          {(props: FieldProps) => (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptionsYesOrNot}
+                              {...props}
+                            >
+                              {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          )}
                         </Field>
                         <Field
-                          name="test7"
+                          name="upperJawExostosisText"
                         >
                           {(props: FieldProps) =>
                             <UnderlineText
                               width='100%'
-                              name='test7'
+                              name='upperJawExostosisText'
                               className={classNames(s.defaultInput, s.title)}
                               onChange={props.field.onChange} />}
                         </Field>
@@ -1466,69 +1685,63 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     </Grid>
                     <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
                       «болтающийся» гребень
-                      <Field name="test16">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: -1, label: 'нет' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
-                                >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
+                      <Field name="danglingComb">
+                        {(props: FieldProps) => (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptionsYesOrNot}
+                            {...props}
+                          >
+                            {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        )}
                       </Field>
                       <Field
-                        name="test7"
+                        name="danglingCombText"
                       >
                         {(props: FieldProps) =>
                           <UnderlineText
                             width='100%'
-                            name='test7'
+                            name='danglingCombText'
                             className={classNames(s.defaultInput, s.title)}
                             onChange={props.field.onChange} />}
                       </Field>
                     </Grid>
                     <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
                       атрофия
-                      <Field name="test_atrofia">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: -1, label: 'нет' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
-                                >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
+                      <Field name="upperJawAtrophy">
+                        {(props: FieldProps) => (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptionsYesOrNot}
+                            {...props}
+                          >
+                            {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        )}
                       </Field>
                       {
-                        values.test_atrofia && (
+                        values.upperJawAtrophy > 0 && (
                           <>
                             <Field
                               name="1"
@@ -1560,12 +1773,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         )
                       }
                       <Field
-                        name="test7"
+                        name="upperJawAtrophyText"
                       >
                         {(props: FieldProps) =>
                           <UnderlineText
                             width='100%'
-                            name='test7'
+                            name='upperJawAtrophyText'
                             className={classNames(s.defaultInput, s.title)}
                             onChange={props.field.onChange} />}
                       </Field>
@@ -1576,37 +1789,34 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     <Grid marginInline={2} marginBlock={2}>
                       <Grid marginBlock={1} className={s.filterOptions}>
                         Экзостоз
-                        <Field name="test16">
-                          {(props: FieldProps) => {
-                            const selectOptions = [{ value: -1, label: 'нет' }];
-                            return (
-                              <SelectField
-                                className={s.optionInfo}
-                                selectNavigate
-                                selectOptions={selectOptions}
-                                {...props}
-                              >
-                                {selectOptions.map(({ label, value: link }) => (
-                                  <MenuItem
-                                    key={link}
-                                    value={link}
-                                    className='select-link'
-                                  >
-                                    {label}
-                                  </MenuItem>
-                                ))
-                                }
-                              </SelectField>
-                            );
-                          }}
+                        <Field name="lowerJawExostosis">
+                          {(props: FieldProps) => (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptionsYesOrNot}
+                              {...props}
+                            >
+                              {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          )}
                         </Field>
                         <Field
-                          name="test7"
+                          name="lowerJawExostosisText"
                         >
                           {(props: FieldProps) =>
                             <UnderlineText
                               width='100%'
-                              name='test7'
+                              name='lowerJawExostosisText'
                               className={classNames(s.defaultInput, s.title)}
                               onChange={props.field.onChange} />}
                         </Field>
@@ -1614,91 +1824,91 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     </Grid>
                     <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
                       «болтающийся» гребень
-                      <Field name="test16">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: -1, label: 'нет' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
-                                >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
+                      <Field name="lowerDanglingComb">
+                        {(props: FieldProps) => (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptionsYesOrNot}
+                            {...props}
+                          >
+                            {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        )}
                       </Field>
                       <Field
-                        name="test7"
+                        name="lowerDanglingCombText"
                       >
                         {(props: FieldProps) =>
                           <UnderlineText
                             width='100%'
-                            name='test7'
+                            name='lowerDanglingCombText'
                             className={classNames(s.defaultInput, s.title)}
                             onChange={props.field.onChange} />}
                       </Field>
                     </Grid>
                     <Grid marginInline={2} marginBlock={2} className={s.filterOptions}>
                       атрофия
-                      <Field name="test_atrofia">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: -1, label: 'нет' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
-                                >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
+                      <Field name="lowerJawAtrophy">
+                        {(props: FieldProps) => (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptionsYesOrNot}
+                            {...props}
+                          >
+                            {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        )}
                       </Field>
                       {
-                        values.test_atrofia && (
+                        values.lowerJawAtrophy > 0 && (
                           <>
                             <Field
-                              name="1"
+                              name="lowerJawAtrophyNo"
                             >
                               {({ field, form }: FieldProps) =>
                                 <Checkbox
                                   className={s.checkbox}
                                   checked={field.value}
-                                  onChange={() => form.setFieldValue('1', !field.value)}
+                                  onChange={() => {
+                                    form.setFieldValue('lowerJawAtrophyNo', 'не выражена');
+                                    form.setFieldValue('lowerJawAtrophyYes', '');
+                                  }}
                                 >
                                   не выражена
                                 </Checkbox>
                               }
                             </Field>
                             <Field
-                              name="1"
+                              name="lowerJawAtrophyYes"
                             >
                               {({ field, form }: FieldProps) =>
                                 <Checkbox
                                   className={s.checkbox}
                                   checked={field.value}
-                                  onChange={() => form.setFieldValue('1', !field.value)}
+                                  onChange={() => {
+                                    form.setFieldValue('lowerJawAtrophyYes', 'выражена');
+                                    form.setFieldValue('lowerJawAtrophyNo', '');
+                                  }}
                                 >
                                   выражена
                                 </Checkbox>
@@ -1708,12 +1918,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         )
                       }
                       <Field
-                        name="test7"
+                        name="lowerJawAtrophyText"
                       >
                         {(props: FieldProps) =>
                           <UnderlineText
                             width='100%'
-                            name='test7'
+                            name='lowerJawAtrophyText'
                             className={classNames(s.defaultInput, s.title)}
                             onChange={props.field.onChange} />}
                       </Field>
@@ -1726,7 +1936,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   </Grid>
                   <Grid marginInline={1} marginBlock={2} className={s.filterOptions}>
                     Подчелюстная при пальпации
-                    <Field name="test16">
+                    <Field name="salivaryGlandSelect1">
                       {(props: FieldProps) => {
                         const selectOptions = [{ value: -1, label: 'однородная' }];
                         return (
@@ -1750,7 +1960,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-                    <Field name="test16">
+                    <Field name="salivaryGlandSelect2">
                       {(props: FieldProps) => {
                         const selectOptions = [{ value: -1, label: 'безболезненная' }];
                         return (
@@ -1774,7 +1984,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-                    <Field name="test16">
+                    <Field name="salivaryGlandSelect3">
                       {(props: FieldProps) => {
                         const selectOptions = [{ value: -1, label: 'симметричная' }];
                         return (
@@ -1799,21 +2009,21 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       }}
                     </Field>
                     <Field
-                      name="test7"
+                      name="salivaryGlandText"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test7'
+                          name='salivaryGlandText'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
                   </Grid>
                   <Grid marginInline={1} marginBlock={2} className={s.filterOptions}>
                     Околоушная при пальпации
-                    <Field name="test16">
+                    <Field name="parotidPalpationSelect1">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'однородная' }];
+                        const selectOptions = [{ value: 'однородная', label: 'однородная' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1835,9 +2045,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-                    <Field name="test16">
+                    <Field name="parotidPalpationSelect2">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'безболезненная' }];
+                        const selectOptions = [{ value: 'безболезненная', label: 'безболезненная' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1859,9 +2069,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-                    <Field name="test16">
+                    <Field name="parotidPalpationSelect3">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'симметричная' }];
+                        const selectOptions = [{ value: 'симметричная', label: 'симметричная' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1884,12 +2094,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       }}
                     </Field>
                     <Field
-                      name="test7"
+                      name="parotidPalpationText"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test7'
+                          name='parotidPalpationText'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -1903,9 +2113,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>красная кайма губ</Grid>
-                    <Field name="test16">
+                    <Field name="redBorderOfLipsSelect1">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'бледно-розовая' }];
+                        const selectOptions = [{ value: 'бледно-розовая', label: 'бледно-розовая' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1927,9 +2137,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         );
                       }}
                     </Field>
-                    <Field name="test16">
+                    <Field name="redBorderOfLipsSelect2">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'влажная' }];
+                        const selectOptions = [{ value: 'влажная', label: 'влажная' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -1956,29 +2166,26 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>наличие чешуек</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="presenceOfScales">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                   </Grid>
                 </li>
@@ -1989,96 +2196,104 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       <Grid container  >
                         <Grid item xs={3} >
                           <Field
-                            name="complaint"
+                            name="crackedUpper"
                           >
                             {({ field, form }: FieldProps) =>
                               <Checkbox
                                 checked={field.value}
-                                onChange={() => form.setFieldValue('complaint', !field.value)}
+                                onChange={() => form.setFieldValue('crackedUpper', !field.value)}
                               >
                                 Верхняя губа
                               </Checkbox>
                             }
                           </Field>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
-                                >
-                                  центральная
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3} >
-                            <Field
-                              name="5"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('5', !field.value)}
-                                >
-                                  парацентральная
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
+                          {
+                            values?.crackedUpper && (
+                              <>
+                                <Grid marginLeft={3}>
+                                  <Field
+                                    name="crackedUpperCenter"
+                                  >
+                                    {({ field, form }: FieldProps) =>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onChange={() => form.setFieldValue('crackedUpperCenter', !field.value)}
+                                      >
+                                        центральная
+                                      </Checkbox>
+                                    }
+                                  </Field>
+                                </Grid>
+                                <Grid marginLeft={3} >
+                                  <Field
+                                    name="crackedUpperParacentral"
+                                  >
+                                    {({ field, form }: FieldProps) =>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onChange={() => form.setFieldValue('crackedUpperParacentral', !field.value)}
+                                      >
+                                        парацентральная
+                                      </Checkbox>
+                                    }
+                                  </Field>
+                                </Grid>
+                              </>
+                            )
+                          }
                         </Grid>
                         <Grid item xs={3}>
                           <Field
-                            name="2"
+                            name="crackedLower"
                           >
                             {({ field, form }: FieldProps) =>
                               <Checkbox
                                 checked={field.value}
-                                onChange={() => form.setFieldValue('2', !field.value)}
+                                onChange={() => form.setFieldValue('crackedLower', !field.value)}
                               >
                                 Нижняя губа
                               </Checkbox>
                             }
                           </Field>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
-                                >
-                                  центральная
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3} >
-                            <Field
-                              name="5"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('5', !field.value)}
-                                >
-                                  парацентральная
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
+                          {values.crackedLower && (<>
+                            <Grid marginLeft={3}>
+                              <Field
+                                name="crackedLowerCenter"
+                              >
+                                {({ field, form }: FieldProps) =>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onChange={() => form.setFieldValue('crackedLowerCenter', !field.value)}
+                                  >
+                                    центральная
+                                  </Checkbox>
+                                }
+                              </Field>
+                            </Grid>
+                            <Grid marginLeft={3} >
+                              <Field
+                                name="crackedLowerParacentral"
+                              >
+                                {({ field, form }: FieldProps) =>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onChange={() => form.setFieldValue('crackedLowerParacentral', !field.value)}
+                                  >
+                                    парацентральная
+                                  </Checkbox>
+                                }
+                              </Field>
+                            </Grid>
+                          </>)}
                         </Grid>
                         <Grid item xs={3}>
                           <Field
-                            name="3"
+                            name="crackedCommissural"
                           >
                             {({ field, form }: FieldProps) =>
                               <Checkbox
                                 checked={field.value}
-                                onChange={() => form.setFieldValue('3', !field.value)}
+                                onChange={() => form.setFieldValue('crackedCommissural', !field.value)}
                               >
                                 коммисуральная
                               </Checkbox>
@@ -2093,41 +2308,40 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   <Grid marginBlock={1} >
                     <Grid className={s.filterOptions}>
                       Трещина в анамнезе
-                      <Field name="test16">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
-                                >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
+                      <Field name="crackInHistory">
+                        {(props: FieldProps) => (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptionsYesOrNot}
+                            {...props}
+                          >
+                            {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        )}
                       </Field>
                     </Grid>
-                    <Field
-                      name="test17"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='test17'
-                          className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} />}
-                    </Field>
+                    <Grid marginBlock={2} >
+                      <Field
+                        name="lipExaminationText"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='100%'
+                            name='lipExaminationText'
+                            className={classNames(s.defaultInput, s.title)}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                    </Grid>
                   </Grid>
                 </li>
               </ul>
@@ -2136,9 +2350,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
               <Grid marginBlock={2}>
                 <Grid marginBlock={1} className={s.filterOptions}>
                   <Grid marginRight={2}>17. Осмотр языка:</Grid>
-                  <Field name="test16">
+                  <Field name="tongueExaminationSelect1 ">
                     {(props: FieldProps) => {
-                      const selectOptions = [{ value: -1, label: 'не увеличен' }];
+                      const selectOptions = [{ value: 'не увеличен', label: 'не увеличен' }];
                       return (
                         <SelectField
                           className={s.optionInfo}
@@ -2160,9 +2374,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       );
                     }}
                   </Field>
-                  <Field name="test16">
+                  <Field name="tongueExaminationSelect2">
                     {(props: FieldProps) => {
-                      const selectOptions = [{ value: -1, label: 'бледно-розовый' }];
+                      const selectOptions = [{ value: 'бледно-розовый', label: 'бледно-розовый' }];
                       return (
                         <SelectField
                           className={s.optionInfo}
@@ -2185,12 +2399,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     }}
                   </Field>
                   <Field
-                    name="test14"
+                    name="tongueExaminationText"
                   >
                     {(props: FieldProps) =>
                       <UnderlineText
                         width='100%'
-                        name='test14'
+                        name='tongueExaminationText'
                         className={classNames(s.defaultInput, s.title)}
                         onChange={props.field.onChange} />}
                   </Field>
@@ -2200,67 +2414,61 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>десквамация эпителия</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="epithelialDesquamation">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                   </Grid>
                 </li>
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>отпечатки зубов на боковой поверхности языка</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="teetImprintsTheTongue">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                   </Grid>
                 </li>
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>уздечка языка</Grid>
-                    <Field name="test16">
+                    <Field name="frenulumTongue">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'длинная' }];
+                        const selectOptions = [{ value: 'длинная', label: 'длинная' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -2287,38 +2495,35 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>выраженность рвотного рефлекса</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="severityGagReflex">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                   </Grid>
                 </li>
                 <li className={s.li}>
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>сосочки</Grid>
-                    <Field name="test16">
+                    <Field name="examinationTonguePapillae">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'не гипертрофированы' }];
+                        const selectOptions = [{ value: 'не гипертрофированы', label: 'не гипертрофированы' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -2342,15 +2547,14 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     </Field>
                   </Grid>
                 </li>
-
                 <li>
                   <Field
-                    name="test14"
+                    name="tongueExaminationField"
                   >
                     {(props: FieldProps) =>
                       <UnderlineText
                         width='100%'
-                        name='test14'
+                        name='tongueExaminationField'
                         className={classNames(s.defaultInput, s.title)}
                         onChange={props.field.onChange} />}
                   </Field>
@@ -2361,9 +2565,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
               <Grid marginBlock={2}>
                 <Grid marginBlock={1} className={s.filterOptions} >
                   <Grid marginRight={2}>18. Осмотр преддверия рта:</Grid>
-                  <Field name="test16">
+                  <Field name="examinationVestibuleMouth">
                     {(props: FieldProps) => {
-                      const selectOptions = [{ value: -1, label: 'среднее' }];
+                      const selectOptions = [{ value: 'среднее', label: 'среднее' }];
                       return (
                         <SelectField
                           className={s.optionInfo}
@@ -2392,82 +2596,79 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>высота прикрепленной десны (мм)</Grid>
                     <Field
-                      name="test14"
+                      name="attachedGingivalHeight"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='300px'
-                          name='test14'
+                          name='attachedGingivalHeight'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
                   </Grid>
                 </li>
                 <li className={s.li}>
-                  <Grid marginBlock={1} className={s.filterOptions}>
+                  <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>наличие рецессий</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="presenceOfRecessions">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
-                    если да то в области каких зубов
+                    <Grid marginRight={1}>если да то в области каких зубов</Grid>
                     <Field
-                      name="test14"
+                      name="presenceOfRecessionsText"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='presenceOfRecessionsText'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
                   </Grid>
                 </li>
                 <li className={s.li}>
-                  <Grid marginBlock={1} className={s.filterOptions}>
+                  <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>уздечка нижней губы</Grid>
                     <Field
-                      name="test14"
+                      name="frenulumLowerLip"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='frenulumLowerLip'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
                   </Grid>
                 </li>
                 <li className={s.li}>
-                  <Grid marginBlock={1} className={s.filterOptions}>
+                  <Grid marginBlock={3} className={s.filterOptions}>
                     <Grid marginRight={1}>уздечка верхней губы</Grid>
                     <Field
-                      name="test14"
+                      name="frenulumUpperLip"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='frenulumUpperLip'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2477,12 +2678,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   <Grid marginBlock={1} className={s.filterOptions}>
                     <Grid marginRight={1}>наличие рубца операций</Grid>
                     <Field
-                      name="test14"
+                      name="presenceSurgicalScar"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='presenceSurgicalScar'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2494,17 +2695,91 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
               <Grid marginBlock={2}>
                 <Grid marginBlock={1} className={s.filterOptions} >
                   <Grid marginRight={2}>19. Состояние прикуса:</Grid>
-                  <Field name="test16">
-                    {(props: FieldProps) => {
-                      const selectOptions = [{ value: -1, label: 'ортогнатический' }];
-                      return (
+                  <Field name="biteCondition">
+                    {(props: FieldProps) => (
+                      <SelectField
+                        className={s.optionInfo}
+                        selectNavigate
+                        selectOptions={biteConditionOptions}
+                        {...props}
+                      >
+                        {biteConditionOptions.map(({ label, value: link }) => (
+                          <MenuItem
+                            key={link}
+                            value={link}
+                            className='select-link'
+                          >
+                            {label}
+                          </MenuItem>
+                        ))
+                        }
+                      </SelectField>
+                    )}
+                  </Field>
+                </Grid>
+                <Field
+                  name="biteConditionField"
+                >
+                  {(props: FieldProps) =>
+                    <UnderlineText
+                      width='100%'
+                      name='biteConditionField'
+                      className={classNames(s.defaultInput, s.title)}
+                      onChange={props.field.onChange} />}
+                </Field>
+              </Grid>
+              <ul className={s.ul}>
+                <li className={s.li}>
+                  <Grid marginBlock={2} className={s.filterOptions}>
+                    <Grid marginRight={1}>перекрытие</Grid>
+                    <Field name="overlapSelect">
+                      {(props: FieldProps) => {
+                        const selectOptions = [{ value: 'горизонтальное', label: 'горизонтальное' }];
+                        return (
+                          <SelectField
+                            className={s.optionInfo}
+                            selectNavigate
+                            selectOptions={selectOptions}
+                            {...props}
+                          >
+                            {selectOptions.map(({ label, value: link }) => (
+                              <MenuItem
+                                key={link}
+                                value={link}
+                                className='select-link'
+                              >
+                                {label}
+                              </MenuItem>
+                            ))
+                            }
+                          </SelectField>
+                        );
+                      }}
+                    </Field>
+                    <Field
+                      name="overlapField"
+                    >
+                      {(props: FieldProps) =>
+                        <UnderlineText
+                          width='100%'
+                          name='overlapField'
+                          className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} />}
+                    </Field>
+                  </Grid>
+                </li>
+                <li className={s.li}>
+                  <Grid marginBlock={2} className={s.filterOptions}>
+                    <Grid marginRight={1}>Тремы</Grid>
+                    <Field name="tremesSelect">
+                      {(props: FieldProps) => (
                         <SelectField
                           className={s.optionInfo}
                           selectNavigate
-                          selectOptions={selectOptions}
+                          selectOptions={selectOptionsYesOrNot}
                           {...props}
                         >
-                          {selectOptions.map(({ label, value: link }) => (
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
                             <MenuItem
                               key={link}
                               value={link}
@@ -2515,134 +2790,15 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                           ))
                           }
                         </SelectField>
-                      );
-                    }}
-                  </Field>
-                </Grid>
-                <Field
-                  name="test14"
-                >
-                  {(props: FieldProps) =>
-                    <UnderlineText
-                      width='100%'
-                      name='test14'
-                      className={classNames(s.defaultInput, s.title)}
-                      onChange={props.field.onChange} />}
-                </Field>
-              </Grid>
-              <ul className={s.ul}>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    <Grid marginRight={1}>перекрытие</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'горизонтальное' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                      )}
                     </Field>
                     <Field
-                      name="test14"
+                      name="tremesField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
-                          className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} />}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    <Grid marginRight={1}>перекрытие</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                    <Field
-                      name="test14"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='test14'
-                          className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} />}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    <Grid marginRight={1}>Тремы</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                    <Field
-                      name="test14"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='test14'
+                          name='tremesField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2651,37 +2807,34 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>Диастемы</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }, { value: 1, label: 'да' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="diastemasSelect">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                     <Field
-                      name="test14"
+                      name="diastemasField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='diastemasField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2691,12 +2844,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>Аномалии отдельных зубов</Grid>
                     <Field
-                      name="test14"
+                      name="anomaliesIndividualTeeth"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='anomaliesIndividualTeeth'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2705,9 +2858,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>Стираемость зубов</Grid>
-                    <Field name="test16">
+                    <Field name="toothWearSelect">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'не имеется' }];
+                        const selectOptions = [{ value: 'не имеется', label: 'не имеется' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -2730,12 +2883,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       }}
                     </Field>
                     <Field
-                      name="test14"
+                      name="toothWearField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='toothWearField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2744,37 +2897,34 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>зубо-альвеолярное выдвижение </Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="dentoalveolarAdvancementSelect">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                     <Field
-                      name="test14"
+                      name="dentoalveolarAdvancementField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='dentoalveolarAdvancementField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2783,37 +2933,34 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>симптом Попова-Годона</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="signPopovGodonSelect">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                     <Field
-                      name="test14"
+                      name="signPopovGodonField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='signPopovGodonField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2823,12 +2970,12 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>Перекрытие нижних резцов верхними (мм)</Grid>
                     <Field
-                      name="test14"
+                      name="overlappingLowerIncisorsUpper"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='overlappingLowerIncisorsUpper'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2837,37 +2984,34 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>дефект речи</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нет' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="speechDefectSelect">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={selectOptionsYesOrNot}
+                          {...props}
+                        >
+                          {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                     <Field
-                      name="test14"
+                      name="speechDefectField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='speechDefectField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2884,85 +3028,76 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>открывание челюсти </Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'в полном объеме' }, { value: 1, label: 'затруднено' }, { value: 2, label: 'не открывается' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="jawOpeningSelect1">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={jawOpeningSelect1Options1}
+                          {...props}
+                        >
+                          {jawOpeningSelect1Options1.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'безболезненное' }, { value: 1, label: 'болезненное' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="jawOpeningSelect2">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={jawOpeningSelect1Options2}
+                          {...props}
+                        >
+                          {jawOpeningSelect1Options2.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'плавное' }, { value: 1, label: 'без смещения' }, { value: 2, label: 'со смещением нижней челюсти вправо' }, { value: 3, label: 'со смещением нижней челюсти влево' }, { value: 4, label: 'С -образное' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
+                    <Field name="jawOpeningSelect3">
+                      {(props: FieldProps) => (
+                        <SelectField
+                          className={s.optionInfo}
+                          selectNavigate
+                          selectOptions={jawOpeningSelect1Options3}
+                          {...props}
+                        >
+                          {jawOpeningSelect1Options3.map(({ label, value: link }) => (
+                            <MenuItem
+                              key={link}
+                              value={link}
+                              className='select-link'
+                            >
+                              {label}
+                            </MenuItem>
+                          ))
+                          }
+                        </SelectField>
+                      )}
                     </Field>
                     <Field
-                      name="test14"
+                      name="jawOpeningField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='jawOpeningField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
                     </Field>
@@ -2971,9 +3106,9 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <li className={s.li}>
                   <Grid marginBlock={2} className={s.filterOptions}>
                     <Grid marginRight={1}>движение суставных головок при пальпации</Grid>
-                    <Field name="test16">
+                    <Field name="movementArticularHeadsSelect">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'симметричное' }];
+                        const selectOptions = [{ value: 'симметричное', label: 'симметричное' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -2996,43 +3131,14 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       }}
                     </Field>
                     <Field
-                      name="test14"
+                      name="movementArticularHeadsField"
                     >
                       {(props: FieldProps) =>
                         <UnderlineText
                           width='100%'
-                          name='test14'
+                          name='movementArticularHeadsField'
                           className={classNames(s.defaultInput, s.title)}
                           onChange={props.field.onChange} />}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    <Grid marginRight={1}>тонус жевательных мышц</Grid>
-                    <Field name="test16">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нормальный' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
                     </Field>
                   </Grid>
                 </li>
@@ -3043,236 +3149,252 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       <Grid container  >
                         <Grid item xs={3} >
                           <Field
-                            name="complaint"
+                            name="additionallyClick"
                           >
                             {({ field, form }: FieldProps) =>
                               <Checkbox
                                 checked={field.value}
-                                onChange={() => form.setFieldValue('complaint', !field.value)}
+                                onChange={() => form.setFieldValue('additionallyClick', !field.value)}
                               >
                                 Щелчок
                               </Checkbox>
                             }
                           </Field>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                          {values.additionallyClick && (
+                            <>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyClickRight"
                                 >
-                                  справа
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyClickRight', !field.value)}
+                                    >
+                                      справа
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyClickLeft"
                                 >
-                                  слева
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyClickLeft', !field.value)}
+                                    >
+                                      слева
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyClickUponOpening"
                                 >
-                                  при открывании
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyClickUponOpening', !field.value)}
+                                    >
+                                      при открывании
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyClickWhenClosing"
                                 >
-                                  при закрывании
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyClickWhenClosing', !field.value)}
+                                    >
+                                      при закрывании
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                            </>
+                          )}
                         </Grid>
                         <Grid item xs={3}>
                           <Field
-                            name="2"
+                            name="additionallyCrunch"
                           >
                             {({ field, form }: FieldProps) =>
                               <Checkbox
                                 checked={field.value}
-                                onChange={() => form.setFieldValue('2', !field.value)}
+                                onChange={() => form.setFieldValue('additionallyCrunch', !field.value)}
                               >
                                 Хруст
                               </Checkbox>
                             }
                           </Field>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                          {values.additionallyCrunch && (
+                            <>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyCrunchRight"
                                 >
-                                  справа
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyCrunchRight', !field.value)}
+                                    >
+                                      справа
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyCrunchLeft"
                                 >
-                                  слева
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyCrunchLeft', !field.value)}
+                                    >
+                                      слева
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyCrunchUponOpening"
                                 >
-                                  при открывании
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyCrunchUponOpening', !field.value)}
+                                    >
+                                      при открывании
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                              <Grid marginLeft={3}>
+                                <Field
+                                  name="additionallyCrunchWhenClosing"
                                 >
-                                  при закрывании
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
+                                  {({ field, form }: FieldProps) =>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onChange={() => form.setFieldValue('additionallyCrunchWhenClosing', !field.value)}
+                                    >
+                                      при закрывании
+                                    </Checkbox>
+                                  }
+                                </Field>
+                              </Grid>
+                            </>
+                          )}
                         </Grid>
                         <Grid item xs={3}>
                           <Field
-                            name="3"
+                            name="additionallyCrepitusJoint"
                           >
                             {({ field, form }: FieldProps) =>
                               <Checkbox
                                 checked={field.value}
-                                onChange={() => form.setFieldValue('3', !field.value)}
+                                onChange={() => form.setFieldValue('additionallyCrepitusJoint', !field.value)}
                               >
                                 Крепитация в суставе
                               </Checkbox>
                             }
                           </Field>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
-                                >
-                                  справа
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
-                                >
-                                  слева
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
-                                >
-                                  при открывании
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
-                          <Grid marginLeft={3}>
-                            <Field
-                              name="4"
-                            >
-                              {({ field, form }: FieldProps) =>
-                                <Checkbox
-                                  checked={field.value}
-                                  onChange={() => form.setFieldValue('4', !field.value)}
-                                >
-                                  при закрывании
-                                </Checkbox>
-                              }
-                            </Field>
-                          </Grid>
+                          {
+                            values.additionallyCrepitusJoint && (
+                              <>
+                                <Grid marginLeft={3}>
+                                  <Field
+                                    name="additionallyCrepitusJointRight"
+                                  >
+                                    {({ field, form }: FieldProps) =>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onChange={() => form.setFieldValue('additionallyCrepitusJointRight', !field.value)}
+                                      >
+                                        справа
+                                      </Checkbox>
+                                    }
+                                  </Field>
+                                </Grid>
+                                <Grid marginLeft={3}>
+                                  <Field
+                                    name="additionallyCrepitusJointLeft"
+                                  >
+                                    {({ field, form }: FieldProps) =>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onChange={() => form.setFieldValue('additionallyCrepitusJointLeft', !field.value)}
+                                      >
+                                        слева
+                                      </Checkbox>
+                                    }
+                                  </Field>
+                                </Grid>
+                                <Grid marginLeft={3}>
+                                  <Field
+                                    name="additionallyCrepitusJointUponOpening"
+                                  >
+                                    {({ field, form }: FieldProps) =>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onChange={() => form.setFieldValue('additionallyCrepitusJointUponOpening', !field.value)}
+                                      >
+                                        при открывании
+                                      </Checkbox>
+                                    }
+                                  </Field>
+                                </Grid>
+                                <Grid marginLeft={3}>
+                                  <Field
+                                    name="additionallyCrepitusJointWhenClosing"
+                                  >
+                                    {({ field, form }: FieldProps) =>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onChange={() => form.setFieldValue('additionallyCrepitusJointWhenClosing', !field.value)}
+                                      >
+                                        при закрывании
+                                      </Checkbox>
+                                    }
+                                  </Field>
+                                </Grid>
+                              </>
+                            )
+                          }
                         </Grid>
                       </Grid>
                     </FormGroup>
                   </Grid>
                 </li>
                 <li>
-                  <Field
-                    name="test17"
-                  >
-                    {(props: FieldProps) =>
-                      <UnderlineText
-                        width='100%'
-                        name='test17'
-                        className={classNames(s.defaultInput, s.title)}
-                        onChange={props.field.onChange} />}
-                  </Field>
+                  <Grid marginBlock={3}>
+                    <Field
+                      name="masticatoryMuscleToneField"
+                    >
+                      {(props: FieldProps) =>
+                        <UnderlineText
+                          width='100%'
+                          name='masticatoryMuscleToneField'
+                          className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} />}
+                    </Field>
+                  </Grid>
                 </li>
                 <li className={s.li}>
                   <Grid marginBlock={3} className={s.filterOptions}>
                     <Grid marginRight={1}>тонус жевательных мышц</Grid>
-                    <Field name="test16">
+                    <Field name="masticatoryMuscleToneSelect">
                       {(props: FieldProps) => {
-                        const selectOptions = [{ value: -1, label: 'нормальный' }];
+                        const selectOptions = [{ value: 'нормальный', label: 'нормальный' }];
                         return (
                           <SelectField
                             className={s.optionInfo}
@@ -3296,17 +3418,29 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     </Field>
                   </Grid>
                 </li>
+                <li>
+                  <Field
+                    name="examinationField"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='examinationField'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                </li>
               </ul>
             </div>
 
-            <div className={classNames(s.title)}>21. Данные рентгенологического и лабораторного исследования:
+            <div className={classNames(s.title, s.filterOptions)}>21. Данные рентгенологического и лабораторного исследования:
               <Field
-                name="test21"
+                name="laboratoryData"
               >
                 {(props: FieldProps) =>
                   <UnderlineText
                     width='100%'
-                    name='test7'
+                    name='laboratoryData'
                     className={classNames(s.defaultInput, s.title)}
                     onChange={props.field.onChange} />}
               </Field>
@@ -3340,6 +3474,16 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
           >
             Сохранить
           </Button>
+
+          <Modal
+            isOpen={isOpen}
+            onSuccess={() => setOpen(false)}
+            onClose={() => setOpen(false)}
+            type='info' >
+            <div>
+              {false ? <>Сохранить информацию? <br />Поменять ее сможет только<br />Владелец клиники</> : 'Информация сохранена!'}
+            </div>
+          </Modal>
         </Form>
       )
       }

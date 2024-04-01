@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
@@ -9,12 +9,25 @@ import DocumentICO from './svg/document-ico.svg';
 
 type Params = {
   patientId: string
+  id: string
 };
 
-export function MedInfo() {
-  const { patientId } = useParams<Params>();
+type Props = {
+  backName: (name: string | JSX.Element) => void
+};
+
+export function MedInfo({ backName }: Props) {
+  const { patientId, id } = useParams<Params>();
   const navigate = useNavigate();
   const [selectCard, setSelectCard] = useState<TCardEvent | null>(null);
+
+  useEffect(() => {
+    if (patientId && !id) {
+      setSelectCard(null);
+      backName('Мед. карта');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   if (!patientId) {
     return <Navigate to={PATH_PAGE.patients.root} />;
@@ -22,14 +35,18 @@ export function MedInfo() {
 
   const cards = cardsNavigate(patientId);
 
+  const onSelectCard = (card: TCardEvent) => {
+    backName(card.title);
+    setSelectCard(card);
+  };
+
   return (
     <div className={s.root}>
       {
         !selectCard
           ? (
             <CardsNavigate cards={cards} className={s.cardsNavigate}
-              onClick={(card) => setSelectCard(card)
-              } />
+              onClick={onSelectCard} />
           )
           : <div className={s.emptyBlock}>
             <DocumentICO />
