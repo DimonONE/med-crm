@@ -27,11 +27,15 @@
   }
 }
 
+.cardBlock,
+.submitButtons {
+  max-width: 1200px;
+}
+
 .cardBlock {
   display: grid;
   gap: 20px;
   overflow: hidden;
-  max-width: 1200px;
   margin: 15px auto 0;
   padding: 20px;
   border-radius: 14px;
@@ -144,4 +148,30 @@
 
 .checkbox {
   width: max-content;
+}
+
+.submitButtons {
+  display: flex;
+  justify-content: end;
+  margin: 20px auto;
+}
+
+.submit {
+  width: max-content;
+  margin-right: 10px;
+  margin-left: 20px;
+  padding: 13px 26px;
+  border-radius: 39px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.submitDownload {
+  color: #FFFFFF;
+  background: #578695 ;
+}
+
+.submitPrint {
+  color: #FFFFFF;
+  background: #029B64 ;
 }

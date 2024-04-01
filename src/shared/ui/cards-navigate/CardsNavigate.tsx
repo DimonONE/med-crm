@@ -33,7 +33,8 @@ export function CardsNavigate(props: TCardsNavigate) {
     <div className={classNames(s.root, className)}>
       {
         cards.map(({ id, title, ico, link, notification }) => (
-          <NavLink key={id} to={link} className={s.card} onClick={() => handleClick({ id, link, title })}>
+          <NavLink key={id} to={link} className={classNames(s.card, { [s.disabled]: link === '#' })}
+            onClick={() => link !== '#' ? handleClick({ id, link, title }) : undefined}>
             <div className={s.icon}>
               {ico}
             </div>

@@ -37,6 +37,10 @@
     box-shadow: 0px 2.8895px 11.55801px 0px rgba(0, 0, 0, 0.25);
     transition: box-shadow 0.7s;
   }
+
+  &.disabled {
+    opacity: 0.5;
+  }
 }
 
 .icon {

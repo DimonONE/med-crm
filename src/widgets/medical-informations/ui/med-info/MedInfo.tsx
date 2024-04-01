@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { usePatientId } from '~entities/patients';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import { CardsNavigate, TCardEvent } from '~shared/ui/cards-navigate';
@@ -19,6 +20,8 @@ type Props = {
 export function MedInfo({ backName }: Props) {
   const { patientId, id } = useParams<Params>();
   const navigate = useNavigate();
+  const { data: patientInfo } = usePatientId(patientId as string);
+
   const [selectCard, setSelectCard] = useState<TCardEvent | null>(null);
 
   useEffect(() => {
@@ -31,6 +34,10 @@ export function MedInfo({ backName }: Props) {
 
   if (!patientId) {
     return <Navigate to={PATH_PAGE.patients.root} />;
+  }
+
+  if (patientInfo?.medInfo) {
+    return <Navigate to={PATH_PAGE.medInfo.edit(patientId, id || 'default')} />;
   }
 
   const cards = cardsNavigate(patientId);

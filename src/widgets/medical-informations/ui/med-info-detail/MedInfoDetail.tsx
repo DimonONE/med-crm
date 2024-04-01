@@ -6,6 +6,7 @@ import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
 import { useCreateUpdateMedInfo, usePatientId } from '~entities/patients';
+import { useRoleUser } from '~entities/session';
 import { API_URL } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { Button } from '~shared/ui/button';
@@ -15,6 +16,7 @@ import { SelectField } from '~shared/ui/select-field';
 import { UnderlineText } from '~shared/ui/underline-text';
 import { biteConditionOptions, jawOpeningSelect1Options1, jawOpeningSelect1Options2, jawOpeningSelect1Options3, selectOptionsYesOrNot } from './lib/utils';
 import s from './styles.module.scss';
+
 
 type MedInfoDetailProps = {
   id: string
@@ -166,6 +168,7 @@ type InitialValues = {
 export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
   const { data: patientInfo, isLoading } = usePatientId(patientId);
   const { mutate } = useCreateUpdateMedInfo();
+  const { role } = useRoleUser();
   const [isOpen, setOpen] = useState(false);
 
   const handleSubmit = async (
@@ -732,17 +735,22 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
     return null;
   }
 
+  const medInfo = JSON.stringify(patientInfo.medInfo);
+  const isUpdate = medInfo.length;
+
+  console.log('medInfo', medInfo);
+
   return (
     <Formik
       initialValues={{
         startDay: '',
         startMonth: '',
         startYear: '20',
-        fullName: 'Пупкин Василий Васильевич',
-        sex: '',
-        address: '',
-        phone: '',
-        age: '',
+        fullName: patientInfo.fullName,
+        sex: patientInfo.sex,
+        address: patientInfo.address,
+        phone: patientInfo.phone,
+        age: patientInfo.dateOfBirth,
         specialization: '',
         diagnosis: '',
         diagnosisICD: '',
@@ -3467,13 +3475,44 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             <div className={classNames(s.title)}>25. Установеленные импланты:
             </div>
           </div>
-          <Button
-            className={classNames(s.submit, 'form-submit')}
-            type="submit"
-            color="primary"
-          >
-            Сохранить
-          </Button>
+          <div className={s.submitButtons}>
+            {
+              role === 'medChief' && (
+                <Button
+                  className={s.submit}
+                  type="submit"
+                  color="secondary"
+                >
+                  Редактировать
+                </Button>
+              )
+            }
+            <Button
+              className={classNames(s.submit, s.submitDownload)}
+              type="submit"
+              color="primary"
+            >
+              Скачать PDF
+            </Button>
+            <Button
+              className={classNames(s.submit, s.submitPrint)}
+              type="submit"
+              color="primary"
+            >
+              Печатать
+            </Button>
+            {
+              !isUpdate && (
+                <Button
+                  className={s.submit}
+                  type="submit"
+                  color="primary"
+                >
+                  Сохранить
+                </Button>
+              )
+            }
+          </div>
 
           <Modal
             isOpen={isOpen}
@@ -3481,7 +3520,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             onClose={() => setOpen(false)}
             type='info' >
             <div>
-              {false ? <>Сохранить информацию? <br />Поменять ее сможет только<br />Владелец клиники</> : 'Информация сохранена!'}
+              {isUpdate ? <>Сохранить информацию? <br />Поменять ее сможет только<br />Владелец клиники</> : 'Информация сохранена!'}
             </div>
           </Modal>
         </Form>
