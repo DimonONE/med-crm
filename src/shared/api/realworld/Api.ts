@@ -40,7 +40,7 @@ export interface PatientEntityDto {
   email: string;
   phone: string;
   image: string;
-  medInfo: object;
+  medInfo: string;
   medInfoPath: string;
   user: UserEntityDto;
   /** @format date-time */
@@ -1022,16 +1022,16 @@ export class Api<
      * @secure
      */
     usersControllerGetWorkList: (
-      query: {
-        doctorName: string;
+      query?: {
+        doctorName?: string;
         /**
          * Sort by ASC or DESC
          * @default "ASC"
          */
-        sortBy: 'ASC' | 'DESC' | null;
-        fieldBySort: string;
+        sortBy?: 'ASC' | 'DESC' | null;
+        fieldBySort?: string;
         /** @format date-time */
-        date: string;
+        date?: string;
       },
       params: RequestParams = {},
     ) =>

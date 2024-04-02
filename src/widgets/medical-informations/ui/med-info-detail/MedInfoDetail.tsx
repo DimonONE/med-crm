@@ -23,6 +23,12 @@ type MedInfoDetailProps = {
   patientId: string
 };
 
+type MedInfoData = {
+  name: string
+  type: 'string' | 'array' | 'image' | 'checkboks' | 'boks'
+  value: string | boolean
+};
+
 type InitialValues = {
   startDay: string
   startMonth: string
@@ -165,6 +171,51 @@ type InitialValues = {
   laboratoryData: string
 };
 
+
+function dataInfoRecurs(dataInfo: MedInfoData) {
+  const dataArray = JSON.parse(dataInfo.value as string);
+  console.log('dataArray.type', dataArray.type);
+  console.log('dataArray.value', dataInfo.value);
+
+
+
+  return (
+    <ul className={s.ul}> {dataArray.map((list: MedInfoData) => {
+      if (list.type === 'array') {
+        return <li className={s.li}>
+          <Grid marginBlock={2} className={s.filterOptions}>
+            {list.name}
+          </Grid>
+          {dataInfoRecurs(list)}
+        </li>;
+      }
+
+      return (
+        <li className={s.li}>
+          <Grid marginBlock={2} className={s.filterOptions}>
+            {list.name} {list.value}
+          </Grid>
+        </li>
+      );
+    })}
+    </ul>
+  );
+}
+
+function getDataInfo(dataInfo: MedInfoData) {
+  switch (dataInfo.type) {
+    case 'string':
+      return dataInfo.value;
+
+    case 'array':
+      return dataInfoRecurs(dataInfo);
+
+    default:
+      return '';
+  }
+}
+
+
 export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
   const { data: patientInfo, isLoading } = usePatientId(patientId);
   const { mutate } = useCreateUpdateMedInfo();
@@ -249,7 +300,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
           type: 'string',
           value: `${values.skinSelect} ${values.skinText}`,
         }, {
-          name: 'Подчелюстные лимфатические узлы',
+          name: 'Подчелюстные лимфатические узлы:',
           type: 'array',
           value: JSON.stringify([{
             name: 'Ствойства',
@@ -734,11 +785,11 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
   if (!patientInfo || isLoading) {
     return null;
   }
-
-  const medInfo = JSON.stringify(patientInfo.medInfo);
+  const medInfo: MedInfoData[] = JSON.parse(patientInfo.medInfo);
   const isUpdate = medInfo.length;
 
-  console.log('medInfo', medInfo);
+
+  // console.log('medInfo', getDataInfo(medInfo[12]));
 
   return (
     <Formik
@@ -889,413 +940,448 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             <span className={s.titleName}> Медицинская информация больного</span>
 
             <div className={classNames(s.title)}>
-              № <span className={s.redHighlight}>{patientId}</span> от
-              «
-              <Field
-                name="startDay"
-              >
-                {(props: FieldProps) =>
-                  <InputMask name="startDay" style={{ width: 20, textAlign: 'center' }} className={s.defaultInput}
-                    onChange={props.field.onChange} mask="99" placeholder='__' maskChar="_" />}
-              </Field>
-              »{' '}
-              <Field
-                name="startMonth"
-              >
-                {(props: FieldProps) =>
-                  <UnderlineText
-                    width='200px'
-                    name='startMonth'
-                    className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} />}
-              </Field>
-              <Field
-                name="startYear"
-              >
-                {(props: FieldProps) =>
-                  <InputMask name="startYear" className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} mask="20\ 99 г." placeholder='20__ г.' maskChar="_" />
-                }
-              </Field>
+              {
+                isUpdate ? medInfo[0].value : (
+                  <>
+                    № <span className={s.redHighlight}>{patientId}</span> от
+                    «
+                    <Field
+                      name="startDay"
+                    >
+                      {(props: FieldProps) =>
+                        <InputMask name="startDay" style={{ width: 20, textAlign: 'center' }} className={s.defaultInput}
+                          onChange={props.field.onChange} mask="99" placeholder='__' maskChar="_" />}
+                    </Field>
+                    »{' '}
+                    <Field
+                      name="startMonth"
+                    >
+                      {(props: FieldProps) =>
+                        <UnderlineText
+                          width='200px'
+                          name='startMonth'
+                          className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} />}
+                    </Field>
+                    <Field
+                      name="startYear"
+                    >
+                      {(props: FieldProps) =>
+                        <InputMask name="startYear" className={classNames(s.defaultInput, s.title)}
+                          onChange={props.field.onChange} mask="20\ 99 г." placeholder='20__ г.' maskChar="_" />
+                      }
+                    </Field>
+                  </>
+                )
+              }
             </div>
             <div className={classNames(s.title)}>
               1. Фамилия, имя, отчество:
-              <span className={classNames(s.redHighlight, s.italic)}>{patientInfo.fullName}</span>
+              <span className={classNames(s.redHighlight, s.italic)}> {patientInfo.fullName}</span>
             </div>
             <div className={classNames(s.title)}>2. <span className={s.redHighlight}> Мужчина</span> </div>
             <div className={classNames(s.title)}>3. Адрес:   <span className={classNames(s.redHighlight, s.italic)}> {patientInfo.address}</span> </div>
             <div className={classNames(s.title)}>4. Телефон: <span className={classNames(s.redHighlight, s.italic)}> {patientInfo.phone}</span> </div>
             <div className={classNames(s.title)}>5. Возраст: <span className={classNames(s.redHighlight, s.italic)}> {dayjs().diff(dayjs(patientInfo.dateOfBirth), 'year')}</span> </div>
             <div className={classNames(s.title, s.filterOptions)}>6. Профессия:
-              <Field
-                name="specialization"
-              >
-                {(props: FieldProps) =>
-                  <UnderlineText
-                    width='100%'
-                    name='specialization'
-                    className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} />}
-              </Field>
+              {
+                isUpdate ? medInfo[6].value : (
+                  <Field
+                    name="specialization"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='specialization'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                )
+              }
             </div>
             <div className={classNames(s.title, s.filterOptions)}>7. Диагноз:
-              <Field
-                name="diagnosis"
-              >
-                {(props: FieldProps) =>
-                  <UnderlineText
-                    width='100%'
-                    name='diagnosis'
-                    className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} />}
-              </Field>
+              {
+                isUpdate ? medInfo[7].value : (
+                  <Field
+                    name="diagnosis"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='diagnosis'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                )
+              }
             </div>
             <div className={classNames(s.title, s.filterOptions)}>8. Диагноз по МКБ -10:
-              <Field
-                name="diagnosisICD"
-              >
-                {(props: FieldProps) =>
-                  <UnderlineText
-                    width='100%'
-                    name='diagnosisICD'
-                    className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} />}
-              </Field>
+              {
+                isUpdate ? medInfo[8].value : (
+                  <Field
+                    name="diagnosisICD"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='diagnosisICD'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                )
+              }
             </div>
             <div className={classNames(s.title, s.filterOptions)}>9. Жалобы:
-              <Field
-                name="complaints"
-              >
-                {(props: FieldProps) =>
-                  <UnderlineText
-                    width='100%'
-                    name='complaints'
-                    className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} />}
-              </Field>
+              {
+                isUpdate ? medInfo[9].value : (
+                  <Field
+                    name="complaints"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='complaints'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                )
+              }
             </div>
             <div className={classNames(s.title, s.filterOptions)}>10. Перенесенные и сопутствующие заболевания:
-              <Field
-                name="previousConcomitantDiseases"
-              >
-                {(props: FieldProps) =>
-                  <UnderlineText
-                    width='100%'
-                    name='previousConcomitantDiseases'
-                    className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} />}
-              </Field>
+              {
+                isUpdate ? medInfo[10].value : (
+                  <Field
+                    name="previousConcomitantDiseases"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='previousConcomitantDiseases'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                )
+              }
             </div>
             <div className={classNames(s.title, s.filterOptions)}>11. Развитие настоящего заболевания:
-              <Field
-                name="developmentDisease"
-              >
-                {(props: FieldProps) =>
-                  <UnderlineText
-                    width='100%'
-                    name='developmentDisease'
-                    className={classNames(s.defaultInput, s.title)}
-                    onChange={props.field.onChange} />}
-              </Field>
+              {
+                isUpdate ? medInfo[11].value : (
+                  <Field
+                    name="developmentDisease"
+                  >
+                    {(props: FieldProps) =>
+                      <UnderlineText
+                        width='100%'
+                        name='developmentDisease'
+                        className={classNames(s.defaultInput, s.title)}
+                        onChange={props.field.onChange} />}
+                  </Field>
+                )
+              }
             </div>
             <Grid>
               <span className={classNames(s.title)}>12. Внешний осмотр:</span>
-              <ul className={s.ul}>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    Лицо
-                    <Field name="faceSelect">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'cимметричное', label: 'Симметричное' }];
+              {
+                isUpdate ? getDataInfo(medInfo[12]) : (
+                  <ul className={s.ul}>
+                    <li className={s.li}>
+                      <Grid marginBlock={2} className={s.filterOptions}>
+                        Лицо
+                        <Field name="faceSelect">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: 'cимметричное', label: 'Симметричное' }];
 
-                        return <SelectField
-                          className={s.optionInfo}
-                          selectNavigate
-                          selectOptions={selectOptions}
-                          {...props}
+                            return <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>;
+                          }}
+                        </Field>
+                        <Field
+                          name="faceText"
                         >
-                          {selectOptions.map(({ label, value: link }) => (
-                            <MenuItem
-                              key={link}
-                              value={link}
-                              className='select-link'
+                          {(props: FieldProps) =>
+                            <UnderlineText
+                              width='100%'
+                              name='faceText'
+                              className={classNames(s.defaultInput, s.title)}
+                              onChange={props.field.onChange} />}
+                        </Field>
+                      </Grid>
+                    </li>
+                    <li className={s.li}>
+                      <Grid marginBlock={2} className={s.filterOptions}>
+                        Кожные покровы:
+                        <Field name="skinSelect">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: 'чистые', label: 'Чистые' }];
+                            return <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              {...props}
                             >
-                              {label}
-                            </MenuItem>
-                          ))
-                          }
-                        </SelectField>;
-                      }}
-                    </Field>
-                    <Field
-                      name="faceText"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='faceText'
-                          className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} />}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    Кожные покровы:
-                    <Field name="skinSelect">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'чистые', label: 'Чистые' }];
-                        return <SelectField
-                          className={s.optionInfo}
-                          selectNavigate
-                          selectOptions={selectOptions}
-                          {...props}
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>;
+                          }}
+                        </Field>
+                        <Field
+                          name="skinText"
                         >
-                          {selectOptions.map(({ label, value: link }) => (
-                            <MenuItem
-                              key={link}
-                              value={link}
-                              className='select-link'
-                            >
-                              {label}
-                            </MenuItem>
-                          ))
-                          }
-                        </SelectField>;
-                      }}
-                    </Field>
-                    <Field
-                      name="skinText"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='skinText'
-                          className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} />}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} >
-                    Подчелюстные лимфатические узлы:
-                    <Grid marginBlock={2} className={s.filterOptions}>
-                      <span> Свойства </span>
-                      <Field name="propertiesOne">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: 'не увеличены', label: 'Не увеличены' }, { value: 'увеличены слева', label: 'Увеличены слева' }, { value: 'увеличены справа', label: 'Увеличены справа' }, { value: 'увеличены с обеих сторон', label: 'Увеличены с обеих сторон' }, { value: 'увеличены с одной стороны', label: 'Увеличены с одной стороны' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
+                          {(props: FieldProps) =>
+                            <UnderlineText
+                              width='100%'
+                              name='skinText'
+                              className={classNames(s.defaultInput, s.title)}
+                              onChange={props.field.onChange} />}
+                        </Field>
+                      </Grid>
+                    </li>
+                    <li className={s.li}>
+                      <Grid marginBlock={2} >
+                        Подчелюстные лимфатические узлы:
+                        <Grid marginBlock={2} className={s.filterOptions}>
+                          <span> Свойства </span>
+                          <Field name="propertiesOne">
+                            {(props: FieldProps) => {
+                              const selectOptions = [{ value: 'не увеличены', label: 'Не увеличены' }, { value: 'увеличены слева', label: 'Увеличены слева' }, { value: 'увеличены справа', label: 'Увеличены справа' }, { value: 'увеличены с обеих сторон', label: 'Увеличены с обеих сторон' }, { value: 'увеличены с одной стороны', label: 'Увеличены с одной стороны' }];
+                              return (
+                                <SelectField
+                                  className={s.optionInfo}
+                                  selectNavigate
+                                  selectOptions={selectOptions}
+                                  {...props}
                                 >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
-                      </Field>
-                      <Field name="propertiesTwo">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: 'безболезненные', label: 'Безболезненные' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
+                                  {selectOptions.map(({ label, value: link }) => (
+                                    <MenuItem
+                                      key={link}
+                                      value={link}
+                                      className='select-link'
+                                    >
+                                      {label}
+                                    </MenuItem>
+                                  ))
+                                  }
+                                </SelectField>
+                              );
+                            }}
+                          </Field>
+                          <Field name="propertiesTwo">
+                            {(props: FieldProps) => {
+                              const selectOptions = [{ value: 'безболезненные', label: 'Безболезненные' }];
+                              return (
+                                <SelectField
+                                  className={s.optionInfo}
+                                  selectNavigate
+                                  selectOptions={selectOptions}
+                                  {...props}
                                 >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
-                      </Field>
-                      <Field name="propertiesThree">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: 'не спаяны с окружающики тканями', label: 'Не спаяны с окружающики тканями' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
+                                  {selectOptions.map(({ label, value: link }) => (
+                                    <MenuItem
+                                      key={link}
+                                      value={link}
+                                      className='select-link'
+                                    >
+                                      {label}
+                                    </MenuItem>
+                                  ))
+                                  }
+                                </SelectField>
+                              );
+                            }}
+                          </Field>
+                          <Field name="propertiesThree">
+                            {(props: FieldProps) => {
+                              const selectOptions = [{ value: 'не спаяны с окружающики тканями', label: 'Не спаяны с окружающики тканями' }];
+                              return (
+                                <SelectField
+                                  className={s.optionInfo}
+                                  selectNavigate
+                                  selectOptions={selectOptions}
+                                  {...props}
                                 >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
-                      </Field>
-                      <Field
-                        name="propertiesInfo"
-                      >
-                        {(props: FieldProps) =>
-                          <UnderlineText
-                            width='100%'
-                            name='propertiesInfo'
-                            className={classNames(s.defaultInput, s.title)}
-                            onChange={props.field.onChange} />}
-                      </Field>
-                    </Grid>
-                    <Grid marginBlock={2} className={s.filterOptions}>
-                      <span> Консистенция </span>
-                      <Field name="consistency">
-                        {(props: FieldProps) => {
-                          const selectOptions = [{ value: 'однородная', label: 'Однородная' }];
-                          return (
-                            <SelectField
-                              className={s.optionInfo}
-                              selectNavigate
-                              selectOptions={selectOptions}
-                              {...props}
-                            >
-                              {selectOptions.map(({ label, value: link }) => (
-                                <MenuItem
-                                  key={link}
-                                  value={link}
-                                  className='select-link'
-                                >
-                                  {label}
-                                </MenuItem>
-                              ))
-                              }
-                            </SelectField>
-                          );
-                        }}
-                      </Field>
-                    </Grid>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    Подбородочные складки
-                    <Field name="chinFolds">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
+                                  {selectOptions.map(({ label, value: link }) => (
+                                    <MenuItem
+                                      key={link}
+                                      value={link}
+                                      className='select-link'
+                                    >
+                                      {label}
+                                    </MenuItem>
+                                  ))
+                                  }
+                                </SelectField>
+                              );
+                            }}
+                          </Field>
+                          <Field
+                            name="propertiesInfo"
                           >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
+                            {(props: FieldProps) =>
+                              <UnderlineText
+                                width='100%'
+                                name='propertiesInfo'
+                                className={classNames(s.defaultInput, s.title)}
+                                onChange={props.field.onChange} />}
+                          </Field>
+                        </Grid>
+                        <Grid marginBlock={2} className={s.filterOptions}>
+                          <span> Консистенция </span>
+                          <Field name="consistency">
+                            {(props: FieldProps) => {
+                              const selectOptions = [{ value: 'однородная', label: 'Однородная' }];
+                              return (
+                                <SelectField
+                                  className={s.optionInfo}
+                                  selectNavigate
+                                  selectOptions={selectOptions}
+                                  {...props}
+                                >
+                                  {selectOptions.map(({ label, value: link }) => (
+                                    <MenuItem
+                                      key={link}
+                                      value={link}
+                                      className='select-link'
+                                    >
+                                      {label}
+                                    </MenuItem>
+                                  ))
+                                  }
+                                </SelectField>
+                              );
+                            }}
+                          </Field>
+                        </Grid>
+                      </Grid>
+                    </li>
+                    <li className={s.li}>
+                      <Grid marginBlock={2} className={s.filterOptions}>
+                        Подбородочные складки
+                        <Field name="chinFolds">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
+                            return (
+                              <SelectField
+                                className={s.optionInfo}
+                                selectNavigate
+                                selectOptions={selectOptions}
+                                {...props}
                               >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    Носогубные складки
-                    <Field name="nasolabialFolds">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
+                                {selectOptions.map(({ label, value: link }) => (
+                                  <MenuItem
+                                    key={link}
+                                    value={link}
+                                    className='select-link'
+                                  >
+                                    {label}
+                                  </MenuItem>
+                                ))
+                                }
+                              </SelectField>
+                            );
+                          }}
+                        </Field>
+                      </Grid>
+                    </li>
+                    <li className={s.li}>
+                      <Grid marginBlock={2} className={s.filterOptions}>
+                        Носогубные складки
+                        <Field name="nasolabialFolds">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
+                            return (
+                              <SelectField
+                                className={s.optionInfo}
+                                selectNavigate
+                                selectOptions={selectOptions}
+                                {...props}
                               >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2} className={s.filterOptions}>
-                    Нижняя треть лица
-                    <Field name="lowerFace">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
+                                {selectOptions.map(({ label, value: link }) => (
+                                  <MenuItem
+                                    key={link}
+                                    value={link}
+                                    className='select-link'
+                                  >
+                                    {label}
+                                  </MenuItem>
+                                ))
+                                }
+                              </SelectField>
+                            );
+                          }}
+                        </Field>
+                      </Grid>
+                    </li>
+                    <li className={s.li}>
+                      <Grid marginBlock={2} className={s.filterOptions}>
+                        Нижняя треть лица
+                        <Field name="lowerFace">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: 'не выражены', label: 'Не выражены' }];
+                            return (
+                              <SelectField
+                                className={s.optionInfo}
+                                selectNavigate
+                                selectOptions={selectOptions}
+                                {...props}
                               >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                  </Grid>
-                </li>
-                <li className={s.li}>
-                  <Grid marginBlock={2}>
-                    <span>Комментарий</span>
-                    <Field
-                      name="externalInspectionComment"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='externalInspectionComment'
-                          className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} />}
-                    </Field>
-                  </Grid>
-                </li>
-              </ul>
+                                {selectOptions.map(({ label, value: link }) => (
+                                  <MenuItem
+                                    key={link}
+                                    value={link}
+                                    className='select-link'
+                                  >
+                                    {label}
+                                  </MenuItem>
+                                ))
+                                }
+                              </SelectField>
+                            );
+                          }}
+                        </Field>
+                      </Grid>
+                    </li>
+                    <li className={s.li}>
+                      <Grid marginBlock={2}>
+                        <span>Комментарий</span>
+                        <Field
+                          name="externalInspectionComment"
+                        >
+                          {(props: FieldProps) =>
+                            <UnderlineText
+                              width='100%'
+                              name='externalInspectionComment'
+                              className={classNames(s.defaultInput, s.title)}
+                              onChange={props.field.onChange} />}
+                        </Field>
+                      </Grid>
+                    </li>
+                  </ul>
+                )
+              }
+
             </Grid>
             <div className={s.title}>
               <Grid className={s.filterOptions}>

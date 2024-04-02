@@ -296,7 +296,7 @@
         "parameters": [
           {
             "name": "doctorName",
-            "required": true,
+            "required": false,
             "in": "query",
             "schema": {
               "type": "string"
@@ -304,7 +304,7 @@
           },
           {
             "name": "sortBy",
-            "required": true,
+            "required": false,
             "in": "query",
             "description": "Sort by ASC or DESC",
             "schema": {
@@ -316,7 +316,7 @@
           },
           {
             "name": "fieldBySort",
-            "required": true,
+            "required": false,
             "in": "query",
             "schema": {
               "type": "string"
@@ -324,7 +324,7 @@
           },
           {
             "name": "date",
-            "required": true,
+            "required": false,
             "in": "query",
             "schema": {
               "format": "date-time",
