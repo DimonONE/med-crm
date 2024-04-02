@@ -21,7 +21,7 @@ type Props = {
 };
 
 export function PatientRecordForm({ patientId }: Props) {
-  const [dateValue, setDateValue] = useState<Dayjs | null>(null);
+  const [dateValue, setDateValue] = useState<Dayjs>(dayjs());
 
   const { data: doctors } = useDoctors();
   const { mutate: createMutate } = useCreateRecord();
@@ -118,10 +118,9 @@ export function PatientRecordForm({ patientId }: Props) {
                     className={s.datePicker}
                     onChange={(date) => setDateValue(date)}
                   />
-                  <WorkDay daysWork={daysWork} handleChange={() => false} className={s.workDay} />
+                  <WorkDay className={s.workDay} defaultValue={dateValue} daysWork={daysWork} handleChange={(date) => setDateValue(date)} />
                 </div>
                 <WorkTime className={s.workTime} timesWork={timesWork} handleChange={() => false} />
-
                 <div className={s.times}>
                   <TimeSelect
                     title='Время от'

@@ -49,6 +49,53 @@ export interface PatientEntityDto {
   updatedAt: string;
 }
 
+export interface UserVisitsEntityDto {
+  id: number;
+  /** @format date-time */
+  startTime: string;
+  /** @format date-time */
+  endTime: string;
+  user: UserEntityDto;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface UserWorkTimeEntityDto {
+  id: number;
+  dayOfWeek:
+    | 'Monday'
+    | 'Tuesday'
+    | 'Wednesday'
+    | 'Thursday'
+    | 'Friday'
+    | 'Saturday'
+    | 'Sunday';
+  /** @format date-time */
+  startTime: string;
+  /** @format date-time */
+  endTime: string;
+  user: UserEntityDto;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface UserVacationEntityDto {
+  id: number;
+  /** @format date-time */
+  startTime: string;
+  /** @format date-time */
+  endTime: string;
+  user: UserEntityDto;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
 export interface TypeClinicEntityDto {
   id: number;
   name: string;
@@ -75,8 +122,10 @@ export interface ClinicEntityDto {
   save: object;
 }
 
-export interface IPriceDto {
+export interface CreateServicePriceDtoDto {
+  /** Price service */
   price: number;
+  /** Name Service */
   name: string;
 }
 
@@ -90,7 +139,7 @@ export interface RecordEntityDto {
   /** @format date-time */
   endTime: string;
   status: string;
-  servicePrices: IPriceDto[];
+  servicePrices: CreateServicePriceDtoDto[];
   notice?: string;
   user: UserEntityDto;
 }
@@ -118,6 +167,9 @@ export interface UserEntityDto {
   city: string;
   address: string;
   patients: PatientEntityDto[];
+  visits: UserVisitsEntityDto[];
+  workTimes: UserWorkTimeEntityDto[];
+  vacations: UserVacationEntityDto[];
   clinic: ClinicEntityDto;
   /** @format date-time */
   createdAt: string;
@@ -191,6 +243,52 @@ export interface UpdateUserDtoDto {
   role?: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
   /** Specialization for doctor */
   specialization?: string;
+}
+
+export interface VisitTimesDtoDto {
+  /** @format date-time */
+  startTime: string;
+  /** @format date-time */
+  endTime: string;
+}
+
+export interface CreateUpdateVisitTimeDtoDto {
+  /** User id */
+  userId: string;
+  /**
+   * need date
+   * @format date-time
+   */
+  date: string;
+  times: VisitTimesDtoDto[];
+}
+
+export interface TimesDtoDto {
+  /** @format date-time */
+  startTime: string;
+  /** @format date-time */
+  endTime: string;
+}
+
+export interface CreateUpdateWorkTimeDtoDto {
+  /** User id */
+  userId: string;
+  /** Day of week  */
+  dayOfWeek:
+    | 'Monday'
+    | 'Tuesday'
+    | 'Wednesday'
+    | 'Thursday'
+    | 'Friday'
+    | 'Saturday'
+    | 'Sunday';
+  times: TimesDtoDto[];
+}
+
+export interface ResponseVisitSchemaDto {
+  doctor: UserEntityDto;
+  totalWeek: number;
+  totalMonth: number;
 }
 
 export interface UpdateClinicUserDtoDto {
@@ -441,7 +539,7 @@ export interface CreateRecordDtoDto {
   /** Notice record */
   notice: string;
   /** Price list */
-  servicePrices: IPriceDto[] |object[];
+  servicePrices: CreateServicePriceDtoDto[];
 }
 
 export interface UpdateRecordDTODto {
@@ -462,14 +560,7 @@ export interface UpdateRecordDTODto {
   /** Notice record */
   notice: string;
   /** Price list */
-  servicePrices: IPriceDto[];
-}
-
-export interface CreateServicePriceDtoDto {
-  /** Price service */
-  price: number;
-  /** Name Service */
-  name: string;
+  servicePrices: CreateServicePriceDtoDto[];
 }
 
 export interface ServicePriceEntityDto {
@@ -875,6 +966,81 @@ export class Api<
         path: `/users/delete`,
         method: 'DELETE',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerCreateVisits
+     * @request POST:/users/create-visits
+     * @secure
+     */
+    usersControllerCreateVisits: (
+      data: CreateUpdateVisitTimeDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserVisitsEntityDto[], any>({
+        path: `/users/create-visits`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerCreateWorkTime
+     * @request POST:/users/create-work-time
+     * @secure
+     */
+    usersControllerCreateWorkTime: (
+      data: CreateUpdateWorkTimeDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserWorkTimeEntityDto[], any>({
+        path: `/users/create-work-time`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerGetWorkList
+     * @request GET:/users/work-list
+     * @secure
+     */
+    usersControllerGetWorkList: (
+      query: {
+        doctorName: string;
+        /**
+         * Sort by ASC or DESC
+         * @default "ASC"
+         */
+        sortBy: 'ASC' | 'DESC' | null;
+        fieldBySort: string;
+        /** @format date-time */
+        date: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ResponseVisitSchemaDto[], any>({
+        path: `/users/work-list`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
         ...params,
       }),
   };

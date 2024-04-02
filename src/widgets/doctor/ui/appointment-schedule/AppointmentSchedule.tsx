@@ -178,7 +178,7 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
           <DatePicker
             value={paidTo}
             className={s.datePicker}
-            onChange={(event) => event && setPaidTo(event as Dayjs)}
+            onChange={(event) => event && setPaidTo(event)}
           />
           <WorkDay defaultValue={paidTo} daysWork={daysWork} handleChange={(date) => setPaidTo(date)} className={s.workDay} />
           <button type='button' className={s.presentDay} onClick={() => setPaidTo(dayjs())}>Сегодня</button>

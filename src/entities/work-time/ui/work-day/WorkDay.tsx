@@ -25,7 +25,12 @@ export function WorkDay({ daysWork, defaultValue = dayjs(), handleChange, classN
     let skipped: number;
 
     if (skip === 'next') {
-      skipped = arrayLength < activeId + 1 ? 1 : activeId + 1;
+      const stepActiveId = activeId + 1;
+      if (arrayLength < stepActiveId) {
+        skipped = 1;
+      } else {
+        skipped = stepActiveId === 7 ? 0 : stepActiveId;
+      }
     } else {
       skipped = ((activeId - 1 < 1) && activeId - 1 !== -1) ? 0 : activeId - 1;
     }

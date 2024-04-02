@@ -216,6 +216,145 @@
         ]
       }
     },
+    "/users/create-visits": {
+      "post": {
+        "operationId": "UsersController_createVisits",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUpdateVisitTimeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserVisitsEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/create-work-time": {
+      "post": {
+        "operationId": "UsersController_createWorkTime",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUpdateWorkTimeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserWorkTimeEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/work-list": {
+      "get": {
+        "operationId": "UsersController_getWorkList",
+        "parameters": [
+          {
+            "name": "doctorName",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "description": "Sort by ASC or DESC",
+            "schema": {
+              "nullable": true,
+              "default": "ASC",
+              "enum": ["ASC", "DESC"],
+              "type": "string"
+            }
+          },
+          {
+            "name": "fieldBySort",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResponseVisitSchema"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/admin/create-clinic": {
       "post": {
         "operationId": "UsersAdminController_createClinic",
@@ -1257,7 +1396,10 @@
         "type": "object",
         "properties": {
           "files": {
-            "$ref": "#/components/schemas/FileSchema"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileSchema"
+            }
           },
           "id": {
             "type": "string"
@@ -1342,6 +1484,124 @@
           "image",
           "medInfo",
           "medInfoPath",
+          "user",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UserVisitsEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "startTime",
+          "endTime",
+          "user",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UserWorkTimeEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "dayOfWeek": {
+            "enum": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "type": "string"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "dayOfWeek",
+          "startTime",
+          "endTime",
+          "user",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UserVacationEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "startTime",
+          "endTime",
           "user",
           "createdAt",
           "updatedAt"
@@ -1434,14 +1694,16 @@
           "save"
         ]
       },
-      "IPrice": {
+      "CreateServicePriceDto": {
         "type": "object",
         "properties": {
           "price": {
-            "type": "number"
+            "type": "number",
+            "description": "Price service"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Name Service"
           }
         },
         "required": ["price", "name"]
@@ -1475,7 +1737,7 @@
           "servicePrices": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IPrice"
+              "$ref": "#/components/schemas/CreateServicePriceDto"
             }
           },
           "notice": {
@@ -1567,6 +1829,24 @@
               "$ref": "#/components/schemas/PatientEntity"
             }
           },
+          "visits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserVisitsEntity"
+            }
+          },
+          "workTimes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserWorkTimeEntity"
+            }
+          },
+          "vacations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserVacationEntity"
+            }
+          },
           "clinic": {
             "$ref": "#/components/schemas/ClinicEntity"
           },
@@ -1606,6 +1886,9 @@
           "city",
           "address",
           "patients",
+          "visits",
+          "workTimes",
+          "vacations",
           "clinic",
           "createdAt",
           "updatedAt",
@@ -1790,6 +2073,99 @@
             "description": "Specialization for doctor"
           }
         }
+      },
+      "VisitTimesDto": {
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["startTime", "endTime"]
+      },
+      "CreateUpdateVisitTimeDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User id"
+          },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "need date"
+          },
+          "times": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VisitTimesDto"
+            }
+          }
+        },
+        "required": ["userId", "date", "times"]
+      },
+      "TimesDto": {
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["startTime", "endTime"]
+      },
+      "CreateUpdateWorkTimeDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User id"
+          },
+          "dayOfWeek": {
+            "type": "string",
+            "enum": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "description": "Day of week "
+          },
+          "times": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimesDto"
+            }
+          }
+        },
+        "required": ["userId", "dayOfWeek", "times"]
+      },
+      "ResponseVisitSchema": {
+        "type": "object",
+        "properties": {
+          "doctor": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "totalWeek": {
+            "type": "number"
+          },
+          "totalMonth": {
+            "type": "number"
+          }
+        },
+        "required": ["doctor", "totalWeek", "totalMonth"]
       },
       "UpdateClinicUserDto": {
         "type": "object",
@@ -2353,7 +2729,7 @@
             "description": "Price list",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IPrice"
+              "$ref": "#/components/schemas/CreateServicePriceDto"
             }
           }
         },
@@ -2395,7 +2771,7 @@
             "description": "Price list",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/IPrice"
+              "$ref": "#/components/schemas/CreateServicePriceDto"
             }
           }
         },
@@ -2408,20 +2784,6 @@
           "servicePrices"
         ]
       },
-      "CreateServicePriceDto": {
-        "type": "object",
-        "properties": {
-          "price": {
-            "type": "number",
-            "description": "Price service"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name Service"
-          }
-        },
-        "required": ["price", "name"]
-      },
       "ServicePriceEntity": {
         "type": "object",
         "properties": {
@@ -2432,10 +2794,10 @@
             "type": "string"
           },
           "price": {
-            "type": "object"
+            "type": "number"
           },
           "clinicId": {
-            "type": "object"
+            "type": "number"
           }
         },
         "required": ["id", "name", "price", "clinicId"]
