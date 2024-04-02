@@ -41,7 +41,8 @@ export function WorkDay({ daysWork, defaultValue = dayjs(), handleChange, classN
 
   useEffect(() => {
     setActiveId(dayjs(defaultValue).day());
-  }, [defaultValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   return (

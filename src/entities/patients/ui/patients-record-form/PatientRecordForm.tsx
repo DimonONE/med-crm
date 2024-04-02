@@ -85,7 +85,7 @@ export function PatientRecordForm({ patientId }: Props) {
         startTime: '',
         endTime: '',
         notice: '',
-        servicePrices: [{}],
+        servicePrices: [{}] as Api.CreateServicePriceDtoDto[],
       }}
       validationSchema={object().shape({
         userId: string().required(),
