@@ -5,6 +5,7 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { object } from 'yup';
+import { sessionApi } from '~entities/session';
 import { attendanceApi } from '~entities/staffAttendance';
 import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import { Api } from '~shared/api/realworld';
@@ -22,6 +23,7 @@ type DayType = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Sat
 
 export function Schedule() {
   const { userId } = useParams<Params>();
+  const { data } = sessionApi.useGetUserId(userId!);
   const { mutate } = attendanceApi.useCreateWorkTime();
 
   const onSubmit = async (
@@ -62,7 +64,7 @@ export function Schedule() {
           {({ isSubmitting, setValues }) => (
             <Form >
               <div className={s.label}>Имя</div>
-              <div className={s.name}>Винницкий Богдан Станиславович</div>
+              <div className={s.name}>{data?.fullName}</div>
 
               <div className={s.label}>Выберите дни работы</div>
               <WorkDay
