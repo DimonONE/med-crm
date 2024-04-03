@@ -7,7 +7,7 @@ import { Api } from '~shared/api/realworld';
 import ArrowLeftICO from '../../svg/arrow-left-ico.svg';
 import ArrowRightICO from '../../svg/arrow-right-ico.svg';
 import closeICO from './img/close-ico.png';
-import { createIntervals, createNewInterval, findChangedTime, getTodayAtSpecificHour, mergeIntervals } from './utils/fn';
+import { createIntervals, createIntervalsParse, createNewInterval, findChangedTime, getTodayAtSpecificHour, mergeIntervals } from './utils/fn';
 import { Interval } from './utils/type';
 
 type IProps = {
@@ -15,14 +15,25 @@ type IProps = {
   endTime: Dayjs
   handleChange: (data: Api.TimesDtoDto[]) => void
   width?: string | number
+  defaultTimeValue?: Api.TimesDtoDto[]
 };
 
-export function TimeScale({ startTime, endTime, handleChange, width = 650 }: IProps) {
+export function TimeScale(props: IProps) {
+  const {
+    startTime,
+    endTime,
+    width = 650,
+    handleChange,
+    defaultTimeValue,
+  } = props;
+
   const defaultTime = dayjs().hour(9).minute(11).second(11).toDate();
+
   const [timelineInterval, setTimelineInterval] = useState<[Date, Date]>([
     startTime.toDate(),
     endTime.toDate(),
   ]);
+
   const [selectedIntervals, setSelectedIntervals] = useState<Date[]>([
     defaultTime,
   ]);
@@ -177,9 +188,23 @@ export function TimeScale({ startTime, endTime, handleChange, width = 650 }: IPr
       endTime: dayjs(time.end).toISOString(),
     }));
 
-    handleChange(timeIntervals);
+    const defaultDateTime = dayjs(defaultTime).format('YYYY-MM-DDTHH:mm:ss');
+    const intervalsDateTime = dayjs(timeIntervals[0].startTime).format('YYYY-MM-DDTHH:mm:ss');
+    const isDefault = timeIntervals.length === 1 && (defaultDateTime === intervalsDateTime);
+
+    if (!isDefault) {
+      handleChange(timeIntervals);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIntervals]);
+
+  useEffect(() => {
+    if (defaultTimeValue?.length) {
+      const timeValues = createIntervalsParse(defaultTimeValue);
+      setSelectedIntervals(timeValues);
+    }
+  }, [defaultTimeValue]);
 
   return (
     <Box

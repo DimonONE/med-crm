@@ -20,6 +20,13 @@ export const createIntervals = (intervals: Date[]): Interval[] =>
     return acc;
   }, []);
 
+export const createIntervalsParse = (intervals: TimesDtoDto[]): Date[] =>
+  intervals.flatMap((interval: TimesDtoDto) => {
+    const startDate = new Date(interval.startTime);
+    const endDate = new Date(interval.endTime);
+    return [startDate, endDate];
+  });
+
 export const mergeIntervals = (intervals: Interval[]): Interval[] =>
   intervals.reduce((acc: Interval[], currentInterval: Interval) => {
     const lastMergedInterval: Interval | undefined = acc[acc.length - 1];
