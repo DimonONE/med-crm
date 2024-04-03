@@ -11,6 +11,7 @@ import { daysWork } from '~entities/work-time';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
+import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import { Button } from '~shared/ui/button';
 import { WorkDayInfo } from '~shared/ui/work-day-info';
 import s from './styles.module.scss';
@@ -47,7 +48,7 @@ export const AttendanceTable = React.forwardRef<HTMLDivElement, AttendanceListPr
   const { personnelList, dataLength, hasNextPage, handleUpdateFilters, handleFetchNextPage, onScroll } = props;
   const { mutate } = attendanceApi.useCreateAttendanceVisits();
 
-  const sortHandler = (sortKey: 'timeWeek' | 'timeMonth') => {
+  const sortHandler = (sortKey: 'totalWeek' | 'totalMonth') => {
     setFieldSort(prev => prev === sortKey ? null : sortKey);
   };
 
@@ -71,10 +72,7 @@ export const AttendanceTable = React.forwardRef<HTMLDivElement, AttendanceListPr
 
   useEffect(() => {
     const filters = {
-      doctorName: '',
-      sortBy: undefined,
-      fieldBySort: '',
-      date: '',
+      fieldBySort: fieldSort !== null ? fieldSort : undefined,
     };
 
     if (fieldSort !== undefined) {
@@ -109,9 +107,19 @@ export const AttendanceTable = React.forwardRef<HTMLDivElement, AttendanceListPr
             <TableHead >
               <TableRow>
                 <TableCell width='100%' className='table-head-cell'>СЕГОДНЯШНИЙ ДЕНЬ</TableCell>
-                <TableCell style={{ minWidth: '220px' }} className='table-head-cell' >ТЕКУЩАЯ НЕДЕЛЯ</TableCell>
-                <TableCell style={{ minWidth: '120px' }} className='table-head-cell' onClick={() => sortHandler('timeWeek')}>Часы нед</TableCell>
-                <TableCell style={{ minWidth: '120px' }} className='table-head-cell'>Часы мес</TableCell>
+                <TableCell style={{ minWidth: '240px' }} className='table-head-cell' >ТЕКУЩАЯ НЕДЕЛЯ</TableCell>
+                <TableCell style={{ minWidth: '140px' }} className='table-head-cell' onClick={() => sortHandler('totalWeek')}>
+                  <span className={s.tableCellItem}>
+                    Часы нед
+                    <ArrowBottomICO />
+                  </span>
+                </TableCell>
+                <TableCell style={{ minWidth: '140px' }} className='table-head-cell' onClick={() => sortHandler('totalMonth')}>
+                  <span className={s.tableCellItem}>
+                    Часы мес
+                    <ArrowBottomICO />
+                  </span>
+                </TableCell>
                 <TableCell className='table-head-cell'>НАСТРОИТЬ</TableCell>
               </TableRow>
             </TableHead>

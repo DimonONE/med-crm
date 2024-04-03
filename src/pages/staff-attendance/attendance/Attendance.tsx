@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { personnelApi } from '~entities/personnel';
 import { attendanceApi } from '~entities/staffAttendance';
 import { Search } from '~shared/ui/search';
 import { handleScroll } from '~shared/utils';
@@ -17,22 +16,11 @@ export function Attendance() {
   const params = useParams<Params>();
   const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<Partial<attendanceApi.QueryListOfAttendance> | null>(null);
-  // const { data, fetchNextPage, updateQueryParameters, hasNextPage } = attendanceApi.useListOfAttendanceInfinity(
-  //   {
-  //     doctorName: '',
-  //     sortBy: 'ASC',
-  //     fieldBySort: '',
-  //     date: `${dayjs()}`,
-  //   },
-  // );
-  const { data, fetchNextPage, updateQueryParameters, hasNextPage } = personnelApi.useListOfPersonnelInfinity(
+  const { data, fetchNextPage, updateQueryParameters, hasNextPage } = attendanceApi.useListOfAttendanceInfinity(
     {
-      status: 'approval',
-      fieldSort: searchParams.get('fieldSort'),
-      role: searchParams.get('role'),
+      fieldBySort: searchParams.get('fieldBySort') as string,
     },
   );
-  console.log('searchParams', searchParams);
 
   const block1Ref = useRef<HTMLInputElement>(null);
   const block2Ref = useRef<HTMLInputElement>(null);
@@ -50,32 +38,30 @@ export function Attendance() {
   }, [params]);
 
   return (
-    <div >
-      <div className='d-flex'>
-        <SidebarItemList
-          ref={block1Ref}
-          items={sidebarItemList}
-          selectId={params?.clinicId}
-          onScroll={handleScroll(block1Ref, block2Ref)}
-        >
-          <Search isSearch filters='Ф.И.О.' handleChange={(value) => {
-            setFilters(prev => ({ ...prev, filter: value }));
+    <div className='d-flex'>
+      <SidebarItemList
+        ref={block1Ref}
+        items={sidebarItemList}
+        selectId={params?.clinicId}
+        onScroll={handleScroll(block1Ref, block2Ref)}
+      >
+        <Search isSearch filters='Ф.И.О.' handleChange={(value) => {
+          setFilters(prev => ({ ...prev, doctorName: value }));
+        }}
+        />
+      </SidebarItemList>
+      <div >
+        <AttendanceTable
+          ref={block2Ref}
+          personnelList={personnelList}
+          hasNextPage={hasNextPage}
+          handleFetchNextPage={fetchNextPage}
+          handleUpdateFilters={(filter) => {
+            setFilters(prev => ({ ...prev, ...filter }));
           }}
-          />
-        </SidebarItemList>
-        <div >
-          <AttendanceTable
-            ref={block2Ref}
-            personnelList={personnelList}
-            hasNextPage={hasNextPage}
-            handleFetchNextPage={fetchNextPage}
-            handleUpdateFilters={(filter) => {
-              setFilters(prev => ({ ...prev, ...filter }));
-            }}
-            dataLength={dataLength(data)}
-            onScroll={handleScroll(block2Ref, block1Ref)}
-          />
-        </div>
+          dataLength={dataLength(data)}
+          onScroll={handleScroll(block2Ref, block1Ref)}
+        />
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ export const PATH_PAGE = {
   patients: {
     root: '/patients',
     records: '/patients/records',
-    editRecord: (patientsId: string) =>  `/patients/record/${patientsId}`,
+    editRecord: (patientsId: string) => `/patients/record/${patientsId}`,
     details: (patientsId: string) => `/patients/records/${patientsId}`,
     add: '/patients/member',
     edit: (patientsId: string) => `/patients/member/${patientsId}`,
@@ -32,7 +32,7 @@ export const PATH_PAGE = {
     edit: (personalId: string) => `/personnel/member/${personalId}`,
   },
   attendance: {
-    root: 'attendance',
+    root: '/attendance',
     schedule: (id: string) => `/attendance/schedule/${id}`,
   },
   receptionTable: {

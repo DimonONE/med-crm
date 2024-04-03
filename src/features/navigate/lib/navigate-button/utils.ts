@@ -13,7 +13,8 @@ export const getNavigateList = (
 
     case checkUserRole('medChief'):
       return [
-        { value: PATH_PAGE.root, label: 'Персонал' },
+        { value: PATH_PAGE.personnel.root, label: 'Персонал' },
+        { value: PATH_PAGE.attendance.root, label: 'Посещаемость' },
         { value: PATH_PAGE.personnel.add, label: 'Добавить' },
       ];
 
