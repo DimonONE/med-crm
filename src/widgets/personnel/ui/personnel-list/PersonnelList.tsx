@@ -36,7 +36,7 @@ export const PersonnelList = React.forwardRef<HTMLDivElement, PersonnelListProps
   const [fieldSort, setFieldSort] = useState<string | null | undefined>(undefined);
   const [roleFilter, setRoleFilter] = useState<RoleFilter>({
     isOpen: false,
-    value: null,
+    value: 'doctor',
   });
   const { personnelList, dataLength, hasNextPage, handleUpdateFilters, handleFetchNextPage, onScroll } = props;
 
