@@ -24,6 +24,7 @@ export interface FileSchemaDto {
 
 export interface PatientEntityDto {
   files: FileSchemaDto[];
+  medInfo: string;
   id: string;
   fullName: string;
   passport: string;
@@ -40,7 +41,6 @@ export interface PatientEntityDto {
   email: string;
   phone: string;
   image: string;
-  medInfo: string;
   medInfoPath: string;
   user: UserEntityDto;
   /** @format date-time */
@@ -240,7 +240,7 @@ export interface UpdateUserDtoDto {
   /** Password of the user */
   password?: string;
   /** Role for user */
-  role?: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  role?: 'superAdmin' | 'medChief' | 'doctor' | 'reception';
   /** Specialization for doctor */
   specialization?: string;
 }
@@ -261,6 +261,21 @@ export interface CreateUpdateVisitTimeDtoDto {
    */
   date: string;
   times: VisitTimesDtoDto[];
+}
+
+export interface CreateVacationDtoDto {
+  /** User id */
+  userId: string;
+  /**
+   * need date
+   * @format date-time
+   */
+  startDate: string;
+  /**
+   * need date
+   * @format date-time
+   */
+  endDate: string;
 }
 
 export interface TimesDtoDto {
@@ -344,7 +359,7 @@ export interface CreatePersonalDtoDto {
   /** Patient country */
   country: string;
   /** Role for user */
-  role: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  role: 'superAdmin' | 'medChief' | 'doctor' | 'reception';
   /** Patient city */
   city: string;
   /** Patient address */
@@ -378,6 +393,7 @@ export interface CreatePersonalDtoDto {
    * @format binary
    */
   files?: File;
+  з: object;
 }
 
 export interface UpdatePersonalDtoDto {
@@ -390,7 +406,7 @@ export interface UpdatePersonalDtoDto {
   /** Personal country */
   country: string;
   /** Role for user */
-  role: 'superAdmin' | 'medChief' | 'doctor' | 'patient';
+  role: 'superAdmin' | 'medChief' | 'doctor' | 'reception';
   /** Personal city */
   city: string;
   /** Personal address */
@@ -852,11 +868,13 @@ export class Api<
      * @tags Users
      * @name UsersControllerGetAllDoctors
      * @request GET:/users/doctors
+     * @secure
      */
     usersControllerGetAllDoctors: (params: RequestParams = {}) =>
       this.request<UserResponseEntityDto[], any>({
         path: `/users/doctors`,
         method: 'GET',
+        secure: true,
         format: 'json',
         ...params,
       }),
@@ -923,7 +941,7 @@ export class Api<
      * @secure
      */
     usersControllerGetUserById: (id: string, params: RequestParams = {}) =>
-      this.request<object, any>({
+      this.request<UserResponseEntityDto, any>({
         path: `/users/user/${id}`,
         method: 'GET',
         secure: true,
@@ -983,6 +1001,28 @@ export class Api<
     ) =>
       this.request<UserVisitsEntityDto[], any>({
         path: `/users/create-visits`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerCreateVacations
+     * @request POST:/users/create-vacation
+     * @secure
+     */
+    usersControllerCreateVacations: (
+      data: CreateVacationDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserVacationEntityDto, any>({
+        path: `/users/create-vacation`,
         method: 'POST',
         body: data,
         secure: true,

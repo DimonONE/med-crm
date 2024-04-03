@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import classNames from 'classnames';
+import { Api } from '~shared/api/realworld';
 import CloseICO from '~shared/svg/close-gray-ico.svg';
 import { Button } from '~shared/ui/button';
 import { TimeScale, getTodayAtSpecificHour } from '~shared/ui/time-scale';
@@ -13,7 +14,7 @@ type Values = {
 
 type IProps = {
   timesWork: Values[]
-  handleChange: (values: Values) => void
+  handleChange?: (values: Api.TimesDtoDto[]) => void
   handleDelete?: (id: string | number) => void
   editTimes?: boolean
   className?: string
@@ -34,14 +35,14 @@ export function WorkTime(props: IProps) {
         setSelectedTimes(selectedTimes.filter(id => id !== values.id));
       }
     }
-    handleChange(values);
   };
 
   return (
     <div className={classNames(s.root, className)}>
       {
-        editTimes ? (
-          <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(21)} />
+        editTimes && handleChange ? (
+          <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(21)}
+            handleChange={handleChange} />
         ) : (
           <div className={s.times}>
             {timesWork.map(({ id, time, isActive }) => (
