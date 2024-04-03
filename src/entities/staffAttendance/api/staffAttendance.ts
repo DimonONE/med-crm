@@ -14,15 +14,16 @@ export const attendanceKeys = {
   listOfAttendance: () => [...attendanceKeys.root, 'list-of-attendance'],
   createWorkTime: () => [...attendanceKeys.root, 'create-work-time'],
   createVisits: () => [...attendanceKeys.root, 'create-visits'],
+  createVacation: () => [...attendanceKeys.root, 'create-vacation'],
 };
 
-const fetchListOfAttendancePage = async (query: QueryListOfAttendance) => {
+const fetchListOfAttendancePage = async (query: QueryListOfAttendance): Promise<Api.ResponseVisitSchemaDto[]> => {
   const response = await axiosInstance({ url: '/users/work-list', method: 'GET', params: query });
   return response.data;
 };
 
 export function useListOfAttendanceInfinity(initialQuery?: Partial<QueryListOfAttendance>) {
-  return useListOfInfinity({
+  return useListOfInfinity<QueryListOfAttendance, Api.ResponseVisitSchemaDto>({
     queryKey: attendanceKeys.listOfAttendance(),
     fetchPage: fetchListOfAttendancePage,
     initialQuery,
@@ -33,7 +34,7 @@ export function useListOfAttendanceInfinity(initialQuery?: Partial<QueryListOfAt
 export function useCreateWorkTime() {
   return useMutation({
     mutationKey: attendanceKeys.createWorkTime(),
-    mutationFn: async (data: Api.UpdatePersonalDtoDto) => {
+    mutationFn: async (data: Api.CreateUpdateWorkTimeDtoDto): Promise<Api.UserWorkTimeEntityDto[]> => {
       const response = await axiosInstance({
         url: '/users/create-work-time',
         method: 'POST',
@@ -44,10 +45,25 @@ export function useCreateWorkTime() {
   });
 }
 
+
+export function useCreateVacation() {
+  return useMutation({
+    mutationKey: attendanceKeys.createVacation(),
+    mutationFn: async (data: Api.CreateVacationDtoDto): Promise<Api.UserVacationEntityDto> => {
+      const response = await axiosInstance({
+        url: '/users/create-vacation',
+        method: 'POST',
+        data,
+      });
+      return response.data;
+    },
+  });
+}
+
 export function useCreateAttendanceVisits() {
   return useMutation({
-    mutationKey: attendanceKeys.createWorkTime(),
-    mutationFn: async (data: Api.UpdatePersonalDtoDto) => {
+    mutationKey: attendanceKeys.createVisits(),
+    mutationFn: async (data: Api.CreateUpdateVisitTimeDtoDto): Promise<Api.UserVisitsEntityDto[]> => {
       const response = await axiosInstance({
         url: '/users/create-visits',
         method: 'POST',

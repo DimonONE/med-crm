@@ -140,7 +140,7 @@ export function Router() {
               element: <AttendancePage />,
               index: true,
             },
-            { path: 'schedule/:id', element: <AttendanceSchedulePage /> },
+            { path: 'schedule/:userId', element: <AttendanceSchedulePage /> },
           ],
         },
         {

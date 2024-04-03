@@ -42,25 +42,6 @@
   }
 }
 
-.vacationTime {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 100px;
-  padding-top: 40px;
-  border-top: 1px solid #76A6C2 ;
-
-  .datePickerBlock {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    color: #0E5F8C;
-    font-size: 16px;
-    font-weight: 500;
-  }
-}
-
 .submit {
   width: 178px;
   margin-top: 35px;

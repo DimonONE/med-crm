@@ -14,8 +14,8 @@ import s from './styles.module.scss';
 export type CreateAttendanceListData = {
   today: any,
   week: any,
-  timeWeek: string,
-  timeMonth: string,
+  timeWeek: number,
+  timeMonth: number,
   settingsId: string,
 };
 
@@ -91,7 +91,7 @@ export const AttendanceTable = React.forwardRef<HTMLDivElement, AttendanceListPr
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell className='table-body-cell' component="th" scope="row">
-                    <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(20)} />
+                    <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(20)} handleChange={() => false} />
 
                     {row.today}
                   </TableCell>
