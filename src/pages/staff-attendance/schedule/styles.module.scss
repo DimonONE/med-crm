@@ -3,8 +3,12 @@
 }
 
 .formContainer {
-  max-width: 660px;
-  margin: 10px auto;
+  max-width: min-content;
+  margin: 20px auto;
+  padding: 22px 68px;
+  border: 1px solid #93CCE9;
+  background: #F9FDFF;
+  border-radius: 12px;
 }
 
 .label {
@@ -38,19 +42,29 @@
   }
 }
 
-.datePickerBlock {
+.vacationTime {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 100px;
+  padding-top: 40px;
+  border-top: 1px solid #76A6C2 ;
 
-  color:#0E5F8C;
-  font-size: 16px;
-  font-weight: 500;
+  .datePickerBlock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    color: #0E5F8C;
+    font-size: 16px;
+    font-weight: 500;
+  }
 }
 
 .submit {
   width: 178px;
   margin-top: 35px;
+  margin-left: auto;
   padding-block: 13px;
   float: right;
   font-size: 18px;

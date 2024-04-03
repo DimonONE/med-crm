@@ -1,14 +1,13 @@
-import {  QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query';
-import { Api } from '~shared/api/realworld';
+import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 
-type UseListOfInfinityProps<T> = {
+type UseListOfInfinityProps<T, R> = {
   queryKey: QueryKey,
-  fetchPage: (query: T) => Promise<Api.UserEntityDto[]>
+  fetchPage: (query: T) => Promise<R[]>
   initialQuery?: Partial<T>,
 };
 
-export function useListOfInfinity<T>({ queryKey, fetchPage, initialQuery }: UseListOfInfinityProps<T>) {
+export function useListOfInfinity<T, R>({ queryKey, fetchPage, initialQuery }: UseListOfInfinityProps<T, R>) {
   let defaultQuery: T = {
     offset: 0,
     limit: 10,

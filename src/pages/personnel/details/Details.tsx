@@ -20,8 +20,10 @@ type Params = {
 export function PersonnelDetailsPage() {
   const params = useParams<Params>();
   const navigate = useNavigate();
-  const { data, error, isLoading } = sessionApi.useGetUserId(params.personnelId || '', { enabled: !!params.personnelId });
+
   const [isOpen, setOpen] = useState(false);
+  const { data, error, isLoading } = sessionApi.useGetUserId(params.personnelId || '', { enabled: !!params.personnelId });
+  console.log('data', data);
 
   const onSuccessModal = () => {
     setOpen(false);
@@ -129,14 +131,18 @@ export function PersonnelDetailsPage() {
           >
             Редактировать
           </Button>
-          <Button
-            className={classNames(s.delete, 'form-submit')}
-            type="submit"
-            color="primary"
-            onClick={() => setOpen(true)}
-          >
-            Удалить
-          </Button>
+          {
+            data.role?.name !== 'medChief' && (
+              <Button
+                className={classNames(s.delete, 'form-submit')}
+                type="submit"
+                color="primary"
+                onClick={() => setOpen(true)}
+              >
+                Удалить
+              </Button>
+            )
+          }
         </div>
       </div>
 
@@ -146,7 +152,7 @@ export function PersonnelDetailsPage() {
         onClose={() => setOpen(false)}
         type="warn" >
         <div>
-          Удалить фперсонал?
+          Удалить персонал?
         </div>
       </Modal>
     </div>

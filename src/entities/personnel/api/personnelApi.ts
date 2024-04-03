@@ -1,4 +1,4 @@
-import {  useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axiosInstance, { Api } from '~shared/api/realworld';
 import { useListOfInfinity } from '~shared/lib/react-query';
 
@@ -28,10 +28,10 @@ export function useCreatePersonal() {
       const formData = new FormData();
 
       Object.entries(personnel)
-      .filter(([key]) => key !== 'files')
-      .forEach(([key, value]) => {
-        formData.append(key, value);
-      });
+        .filter(([key]) => key !== 'files')
+        .forEach(([key, value]) => {
+          formData.append(key, value);
+        });
 
       if (Array.isArray(personnel.files)) {
         personnel.files.forEach((file, index) => {
@@ -39,8 +39,8 @@ export function useCreatePersonal() {
         });
       }
 
-      const response = await axiosInstance({ 
-        url: '/admin/create-personal', 
+      const response = await axiosInstance({
+        url: '/admin/create-personal',
         method: 'POST',
         data: formData,
         headers: {
@@ -59,10 +59,10 @@ export function useUpdatePersonnel() {
       const formData = new FormData();
 
       Object.entries(personnel)
-      .filter(([key]) => key !== 'newFiles')
-      .forEach(([key, value]) => {
-        formData.append(key, value);
-      });
+        .filter(([key]) => key !== 'newFiles')
+        .forEach(([key, value]) => {
+          formData.append(key, value);
+        });
 
       if (personnel.newImage) {
         formData.delete('image');
@@ -73,9 +73,9 @@ export function useUpdatePersonnel() {
           formData.append('newFiles', file, `newFiles${index}`);
         });
       }
-      
-      const response = await axiosInstance({ 
-        url: '/admin/update-personal', 
+
+      const response = await axiosInstance({
+        url: '/admin/update-personal',
         method: 'POST',
         data: formData,
         headers: {
@@ -93,9 +93,9 @@ const fetchListOfPersonnelPage = async (query: QueryListOfUsers) => {
 };
 
 export function useListOfPersonnelInfinity(initialQuery?: Partial<QueryListOfUsers>) {
-  return useListOfInfinity({
+  return useListOfInfinity<QueryListOfUsers, Api.UserEntityDto>({
     queryKey: personnelKeys.listOfPersonnel(),
     fetchPage: fetchListOfPersonnelPage,
     initialQuery,
-  } );
+  });
 }
