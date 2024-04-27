@@ -17,6 +17,7 @@ import { UnderlineText } from '~shared/ui/underline-text';
 import { MedInfoData, downloadPDF, getDataInfo } from './lib/helper';
 import { biteConditionOptions, jawOpeningSelect1Options1, jawOpeningSelect1Options2, jawOpeningSelect1Options3, selectOptionsYesOrNot } from './lib/utils';
 import s from './styles.module.scss';
+import ImplantICO from './svg/implant.svg';
 
 type MedInfoDetailProps = {
   id: string
@@ -3609,7 +3610,17 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
               </div>
             </div>
 
-            <div className={classNames(s.title)}>25. Установеленные импланты:
+            <div className={s.title}>25. Установеленные импланты: <br /><br />
+              <div className='center'>
+                {Array.from({ length: 4 }).fill(0).map(() => (
+                  <div className='d-flex'>
+                    {Array.from({ length: 4 }).fill(0).map((_, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <ImplantICO key={`column-${i}`} />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className={s.submitButtons}>
