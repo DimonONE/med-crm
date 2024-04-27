@@ -1498,10 +1498,73 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   </Grid>)
               }
             </div>
-            <div className={classNames(s.title)}>14. Зубная формула
-              <Grid marginBlock={2} className={s.insertedPicture}>
-                <img src={`${API_URL}/static/2.jpg`} alt='14' />
-              </Grid>
+            <div className={classNames(s.title)}>14. Зубная формула <br /><br />
+              <div className={s.dentalFormula}>
+                Условные обозначения: отсутствует — О, корень — R, Кариес — С, пульпит —Р, Периодонтит — Pt, пломба — П,<br /><br />
+                Пародонтит — А, подвижность — степень I, II, III, Клиновидный дефект — КД, коронка - К, иск. зуб — Из,<br /><br />
+                Имплантат — И, керамический виннр— VC, ЧСП—частичный съемный протез, ПСП— полный съемный протез <br /><br />
+
+                <table>
+                  <tr>
+                    <th>Диагноз MКБ-10</th>
+                    {
+                      Array.from({ length: 16 }).fill(0).map((_, i) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <th key={`column-${i}`}> </th>
+                      ))
+                    }
+                  </tr>
+                  <tr>
+                    <td>Подвижность</td>
+                    <td width={20}>Тут может быть только I, II, III</td>
+                    {Array.from({ length: 15 }).fill(0).map((_, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <th key={`column-${i}`}> </th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td>Дата заполнения</td>
+                    {Array.from({ length: 16 }).fill(0).map((_, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <th key={`column-${i}`}> </th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td>Номер зубов</td>
+                    {Array.from({ length: 8 }).fill(0).map((_, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <th key={`column-${i}`}>{i + 1}</th>
+                    ))}
+                    {Array.from({ length: 8 }).fill(0).reverse().map((_, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <th key={`column-${i}`}>{i + 1}</th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td>Дата заполнения</td>
+                    {Array.from({ length: 16 }).fill(0).map((_, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <th key={`column-${i}`}> </th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td>Подвижность</td>
+                    {Array.from({ length: 15 }).fill(0).map((_, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <th key={`column-${i}`}> </th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td>Диагноз MКБ-10</td>
+                    {
+                      Array.from({ length: 16 }).fill(0).map((_, i) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <th key={`column-${i}`}> </th>
+                      ))
+                    }
+                  </tr>
+                </table>
+              </div>
             </div>
             <div className={s.title}>
               <Grid marginBlock={2}>15. Состояние слизистой оболочки рта, десен, альвеолярных отростков и неба:</Grid>

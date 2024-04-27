@@ -175,3 +175,28 @@
   color: #FFFFFF;
   background: #029B64 ;
 }
+
+.dentalFormula {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+
+  th,
+  td {
+    height: 50px;
+    padding: 10px;
+    text-align: left;
+
+    &:first-child {
+      width: 170px;
+    }
+  }
+}
+
