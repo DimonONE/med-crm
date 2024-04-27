@@ -14,19 +14,13 @@ import { Checkbox } from '~shared/ui/checkbox';
 import { Modal } from '~shared/ui/modal';
 import { SelectField } from '~shared/ui/select-field';
 import { UnderlineText } from '~shared/ui/underline-text';
+import { MedInfoData, downloadPDF, getDataInfo } from './lib/helper';
 import { biteConditionOptions, jawOpeningSelect1Options1, jawOpeningSelect1Options2, jawOpeningSelect1Options3, selectOptionsYesOrNot } from './lib/utils';
 import s from './styles.module.scss';
-
 
 type MedInfoDetailProps = {
   id: string
   patientId: string
-};
-
-type MedInfoData = {
-  name: string
-  type: 'string' | 'array' | 'image' | 'checkboks' | 'boks'
-  value: string | boolean
 };
 
 type InitialValues = {
@@ -170,69 +164,6 @@ type InitialValues = {
   additionallyCrepitusJointWhenClosing: boolean
   laboratoryData: string
 };
-
-
-function dataInfoRecurs(dataInfo: MedInfoData) {
-  const dataArray = JSON.parse(dataInfo.value as string);
-
-  return (
-    <ul className={s.ul}> {dataArray.map((list: MedInfoData) => {
-      if (list.type === 'array') {
-        return <li className={s.li}>
-          <Grid marginBlock={2} className={s.filterOptions}>
-            {list.name}
-          </Grid>
-          {dataInfoRecurs(list)}
-        </li>;
-      }
-
-      if (list.type === 'checkboks') {
-        return <li className={s.li}>
-          <Grid marginBlock={2} className={s.filterOptions}>
-            {list.name}
-          </Grid>
-          {dataInfoRecurs(list)}
-        </li>;
-      }
-      if (list.type === 'boks') {
-        return <Grid marginBlock={2} className={s.filterOptions}>
-          <Checkbox
-            checked={list.value as boolean}
-            onChange={() => false}
-            disabled
-          >
-            {list.name}
-          </Checkbox>
-        </Grid>;
-      }
-
-      return (
-        <li className={s.li}>
-          <Grid marginBlock={2} className={s.filterOptions}>
-            {list.name} {list.value}
-          </Grid>
-        </li>
-      );
-    })}
-    </ul>
-  );
-}
-
-function getDataInfo(dataInfo: MedInfoData) {
-  switch (dataInfo?.type) {
-    case 'string':
-      return dataInfo.value;
-
-    case 'array':
-      return dataInfoRecurs(dataInfo);
-
-    case 'checkboks':
-      return dataInfoRecurs(dataInfo);
-
-    default:
-      return '';
-  }
-}
 
 export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
   const { data: patientInfo, isLoading } = usePatientId(patientId);
@@ -3633,15 +3564,17 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             }
             <Button
               className={classNames(s.submit, s.submitDownload)}
-              type="submit"
+              type="button"
               color="primary"
+              onClick={() => downloadPDF(`${API_URL}/${patientInfo.medInfoPath}`)}
             >
               Скачать PDF
             </Button>
             <Button
               className={classNames(s.submit, s.submitPrint)}
-              type="submit"
+              type="button"
               color="primary"
+              onClick={() => window.open(`${API_URL}/${patientInfo.medInfoPath}`, '_blank')}
             >
               Печатать
             </Button>
