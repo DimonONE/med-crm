@@ -67,9 +67,9 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
           >
             Записать
           </Button>
-          <Button className={classNames(s.button, s.buttonCancel)} onClick={() => false}>
+          {/* <Button className={classNames(s.button, s.buttonCancel)} onClick={() => false}>
             Напоминание
-          </Button>
+          </Button> */}
         </div>
 
         <div className={s.userInfo}>
