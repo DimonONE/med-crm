@@ -714,9 +714,25 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
       },
       {
         name: '25. Установеленные импланты:',
-        type: 'image',
-        value: '',
+        type: 'array',
+        value: JSON.stringify([
+          {
+            name: '',
+            type: 'string',
+            value: `<img src='${ImplantICO}' />`,
+          },
+        ]),
       },
+      //    {
+      //   Array.from({ length: 4 }).fill(0).map(() => (
+      //     <div className='d-flex'>
+      //       {Array.from({ length: 4 }).fill(0).map((_, i) => (
+      //         // eslint-disable-next-line react/no-array-index-key
+      //         <ImplantICO key={`column-${i}`} />
+      //       ))}
+      //     </div>
+      //   ))
+      // },
     ];
 
     const info = JSON.stringify(medInfoData);
@@ -3653,7 +3669,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
               Печатать
             </Button>
             {
-              !isUpdate && (
+              !isUpdate || true && (
                 <Button
                   className={s.submit}
                   type="submit"
