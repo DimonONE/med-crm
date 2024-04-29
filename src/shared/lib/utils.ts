@@ -6,5 +6,5 @@ export const passwordValidationSchema = string()
   .required('Password is required for creating')
   .matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
-    'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one numeric digit, and one special character',
+    'Пароль должен иметь длину не менее 8 символов и содержать хотя бы одну заглавную букву, одну строчную букву, одну цифру и один специальный символ.',
   );
