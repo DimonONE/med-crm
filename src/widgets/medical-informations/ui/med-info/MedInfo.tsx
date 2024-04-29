@@ -36,15 +36,15 @@ export function MedInfo({ backName }: Props) {
     return <Navigate to={PATH_PAGE.patients.root} />;
   }
 
-  if (patientInfo?.medInfo) {
-    return <Navigate to={PATH_PAGE.medInfo.edit(patientId, id || 'default')} />;
-  }
-
   const cards = cardsNavigate(patientId);
 
   const onSelectCard = (card: TCardEvent) => {
-    backName(card.title);
-    setSelectCard(card);
+    if (patientInfo?.medInfo) {
+      navigate(PATH_PAGE.medInfo.edit(patientId, card.id.toString()));
+    } else {
+      setSelectCard(card);
+      backName(card.title);
+    }
   };
 
   return (

@@ -6,7 +6,7 @@ export const cardsNavigate = (patientId: string) => [
     id: 1,
     title: <>Медицинская карта <br /> 043-У</>,
     ico: <DocumentCardICO />,
-    link: PATH_PAGE.medInfo.detail(patientId, '1'),
+    link: PATH_PAGE.medInfo.edit(patientId, '1'),
   },
   {
     id: 2,
