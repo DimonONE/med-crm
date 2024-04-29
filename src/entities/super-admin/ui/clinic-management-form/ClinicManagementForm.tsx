@@ -7,6 +7,7 @@ import { object, string } from 'yup';
 import { Api, HttpResponse } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
+import { passwordValidationSchema } from '~shared/lib/utils';
 import { Button } from '~shared/ui/button';
 import { SelectField } from '~shared/ui/select-field';
 import { useAllTypeClinic, useCreateClinic, useUpdateClinic } from '../../api/superAdminApi';
@@ -115,13 +116,7 @@ export function ClinicManagementForm({ clinicId, isCreate }: Props) {
         fullName: string().min(3).required(),
         name: string().min(3).required(),
         email: string().email().required(),
-        password: string().test({
-          name: 'password',
-          message: 'Password is required for creating',
-          test(value) {
-            return isCreate ? !!value : true;
-          },
-        }).min(8),
+        password: passwordValidationSchema,
         type: string().test({
           name: 'type',
           message: 'Selected type',

@@ -264,6 +264,7 @@ textarea {
   padding-block: 5px;
   font-size: 14px;
   font-weight: 500;
+  max-width: 400px;
 
   &:empty {
     display: none
