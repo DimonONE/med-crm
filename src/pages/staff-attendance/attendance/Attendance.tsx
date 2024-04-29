@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { attendanceApi } from '~entities/staffAttendance';
+import { PATH_PAGE } from '~shared/lib/react-router';
+import { Button } from '~shared/ui/button';
 import { Search } from '~shared/ui/search';
 import { handleScroll } from '~shared/utils';
 import { dataLength, filterObject } from '~shared/utils/helpers';
@@ -14,6 +17,7 @@ type Params = {
 
 export function Attendance() {
   const params = useParams<Params>();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState<Partial<attendanceApi.QueryListOfAttendance> | null>(null);
   const { data, fetchNextPage, updateQueryParameters, hasNextPage } = attendanceApi.useListOfAttendanceInfinity(
@@ -63,6 +67,10 @@ export function Attendance() {
           onScroll={handleScroll(block2Ref, block1Ref)}
         />
       </div>
+      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.personnel.add)}>
+        <AiOutlinePlusCircle />
+        Добавить персонал
+      </Button>
     </div>
   );
 }
