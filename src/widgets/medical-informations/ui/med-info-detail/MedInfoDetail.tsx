@@ -4,11 +4,13 @@ import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { Field, FieldProps, Form, Formik, FormikHelpers } from 'formik';
 import InputMask from 'react-input-mask';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCreateUpdateMedInfo, usePatientId } from '~entities/patients';
 import { useRoleUser } from '~entities/session';
 import { API_URL } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import { Button } from '~shared/ui/button';
 import { Checkbox } from '~shared/ui/checkbox';
 import { Modal } from '~shared/ui/modal';
@@ -22,6 +24,7 @@ import ImplantICO from './svg/implant.svg';
 type MedInfoDetailProps = {
   id: string
   patientId: string
+  isUpdate: boolean
 };
 
 type InitialValues = {
@@ -166,7 +169,8 @@ type InitialValues = {
   laboratoryData: string
 };
 
-export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
+export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
+  const navigate = useNavigate();
   const { data: patientInfo, isLoading } = usePatientId(patientId);
   const { mutate } = useCreateUpdateMedInfo();
   const { role } = useRoleUser();
@@ -181,7 +185,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
       {
         name: '',
         type: 'string',
-        value: `№ ${patientId} от «${values.startDay}» ${values.startMonth} ${values.startYear} `,
+        value: `№ ${patientId} от «${values.startDay}» ${values.startMonth} ${values.startYear.replace(' ', '')}`,
       },
       {
         name: '1. Фамилия, имя, отчество:',
@@ -748,31 +752,41 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
     });
   };
 
+  const handleEdit = () => {
+    navigate(PATH_PAGE.medInfo.edit(patientId, id));
+    window.scrollTo(0, 0);
+  };
+
   if (!patientInfo || isLoading) {
     return null;
   }
   const medInfo: MedInfoData[] = JSON.parse(patientInfo.medInfo);
-  const isUpdate = medInfo?.length;
+  console.log('medInfo', medInfo);
+
+  const getDateText = medInfo[0]?.value.toString();
+  const parts = getDateText.split(' ');
+  const startMonth = parts[parts.length - 2];
+  const startYear = parts[parts.length - 1];
 
   return (
     <Formik
       initialValues={{
-        startDay: '',
-        startMonth: '',
-        startYear: '20',
+        startDay: medInfo[0]?.value.toString().match(/«([^»]*)»/)![1] || '',
+        startMonth: startMonth || '',
+        startYear: startYear || '20',
         fullName: patientInfo.fullName,
         sex: patientInfo.sex,
         address: patientInfo.address,
         phone: patientInfo.phone,
         age: patientInfo.dateOfBirth,
-        specialization: '',
-        diagnosis: '',
-        diagnosisICD: '',
-        complaints: '',
-        previousConcomitantDiseases: '',
-        developmentDisease: '',
+        specialization: medInfo[6]?.value.toString() || '',
+        diagnosis: medInfo[7]?.value.toString() || '',
+        diagnosisICD: medInfo[8]?.value.toString() || '',
+        complaints: medInfo[9]?.value.toString() || '',
+        previousConcomitantDiseases: medInfo[10]?.value.toString() || '',
+        developmentDisease: medInfo[11]?.value.toString() || '',
         visualInspection: '',
-        faceSelect: 'cимметричное',
+        faceSelect: medInfo[11]?.value.toString() || 'cимметричное',
         faceText: '',
         skinSelect: 'чистые',
         skinText: '',
@@ -904,7 +918,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
 
             <div className={classNames(s.title)}>
               {
-                isUpdate ? medInfo[0].value : (
+                !isUpdate ? medInfo[0].value : (
                   <>
                     № <span className={s.redHighlight}>{patientId}</span> от
                     «
@@ -913,6 +927,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     >
                       {(props: FieldProps) =>
                         <InputMask name="startDay" style={{ width: 20, textAlign: 'center' }} className={s.defaultInput}
+                          defaultValue={props.field.value}
                           onChange={props.field.onChange} mask="99" placeholder='__' maskChar="_" />}
                     </Field>
                     »{' '}
@@ -924,14 +939,17 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                           width='200px'
                           name='startMonth'
                           className={classNames(s.defaultInput, s.title)}
+                          value={props.field.value}
                           onChange={props.field.onChange} />}
                     </Field>
+                    {' '}
                     <Field
                       name="startYear"
                     >
                       {(props: FieldProps) =>
                         <InputMask name="startYear" className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} mask="20\ 99 г." placeholder='20__ г.' maskChar="_" />
+                          defaultValue={props.field.value}
+                          onChange={props.field.onChange} mask="2099г." placeholder='20__г.' maskChar="_" />
                       }
                     </Field>
                   </>
@@ -948,7 +966,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             <div className={classNames(s.title)}>5. Возраст: <span className={classNames(s.redHighlight, s.italic)}> {dayjs().diff(dayjs(patientInfo.dateOfBirth), 'year')}</span> </div>
             <div className={classNames(s.title, s.filterOptions)}>6. Профессия:
               {
-                isUpdate ? medInfo[6].value : (
+                !isUpdate ? medInfo[6].value : (
                   <Field
                     name="specialization"
                   >
@@ -957,6 +975,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         width='100%'
                         name='specialization'
                         className={classNames(s.defaultInput, s.title)}
+                        value={props.field.value}
                         onChange={props.field.onChange} />}
                   </Field>
                 )
@@ -964,7 +983,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             </div>
             <div className={classNames(s.title, s.filterOptions)}>7. Диагноз:
               {
-                isUpdate ? medInfo[7].value : (
+                !isUpdate ? medInfo[7].value : (
                   <Field
                     name="diagnosis"
                   >
@@ -973,6 +992,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         width='100%'
                         name='diagnosis'
                         className={classNames(s.defaultInput, s.title)}
+                        value={props.field.value}
                         onChange={props.field.onChange} />}
                   </Field>
                 )
@@ -980,7 +1000,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             </div>
             <div className={classNames(s.title, s.filterOptions)}>8. Диагноз по МКБ -10:
               {
-                isUpdate ? medInfo[8].value : (
+                !isUpdate ? medInfo[8].value : (
                   <Field
                     name="diagnosisICD"
                   >
@@ -989,6 +1009,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         width='100%'
                         name='diagnosisICD'
                         className={classNames(s.defaultInput, s.title)}
+                        value={props.field.value}
                         onChange={props.field.onChange} />}
                   </Field>
                 )
@@ -996,7 +1017,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             </div>
             <div className={classNames(s.title, s.filterOptions)}>9. Жалобы:
               {
-                isUpdate ? medInfo[9].value : (
+                !isUpdate ? medInfo[9].value : (
                   <Field
                     name="complaints"
                   >
@@ -1005,6 +1026,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         width='100%'
                         name='complaints'
                         className={classNames(s.defaultInput, s.title)}
+                        value={props.field.value}
                         onChange={props.field.onChange} />}
                   </Field>
                 )
@@ -1012,7 +1034,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             </div>
             <div className={classNames(s.title, s.filterOptions)}>10. Перенесенные и сопутствующие заболевания:
               {
-                isUpdate ? medInfo[10].value : (
+                !isUpdate ? medInfo[10].value : (
                   <Field
                     name="previousConcomitantDiseases"
                   >
@@ -1021,6 +1043,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         width='100%'
                         name='previousConcomitantDiseases'
                         className={classNames(s.defaultInput, s.title)}
+                        value={props.field.value}
                         onChange={props.field.onChange} />}
                   </Field>
                 )
@@ -1028,7 +1051,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             </div>
             <div className={classNames(s.title, s.filterOptions)}>11. Развитие настоящего заболевания:
               {
-                isUpdate ? medInfo[11].value : (
+                !isUpdate ? medInfo[11].value : (
                   <Field
                     name="developmentDisease"
                   >
@@ -1037,6 +1060,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                         width='100%'
                         name='developmentDisease'
                         className={classNames(s.defaultInput, s.title)}
+                        value={props.field.value}
                         onChange={props.field.onChange} />}
                   </Field>
                 )
@@ -1045,7 +1069,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             <Grid>
               <span className={classNames(s.title)}>12. Внешний осмотр:</span>
               {
-                isUpdate ? getDataInfo(medInfo[12]) : (
+                !isUpdate ? getDataInfo(medInfo[12]) : (
                   <ul className={s.ul}>
                     <li className={s.li}>
                       <Grid marginBlock={2} className={s.filterOptions}>
@@ -1081,6 +1105,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                               width='100%'
                               name='faceText'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -1344,13 +1369,13 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   </ul>
                 )
               }
-              {isUpdate && getDataInfo(medInfo[13])}
+              {!isUpdate && getDataInfo(medInfo[13])}
             </Grid>
             <div className={s.title}>
               <Grid className={s.filterOptions}>
                 <Grid marginRight={1}>13. Состояние зубов: <span>налет на зубах</span></Grid>
                 {
-                  isUpdate ? getDataInfo(medInfo[14]) : (
+                  !isUpdate ? getDataInfo(medInfo[14]) : (
                     <Field name="plaqueOnTeeth">
                       {(props: FieldProps) => {
                         const selectOptions = [{ value: 'Нет', label: 'Нет' }, { value: 'Есть', label: 'Есть' }];
@@ -1586,7 +1611,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             <div className={s.title}>
               <Grid marginBlock={2}>15. Состояние слизистой оболочки рта, десен, альвеолярных отростков и неба:</Grid>
               {
-                isUpdate ? getDataInfo(medInfo[16]) : (
+                !isUpdate ? getDataInfo(medInfo[16]) : (
                   <ul className={s.ul}>
                     <li className={s.li}>
                       <Grid marginBlock={1} className={s.filterOptions}>
@@ -2238,7 +2263,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             <div className={s.title}>
               <Grid marginBlock={2}>16. Осмотр губ:</Grid>
               {
-                isUpdate ? getDataInfo(medInfo[17]) : (
+                !isUpdate ? getDataInfo(medInfo[17]) : (
                   <ul className={s.ul}>
                     <li className={s.li}>
                       <Grid marginBlock={1} className={s.filterOptions}>
@@ -2482,7 +2507,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <Grid marginBlock={1} className={s.filterOptions}>
                   <Grid marginRight={2}>17. Осмотр языка:</Grid>
                   {
-                    !isUpdate && (
+                    !!isUpdate && (
                       <>
                         <Field name="tongueExaminationSelect1 ">
                           {(props: FieldProps) => {
@@ -2545,10 +2570,10 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                       </>
                     )}
                 </Grid>
-                {isUpdate && getDataInfo(medInfo[18])}
+                {!isUpdate && getDataInfo(medInfo[18])}
               </Grid>
               {
-                !isUpdate && (
+                !!isUpdate && (
                   <ul className={s.ul}>
                     <li className={s.li}>
                       <Grid marginBlock={1} className={s.filterOptions}>
@@ -2707,7 +2732,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <Grid marginBlock={1} className={s.filterOptions} >
                   <Grid marginRight={2}>18. Осмотр преддверия рта:</Grid>
                   {
-                    !isUpdate && (
+                    !!isUpdate && (
                       <Field name="examinationVestibuleMouth">
                         {(props: FieldProps) => {
                           const selectOptions = [{ value: 'среднее', label: 'среднее' }];
@@ -2736,7 +2761,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 </Grid>
               </Grid>
               {
-                isUpdate ? getDataInfo(medInfo[19]) : (
+                !isUpdate ? getDataInfo(medInfo[19]) : (
                   <ul className={s.ul}>
                     <li className={s.li}>
                       <Grid marginBlock={2} className={s.filterOptions}>
@@ -2843,7 +2868,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 <Grid marginBlock={1} className={s.filterOptions} >
                   <Grid marginRight={2}>19. Состояние прикуса:</Grid>
                   {
-                    !isUpdate && (
+                    !!isUpdate && (
                       <Field name="biteCondition">
                         {(props: FieldProps) => (
                           <SelectField
@@ -2868,7 +2893,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                     )}
                 </Grid>
                 {
-                  !isUpdate && (
+                  !!isUpdate && (
                     <Field
                       name="biteConditionField"
                     >
@@ -2882,7 +2907,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                   )}
               </Grid>
               {
-                isUpdate ? getDataInfo(medInfo[20]) : (
+                !isUpdate ? getDataInfo(medInfo[20]) : (
                   <ul className={s.ul}>
                     <li className={s.li}>
                       <Grid marginBlock={2} className={s.filterOptions}>
@@ -3181,7 +3206,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
                 20. Осмотр ВНЧС:
               </Grid>
               {
-                isUpdate ? getDataInfo(medInfo[21]) : (
+                !isUpdate ? getDataInfo(medInfo[21]) : (
                   <ul className={s.ul}>
                     <li className={s.li}>
                       <Grid marginBlock={2} className={s.filterOptions}>
@@ -3594,7 +3619,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
 
             <div className={classNames(s.title, s.filterOptions)}>21. Данные рентгенологического и лабораторного исследования:
               {
-                isUpdate ? getDataInfo(medInfo[22]) : (
+                !isUpdate ? getDataInfo(medInfo[22]) : (
                   <Field
                     name="laboratoryData"
                   >
@@ -3640,36 +3665,41 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             </div>
           </div>
           <div className={s.submitButtons}>
-            {
-              role === 'medChief' && (
+            {!isUpdate && (
+              <>
+                {
+                  role === 'medChief' && (
+                    <Button
+                      className={s.submit}
+                      type="submit"
+                      color="secondary"
+                      onClick={handleEdit}
+                    >
+                      Редактировать
+                    </Button>
+                  )
+                }
                 <Button
-                  className={s.submit}
-                  type="submit"
-                  color="secondary"
-                  disabled
+                  className={classNames(s.submit, s.submitDownload)}
+                  type="button"
+                  color="primary"
+                  onClick={() => downloadPDF(`${API_URL}/${patientInfo.medInfoPath}`)}
                 >
-                  Редактировать
+                  Скачать PDF
                 </Button>
-              )
-            }
-            <Button
-              className={classNames(s.submit, s.submitDownload)}
-              type="button"
-              color="primary"
-              onClick={() => downloadPDF(`${API_URL}/${patientInfo.medInfoPath}`)}
-            >
-              Скачать PDF
-            </Button>
-            <Button
-              className={classNames(s.submit, s.submitPrint)}
-              type="button"
-              color="primary"
-              onClick={() => window.open(`${API_URL}/${patientInfo.medInfoPath}`, '_blank')}
-            >
-              Печатать
-            </Button>
+                <Button
+                  className={classNames(s.submit, s.submitPrint)}
+                  type="button"
+                  color="primary"
+                  onClick={() => window.open(`${API_URL}/${patientInfo.medInfoPath}`, '_blank')}
+                >
+                  Печатать
+                </Button>
+              </>
+            )}
+
             {
-              !isUpdate || true && (
+              isUpdate && (
                 <Button
                   className={s.submit}
                   type="submit"
@@ -3687,7 +3717,7 @@ export function MedInfoDetail({ patientId }: MedInfoDetailProps) {
             onClose={() => setOpen(false)}
             type='info' >
             <div>
-              {isUpdate ? <>Сохранить информацию? <br />Поменять ее сможет только<br />Владелец клиники</> : 'Информация сохранена!'}
+              {!isUpdate ? <>Сохранить информацию? <br />Поменять ее сможет только<br />Владелец клиники</> : 'Информация сохранена!'}
             </div>
           </Modal>
         </Form>

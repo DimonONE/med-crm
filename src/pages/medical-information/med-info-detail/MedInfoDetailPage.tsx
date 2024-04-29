@@ -7,8 +7,11 @@ type Params = {
   id: string
   patientId: string
 };
+type IProps = {
+  isUpdate: boolean
+};
 
-export function MedInfoDetailPage() {
+export function MedInfoDetailPage({ isUpdate }: IProps) {
   const { id, patientId } = useParams<Params>();
 
   if (!id || !patientId) {
@@ -17,7 +20,7 @@ export function MedInfoDetailPage() {
 
   return (
     <div className={s.root}>
-      <MedInfoDetail id={id} patientId={patientId} />
+      <MedInfoDetail id={id} patientId={patientId} isUpdate={isUpdate} />
     </div>
   );
 }

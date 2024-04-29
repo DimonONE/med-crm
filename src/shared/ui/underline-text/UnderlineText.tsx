@@ -3,8 +3,9 @@ import classNames from 'classnames';
 import s from './styles.module.scss';
 
 interface UnderlineTextProps {
+  value?: string
+  onChange: (value: React.ChangeEvent<HTMLTextAreaElement> | string) => void
   name: string
-  onChange: (value: React.ChangeEvent<HTMLTextAreaElement>) => void
   width?: string
   className?: string
 }
@@ -13,7 +14,7 @@ export function UnderlineText(props: UnderlineTextProps): JSX.Element {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = useState('');
 
-  const { width, className, onChange, ...prevProps } = props;
+  const { value: initialValue, width, className, onChange, ...prevProps } = props;
   const fontSize = 18;
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -32,6 +33,14 @@ export function UnderlineText(props: UnderlineTextProps): JSX.Element {
       }
     }
   }, [value]);
+
+  useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue);
+      onChange(initialValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValue]);
 
   return (
     <textarea

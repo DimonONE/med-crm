@@ -42,7 +42,7 @@ export const PATH_PAGE = {
   medInfo: {
     root: '/med-info',
     cards: (patientId: string) => `/med-info/${patientId}`,
-    detail: (patientId: string, id: string) => `/med-info/${patientId}/${id}`,
+    detail: (patientId: string, id: string) => `/med-info/detail/${patientId}/${id}`,
     edit: (patientId: string, id: string) => `/med-info/edit/${patientId}/${id}`,
   },
   services: '/services',

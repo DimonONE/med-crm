@@ -40,7 +40,7 @@ export function MedInfo({ backName }: Props) {
 
   const onSelectCard = (card: TCardEvent) => {
     if (patientInfo?.medInfo) {
-      navigate(PATH_PAGE.medInfo.edit(patientId, card.id.toString()));
+      navigate(PATH_PAGE.medInfo.detail(patientId, card.id.toString()));
     } else {
       setSelectCard(card);
       backName(card.title);
