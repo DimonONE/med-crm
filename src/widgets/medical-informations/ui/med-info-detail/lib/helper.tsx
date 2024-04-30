@@ -57,7 +57,7 @@ function dataInfoRecurs(dataInfo: MedInfoData) {
         </Grid>;
       }
 
-      return (
+      return list.value && (
         <li className={s.li}>
           <Grid marginBlock={2} className={s.filterOptions}>
             {list.name} {list.value}
