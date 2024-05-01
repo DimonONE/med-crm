@@ -6,6 +6,7 @@ export type MedInfoData = {
   name: string
   type: 'string' | 'array' | 'image' | 'checkboks' | 'boks'
   value: string | boolean
+  [key: string]: string | boolean | number;
 };
 
 export const downloadPDF = async (url: string) => {

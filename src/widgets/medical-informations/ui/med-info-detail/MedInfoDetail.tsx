@@ -65,10 +65,10 @@ type InitialValues = {
   plaqueOnTeethInputField: string
   oralMucosa1: string,
   oralMucosa2: string,
-  bleedingDuringEndotherapy: string,
-  presenceOfScars: string,
-  periodontalPockets: string,
-  dischargeExudatePocket: string,
+  bleedingDuringEndotherapy: number,
+  presenceOfScars: number,
+  periodontalPockets: number,
+  dischargeExudatePocket: number,
   dischargeExudatePocketText: string,
   upperJawExostosis: number,
   upperJawExostosisText: string,
@@ -726,17 +726,13 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
           },
         ]),
       },
-      //    {
-      //   Array.from({ length: 4 }).fill(0).map(() => (
-      //     <div className='d-flex'>
-      //       {Array.from({ length: 4 }).fill(0).map((_, i) => (
-      //         // eslint-disable-next-line react/no-array-index-key
-      //         <ImplantICO key={`column-${i}`} />
-      //       ))}
-      //     </div>
-      //   ))
-      // },
+      {
+        id: 'default',
+        type: 'string',
+        ...values,
+      },
     ];
+
 
     const info = JSON.stringify(medInfoData);
 
@@ -759,148 +755,143 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
   if (!patientInfo || isLoading) {
     return null;
   }
-  const medInfo: MedInfoData[] = JSON.parse(patientInfo.medInfo);
-  console.log('medInfo', medInfo);
-  console.log('patientInfo', JSON.parse(medInfo?.[12]?.value as string));
 
-  const getDateText = medInfo ? medInfo[0]?.value.toString() : '';
-  const parts = getDateText.split(' ');
-  const startMonth = parts[parts.length - 2];
-  const startYear = parts[parts.length - 1];
+  const medInfo: MedInfoData[] = JSON.parse(patientInfo.medInfo);
+  const defaultValue = medInfo.find((value) => value.id === 'default');
 
   return (
     <Formik
       initialValues={{
-        startDay: medInfo?.[0]?.value.toString().match(/«([^»]*)»/)![1] || '',
-        startMonth: startMonth || '',
-        startYear: startYear || '20',
+        startDay: defaultValue?.startDay as string ?? '',
+        startMonth: defaultValue?.startMonth as string ?? '',
+        startYear: defaultValue?.startYear as string ?? '20',
         fullName: patientInfo.fullName,
         sex: patientInfo.sex,
         address: patientInfo.address,
         phone: patientInfo.phone,
         age: patientInfo.dateOfBirth,
-        specialization: medInfo?.[6]?.value.toString() || '',
-        diagnosis: medInfo?.[7]?.value.toString() || '',
-        diagnosisICD: medInfo?.[8]?.value.toString() || '',
-        complaints: medInfo?.[9]?.value.toString() || '',
-        previousConcomitantDiseases: medInfo?.[10]?.value.toString() || '',
-        developmentDisease: medInfo?.[11]?.value.toString() || '',
-        faceSelect: medInfo?.[12]?.value.toString() || 'cимметричное',
-        faceText: '',
-        skinSelect: 'чистые',
-        skinText: '',
-        propertiesOne: 'не увеличены',
-        propertiesTwo: 'безболезненные',
-        propertiesThree: 'не спаяны с окружающики тканями',
-        propertiesInfo: '',
-        consistency: 'однородная',
-        chinFolds: 'не выражены',
-        nasolabialFolds: 'не выражены',
-        lowerFace: 'не выражены',
-        externalInspectionComment: '',
-        plaqueOnTeeth: 'Нет',
-        plaqueOnTeethText: '',
-        plaqueOnTeethDropdown1: 'пигментированный',
-        plaqueOnTeethDropdown2: 'Твердый',
-        plaqueOnTeethDropdown3: 'обильное',
-        plaqueOnTeethCheckbox1: '',
-        plaqueOnTeethCheckbox2: '',
-        plaqueOnTeethInputField: '',
-        oralMucosa1: 'бледно-розового цвета',
-        oralMucosa2: 'не отечна',
-        bleedingDuringEndotherapy: 'нет',
-        presenceOfScars: 'нет',
-        periodontalPockets: 'нет',
-        dischargeExudatePocket: 'нет',
-        dischargeExudatePocketText: '',
-        upperJawExostosis: -1,
-        upperJawExostosisText: '',
-        danglingComb: -1,
-        danglingCombText: '',
-        upperJawAtrophy: -1,
-        upperJawAtrophyText: '',
-        lowerJawExostosis: -1,
-        lowerJawExostosisText: '',
-        lowerDanglingComb: -1,
-        lowerDanglingCombText: '',
-        lowerJawAtrophy: -1,
-        lowerJawAtrophyText: '',
-        salivaryGlandSelect1: 'однородная',
-        salivaryGlandSelect2: 'безболезненная',
-        salivaryGlandSelect3: 'симметричная',
-        salivaryGlandText: '',
-        parotidPalpationSelect1: 'однородная',
-        parotidPalpationSelect2: 'безболезненная',
-        parotidPalpationSelect3: 'симметричная',
-        parotidPalpationText: '',
-        redBorderOfLipsSelect1: 'бледно-розовая',
-        redBorderOfLipsSelect2: 'влажная',
-        presenceOfScales: -1,
-        crackedUpper: false,
-        crackedLower: false,
-        crackedCommissural: '',
-        crackInHistory: -1,
-        lipExaminationText: '',
-        tongueExaminationSelect1: 'не увеличен',
-        tongueExaminationSelect2: 'бледно-розовый',
-        tongueExaminationText: '',
-        epithelialDesquamation: -1,
-        teetImprintsTheTongue: -1,
-        frenulumTongue: 'длинная',
-        severityGagReflex: -1,
-        examinationTonguePapillae: 'не гипертрофированы',
-        tongueExaminationField: '',
-        examinationVestibuleMouth: 'среднее',
-        attachedGingivalHeight: '',
-        presenceOfRecessions: -1,
-        presenceOfRecessionsText: '',
-        frenulumLowerLip: '',
-        frenulumUpperLip: '',
-        presenceSurgicalScar: '',
-        biteCondition: -1,
-        biteConditionField: '',
-        overlapSelect: 'горизонтальное',
-        overlapField: '',
-        tremesSelect: -1,
-        tremesField: '',
-        diastemasSelect: -1,
-        diastemasField: '',
-        anomaliesIndividualTeeth: '',
-        toothWearSelect: 'не имеется',
-        toothWearField: '',
-        dentoalveolarAdvancementSelect: -1,
-        dentoalveolarAdvancementField: '',
-        signPopovGodonSelect: -1,
-        signPopovGodonField: '',
-        overlappingLowerIncisorsUpper: '',
-        speechDefectSelect: -1,
-        speechDefectField: '',
-        jawOpeningSelect1: -1,
-        jawOpeningSelect2: -1,
-        jawOpeningSelect3: -1,
-        jawOpeningField: '',
-        movementArticularHeadsSelect: 'симметричное',
-        movementArticularHeadsField: '',
-        additionallyClick: false,
-        additionallyCrunch: false,
-        additionallyCrepitusJoint: false,
-        additionallyField: '',
-        masticatoryMuscleToneSelect: 'нормальный',
-        masticatoryMuscleToneField: '',
-        examinationField: '',
-        additionallyClickRight: false,
-        additionallyClickLeft: false,
-        additionallyClickUponOpening: false,
-        additionallyClickWhenClosing: false,
-        additionallyCrunchRight: false,
-        additionallyCrunchLeft: false,
-        additionallyCrunchUponOpening: false,
-        additionallyCrunchWhenClosing: false,
-        additionallyCrepitusJointRight: false,
-        additionallyCrepitusJointLeft: false,
-        additionallyCrepitusJointUponOpening: false,
-        additionallyCrepitusJointWhenClosing: false,
-        laboratoryData: '',
+        specialization: defaultValue?.specialization as string ?? '',
+        diagnosis: defaultValue?.diagnosis as string ?? '',
+        diagnosisICD: defaultValue?.diagnosisICD as string ?? '',
+        complaints: defaultValue?.complaints as string ?? '',
+        previousConcomitantDiseases: defaultValue?.previousConcomitantDiseases as string ?? '',
+        developmentDisease: defaultValue?.developmentDisease as string ?? '',
+        faceSelect: defaultValue?.faceSelect as string ?? 'cимметричное',
+        faceText: defaultValue?.faceText as string ?? '',
+        skinSelect: defaultValue?.skinSelect as string ?? 'чистые',
+        skinText: defaultValue?.skinText as string ?? '',
+        propertiesOne: defaultValue?.propertiesOne as string ?? 'не увеличены',
+        propertiesTwo: defaultValue?.propertiesTwo as string ?? 'безболезненные',
+        propertiesThree: defaultValue?.propertiesThree as string ?? 'не спаяны с окружающики тканями',
+        propertiesInfo: defaultValue?.propertiesInfo as string ?? '',
+        consistency: defaultValue?.consistency as string ?? 'однородная',
+        chinFolds: defaultValue?.chinFolds as string ?? 'не выражены',
+        nasolabialFolds: defaultValue?.nasolabialFolds as string ?? 'не выражены',
+        lowerFace: defaultValue?.nasolabialFolds as string ?? 'не выражены',
+        externalInspectionComment: defaultValue?.nasolabialFolds as string ?? '',
+        plaqueOnTeeth: defaultValue?.nasolabialFolds as string ?? 'Нет',
+        plaqueOnTeethText: defaultValue?.nasolabialFolds as string ?? '',
+        plaqueOnTeethDropdown1: defaultValue?.plaqueOnTeethDropdown1 as string ?? 'пигментированный',
+        plaqueOnTeethDropdown2: defaultValue?.plaqueOnTeethDropdown2 as string ?? 'Твердый',
+        plaqueOnTeethDropdown3: defaultValue?.plaqueOnTeethDropdown3 as string ?? 'обильное',
+        plaqueOnTeethCheckbox1: defaultValue?.plaqueOnTeethCheckbox1 as string ?? '',
+        plaqueOnTeethCheckbox2: defaultValue?.plaqueOnTeethCheckbox2 as string ?? '',
+        plaqueOnTeethInputField: defaultValue?.plaqueOnTeethInputField as string ?? '',
+        oralMucosa1: defaultValue?.oralMucosa1 as string ?? 'бледно-розового цвета',
+        oralMucosa2: defaultValue?.oralMucosa2 as string ?? 'не отечна',
+        bleedingDuringEndotherapy: defaultValue?.bleedingDuringEndotherapy as number ?? -1,
+        presenceOfScars: defaultValue?.presenceOfScars as number ?? -1,
+        periodontalPockets: defaultValue?.periodontalPockets as number ?? -1,
+        dischargeExudatePocket: defaultValue?.dischargeExudatePocket as number ?? -1,
+        dischargeExudatePocketText: defaultValue?.dischargeExudatePocketText as string ?? '',
+        upperJawExostosis: defaultValue?.bleedingDuringEndotherapy as number ?? -1,
+        upperJawExostosisText: defaultValue?.upperJawExostosisText as string ?? '',
+        danglingComb: defaultValue?.danglingComb as number ?? -1,
+        danglingCombText: defaultValue?.danglingCombText as string ?? '',
+        upperJawAtrophy: defaultValue?.upperJawAtrophy as number ?? -1,
+        upperJawAtrophyText: defaultValue?.upperJawAtrophyText as string ?? '',
+        lowerJawExostosis: defaultValue?.lowerJawExostosis as number ?? -1,
+        lowerJawExostosisText: defaultValue?.lowerJawExostosisText as string ?? '',
+        lowerDanglingComb: defaultValue?.lowerDanglingComb as number ?? -1,
+        lowerDanglingCombText: defaultValue?.lowerDanglingCombText as string ?? '',
+        lowerJawAtrophy: defaultValue?.lowerJawAtrophy as number ?? -1,
+        lowerJawAtrophyText: defaultValue?.lowerJawAtrophyText as string ?? '',
+        salivaryGlandSelect1: defaultValue?.salivaryGlandSelect1 as string ?? 'однородная',
+        salivaryGlandSelect2: defaultValue?.salivaryGlandSelect2 as string ?? 'безболезненная',
+        salivaryGlandSelect3: defaultValue?.salivaryGlandSelect3 as string ?? 'симметричная',
+        salivaryGlandText: defaultValue?.salivaryGlandText as string ?? '',
+        parotidPalpationSelect1: defaultValue?.parotidPalpationSelect1 as string ?? 'однородная',
+        parotidPalpationSelect2: defaultValue?.parotidPalpationSelect2 as string ?? 'безболезненная',
+        parotidPalpationSelect3: defaultValue?.parotidPalpationSelect3 as string ?? 'симметричная',
+        parotidPalpationText: defaultValue?.parotidPalpationText as string ?? '',
+        redBorderOfLipsSelect1: defaultValue?.redBorderOfLipsSelect1 as string ?? 'бледно-розовая',
+        redBorderOfLipsSelect2: defaultValue?.redBorderOfLipsSelect2 as string ?? 'влажная',
+        presenceOfScales: defaultValue?.presenceOfScales as number ?? -1,
+        crackedUpper: defaultValue?.crackedUpper as boolean ?? false,
+        crackedLower: defaultValue?.crackedLower as boolean ?? false,
+        crackedCommissural: defaultValue?.crackedCommissural as string ?? '',
+        crackInHistory: defaultValue?.crackInHistory as number ?? -1,
+        lipExaminationText: defaultValue?.lipExaminationText as string ?? '',
+        tongueExaminationSelect1: defaultValue?.tongueExaminationSelect1 as string ?? 'не увеличен',
+        tongueExaminationSelect2: defaultValue?.tongueExaminationSelect2 as string ?? 'бледно-розовый',
+        tongueExaminationText: defaultValue?.tongueExaminationText as string ?? '',
+        epithelialDesquamation: defaultValue?.epithelialDesquamation as number ?? -1,
+        teetImprintsTheTongue: defaultValue?.teetImprintsTheTongue as number ?? -1,
+        frenulumTongue: defaultValue?.frenulumTongue as string ?? 'длинная',
+        severityGagReflex: defaultValue?.severityGagReflex as number ?? -1,
+        examinationTonguePapillae: defaultValue?.examinationTonguePapillae as string ?? 'не гипертрофированы',
+        tongueExaminationField: defaultValue?.tongueExaminationField as string ?? '',
+        examinationVestibuleMouth: defaultValue?.examinationVestibuleMouth as string ?? 'среднее',
+        attachedGingivalHeight: defaultValue?.attachedGingivalHeight as string ?? '',
+        presenceOfRecessions: defaultValue?.presenceOfRecessions as number ?? -1,
+        presenceOfRecessionsText: defaultValue?.presenceOfRecessionsText as string ?? '',
+        frenulumLowerLip: defaultValue?.frenulumLowerLip as string ?? '',
+        frenulumUpperLip: defaultValue?.frenulumUpperLip as string ?? '',
+        presenceSurgicalScar: defaultValue?.presenceSurgicalScar as string ?? '',
+        biteCondition: defaultValue?.biteCondition as number ?? -1,
+        biteConditionField: defaultValue?.biteConditionField as string ?? '',
+        overlapSelect: defaultValue?.overlapSelect as string ?? 'горизонтальное',
+        overlapField: defaultValue?.overlapField as string ?? '',
+        tremesSelect: defaultValue?.tremesSelect as number ?? -1,
+        tremesField: defaultValue?.tremesField as string ?? '',
+        diastemasSelect: defaultValue?.diastemasSelect as number ?? -1,
+        diastemasField: defaultValue?.diastemasField as string ?? '',
+        anomaliesIndividualTeeth: defaultValue?.anomaliesIndividualTeeth as string ?? '',
+        toothWearSelect: defaultValue?.toothWearSelect as string ?? 'не имеется',
+        toothWearField: defaultValue?.toothWearField as string ?? '',
+        dentoalveolarAdvancementSelect: defaultValue?.dentoalveolarAdvancementSelect as number ?? -1,
+        dentoalveolarAdvancementField: defaultValue?.dentoalveolarAdvancementField as string ?? '',
+        signPopovGodonSelect: defaultValue?.dentoalveolarAdvancementSelect as number ?? -1,
+        signPopovGodonField: defaultValue?.signPopovGodonField as string ?? '',
+        overlappingLowerIncisorsUpper: defaultValue?.overlappingLowerIncisorsUpper as string ?? '',
+        speechDefectSelect: defaultValue?.speechDefectSelect as number ?? -1,
+        speechDefectField: defaultValue?.speechDefectField as string ?? '',
+        jawOpeningSelect1: defaultValue?.jawOpeningSelect1 as number ?? -1,
+        jawOpeningSelect2: defaultValue?.jawOpeningSelect2 as number ?? -1,
+        jawOpeningSelect3: defaultValue?.jawOpeningSelect3 as number ?? -1,
+        jawOpeningField: defaultValue?.jawOpeningField as string ?? '',
+        movementArticularHeadsSelect: defaultValue?.movementArticularHeadsSelect as string ?? 'симметричное',
+        movementArticularHeadsField: defaultValue?.movementArticularHeadsField as string ?? '',
+        additionallyClick: defaultValue?.additionallyClick as boolean ?? false,
+        additionallyCrunch: defaultValue?.additionallyCrunch as boolean ?? false,
+        additionallyCrepitusJoint: defaultValue?.additionallyCrepitusJoint as boolean ?? false,
+        additionallyField: defaultValue?.additionallyField as string ?? '',
+        masticatoryMuscleToneSelect: defaultValue?.masticatoryMuscleToneSelect as string ?? 'нормальный',
+        masticatoryMuscleToneField: defaultValue?.masticatoryMuscleToneField as string ?? '',
+        examinationField: defaultValue?.examinationField as string ?? '',
+        additionallyClickRight: defaultValue?.additionallyClickRight as boolean ?? false,
+        additionallyClickLeft: defaultValue?.additionallyClickLeft as boolean ?? false,
+        additionallyClickUponOpening: defaultValue?.additionallyClickUponOpening as boolean ?? false,
+        additionallyClickWhenClosing: defaultValue?.additionallyClickWhenClosing as boolean ?? false,
+        additionallyCrunchRight: defaultValue?.additionallyCrunchRight as boolean ?? false,
+        additionallyCrunchLeft: defaultValue?.additionallyCrunchLeft as boolean ?? false,
+        additionallyCrunchUponOpening: defaultValue?.additionallyCrunchUponOpening as boolean ?? false,
+        additionallyCrunchWhenClosing: defaultValue?.additionallyCrunchWhenClosing as boolean ?? false,
+        additionallyCrepitusJointRight: defaultValue?.additionallyCrepitusJointRight as boolean ?? false,
+        additionallyCrepitusJointLeft: defaultValue?.additionallyCrepitusJointLeft as boolean ?? false,
+        additionallyCrepitusJointUponOpening: defaultValue?.additionallyCrepitusJointUponOpening as boolean ?? false,
+        additionallyCrepitusJointWhenClosing: defaultValue?.additionallyCrepitusJointWhenClosing as boolean ?? false,
+        laboratoryData: defaultValue?.laboratoryData as string ?? '',
       }}
       // validationSchema={object().shape({
       //   email: string().email().required(),
@@ -1081,6 +1072,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptions}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptions.map(({ label, value: link }) => (
@@ -1119,6 +1111,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptions}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptions.map(({ label, value: link }) => (
@@ -1142,6 +1135,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='skinText'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -1159,6 +1153,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   className={s.optionInfo}
                                   selectNavigate
                                   selectOptions={selectOptions}
+                                  defaultOption={props.field.value}
                                   {...props}
                                 >
                                   {selectOptions.map(({ label, value: link }) => (
@@ -1183,6 +1178,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   className={s.optionInfo}
                                   selectNavigate
                                   selectOptions={selectOptions}
+                                  defaultOption={props.field.value}
                                   {...props}
                                 >
                                   {selectOptions.map(({ label, value: link }) => (
@@ -1207,6 +1203,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   className={s.optionInfo}
                                   selectNavigate
                                   selectOptions={selectOptions}
+                                  defaultOption={props.field.value}
                                   {...props}
                                 >
                                   {selectOptions.map(({ label, value: link }) => (
@@ -1231,6 +1228,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 width='100%'
                                 name='propertiesInfo'
                                 className={classNames(s.defaultInput, s.title)}
+                                value={props.field.value}
                                 onChange={props.field.onChange} />}
                           </Field>
                         </Grid>
@@ -1244,6 +1242,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   className={s.optionInfo}
                                   selectNavigate
                                   selectOptions={selectOptions}
+                                  defaultOption={props.field.value}
                                   {...props}
                                 >
                                   {selectOptions.map(({ label, value: link }) => (
@@ -1274,6 +1273,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -1303,6 +1303,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -1332,6 +1333,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -1361,6 +1363,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='externalInspectionComment'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -1383,6 +1386,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                             className={s.optionInfo}
                             selectNavigate
                             selectOptions={selectOptions}
+                            defaultOption={props.field.value}
                             {...props}
                           >
                             {selectOptions.map(({ label, value: link }) => (
@@ -1411,6 +1415,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                           width='100%'
                           name='plaqueOnTeethText'
                           className={classNames(s.defaultInput, s.title)}
+                          value={props.field.value}
                           onChange={props.field.onChange} />}
                     </Field>
                   )
@@ -1418,97 +1423,17 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
               </Grid>
               {
                 values.plaqueOnTeeth !== 'Нет' && (
-                  <Grid marginBlock={2} marginLeft={2} className={s.filterOptions}>
-                    <Field name="plaqueOnTeethDropdown1">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'пигментированный', label: 'пигментированный' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                    <Field name="plaqueOnTeethDropdown2">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'Твердый', label: 'Твердый' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            {...props}
-                          >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                    <Grid className={s.filterOptions} >
-                      <Grid >
-                        <Field
-                          name="plaqueOnTeethCheckbox1"
-                        >
-                          {({ field, form }: FieldProps) =>
-                            <Checkbox
-                              className={s.checkbox}
-                              checked={field.value}
-                              onChange={() => form.setFieldValue('plaqueOnTeethCheckbox1', !field.value ? 'наддесневой' : '')}
-                            >
-                              наддесневой
-                            </Checkbox>
-                          }
-                        </Field>
-                      </Grid>
-                      <Grid >
-                        <Field
-                          name="plaqueOnTeethCheckbox2"
-                        >
-                          {({ field, form }: FieldProps) =>
-                            <Checkbox
-                              className={s.checkbox}
-                              checked={field.value}
-                              onChange={() => form.setFieldValue('plaqueOnTeethCheckbox2', !field.value ? 'поддесневой' : '')}
-                            >
-                              поддесневой
-                            </Checkbox>
-                          }
-                        </Field>
-                      </Grid>
-                    </Grid>
-                    <Grid className={s.filterOptions} >
-                      <Grid marginRight={2}>Количество</Grid>
-                      <Field name="plaqueOnTeethDropdown3">
+                  <>
+                    <Grid marginBlock={2} marginLeft={2} className={s.filterOptions}>
+                      <Field name="plaqueOnTeethDropdown1">
                         {(props: FieldProps) => {
-                          const selectOptions = [{ value: 'обильное', label: 'обильное' }];
+                          const selectOptions = [{ value: 'пигментированный', label: 'пигментированный' }];
                           return (
                             <SelectField
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptions}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptions.map(({ label, value: link }) => (
@@ -1525,18 +1450,106 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                           );
                         }}
                       </Field>
+                      <Field name="plaqueOnTeethDropdown2">
+                        {(props: FieldProps) => {
+                          const selectOptions = [{ value: 'Твердый', label: 'Твердый' }];
+                          return (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              defaultOption={props.field.value}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          );
+                        }}
+                      </Field>
+                      <Grid className={s.filterOptions} >
+                        <Grid >
+                          <Field
+                            name="plaqueOnTeethCheckbox1"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                className={s.checkbox}
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('plaqueOnTeethCheckbox1', !field.value ? 'наддесневой' : '')}
+                              >
+                                наддесневой
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                        <Grid >
+                          <Field
+                            name="plaqueOnTeethCheckbox2"
+                          >
+                            {({ field, form }: FieldProps) =>
+                              <Checkbox
+                                className={s.checkbox}
+                                checked={field.value}
+                                onChange={() => form.setFieldValue('plaqueOnTeethCheckbox2', !field.value ? 'поддесневой' : '')}
+                              >
+                                поддесневой
+                              </Checkbox>
+                            }
+                          </Field>
+                        </Grid>
+                      </Grid>
+                      <Grid className={s.filterOptions} >
+                        <Grid marginRight={2}>Количество</Grid>
+                        <Field name="plaqueOnTeethDropdown3">
+                          {(props: FieldProps) => {
+                            const selectOptions = [{ value: 'обильное', label: 'обильное' }];
+                            return (
+                              <SelectField
+                                className={s.optionInfo}
+                                selectNavigate
+                                selectOptions={selectOptions}
+                                defaultOption={props.field.value}
+                                {...props}
+                              >
+                                {selectOptions.map(({ label, value: link }) => (
+                                  <MenuItem
+                                    key={link}
+                                    value={link}
+                                    className='select-link'
+                                  >
+                                    {label}
+                                  </MenuItem>
+                                ))
+                                }
+                              </SelectField>
+                            );
+                          }}
+                        </Field>
+                      </Grid>
                     </Grid>
-                    <Field
-                      name="plaqueOnTeethInputField"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='plaqueOnTeethInputField'
-                          className={classNames(s.defaultInput, s.title)}
-                          onChange={props.field.onChange} />}
-                    </Field>
-                  </Grid>)
+                    <Grid marginBlock={2} marginLeft={2} >
+                      <Field
+                        name="plaqueOnTeethInputField"
+                      >
+                        {(props: FieldProps) =>
+                          <UnderlineText
+                            width='100%'
+                            name='plaqueOnTeethInputField'
+                            className={classNames(s.defaultInput, s.title)}
+                            value={props.field.value}
+                            onChange={props.field.onChange} />}
+                      </Field>
+                    </Grid>
+                  </>)
               }
             </div>
             <div className={classNames(s.title)}>14. Зубная формула <br /><br />
@@ -1623,6 +1636,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -1647,6 +1661,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -1669,28 +1684,26 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                       <Grid marginBlock={1} className={s.filterOptions}>
                         <Grid marginRight={1}>кровоточивость при зондировании</Grid>
                         <Field name="bleedingDuringEndotherapy">
-                          {(props: FieldProps) => {
-                            const selectOptions = [{ value: 'нет', label: 'нет' }, { value: 'да', label: 'да' }];
-                            return (
-                              <SelectField
-                                className={s.optionInfo}
-                                selectNavigate
-                                selectOptions={selectOptions}
-                                {...props}
-                              >
-                                {selectOptions.map(({ label, value: link }) => (
-                                  <MenuItem
-                                    key={link}
-                                    value={link}
-                                    className='select-link'
-                                  >
-                                    {label}
-                                  </MenuItem>
-                                ))
-                                }
-                              </SelectField>
-                            );
-                          }}
+                          {(props: FieldProps) => (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
+                              {...props}
+                            >
+                              {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          )}
                         </Field>
                       </Grid>
                     </li>
@@ -1698,28 +1711,26 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                       <Grid marginBlock={1} className={s.filterOptions}>
                         <Grid marginRight={1}>наличие рубцов</Grid>
                         <Field name="presenceOfScars">
-                          {(props: FieldProps) => {
-                            const selectOptions = [{ value: 'нет', label: 'нет' }];
-                            return (
-                              <SelectField
-                                className={s.optionInfo}
-                                selectNavigate
-                                selectOptions={selectOptions}
-                                {...props}
-                              >
-                                {selectOptions.map(({ label, value: link }) => (
-                                  <MenuItem
-                                    key={link}
-                                    value={link}
-                                    className='select-link'
-                                  >
-                                    {label}
-                                  </MenuItem>
-                                ))
-                                }
-                              </SelectField>
-                            );
-                          }}
+                          {(props: FieldProps) => (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
+                              {...props}
+                            >
+                              {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          )}
                         </Field>
                       </Grid>
                     </li>
@@ -1727,28 +1738,26 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                       <Grid marginBlock={1} className={s.filterOptions}>
                         <Grid marginRight={1}>пародонтальные карманы </Grid>
                         <Field name="periodontalPockets">
-                          {(props: FieldProps) => {
-                            const selectOptions = [{ value: 'нет', label: 'нет' }];
-                            return (
-                              <SelectField
-                                className={s.optionInfo}
-                                selectNavigate
-                                selectOptions={selectOptions}
-                                {...props}
-                              >
-                                {selectOptions.map(({ label, value: link }) => (
-                                  <MenuItem
-                                    key={link}
-                                    value={link}
-                                    className='select-link'
-                                  >
-                                    {label}
-                                  </MenuItem>
-                                ))
-                                }
-                              </SelectField>
-                            );
-                          }}
+                          {(props: FieldProps) => (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
+                              {...props}
+                            >
+                              {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          )}
                         </Field>
                       </Grid>
                     </li>
@@ -1756,28 +1765,26 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                       <Grid marginBlock={1} className={s.filterOptions}>
                         <Grid marginRight={1}>выделение экссудата из кармана</Grid>
                         <Field name="dischargeExudatePocket">
-                          {(props: FieldProps) => {
-                            const selectOptions = [{ value: 'нет', label: 'нет' }];
-                            return (
-                              <SelectField
-                                className={s.optionInfo}
-                                selectNavigate
-                                selectOptions={selectOptions}
-                                {...props}
-                              >
-                                {selectOptions.map(({ label, value: link }) => (
-                                  <MenuItem
-                                    key={link}
-                                    value={link}
-                                    className='select-link'
-                                  >
-                                    {label}
-                                  </MenuItem>
-                                ))
-                                }
-                              </SelectField>
-                            );
-                          }}
+                          {(props: FieldProps) => (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
+                              {...props}
+                            >
+                              {selectOptionsYesOrNot.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          )}
                         </Field>
                         <Field
                           name="dischargeExudatePocketText"
@@ -1787,6 +1794,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='dischargeExudatePocketText'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -1806,6 +1814,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   className={s.optionInfo}
                                   selectNavigate
                                   selectOptions={selectOptionsYesOrNot}
+                                  defaultOption={props.field.value}
                                   {...props}
                                 >
                                   {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -1829,6 +1838,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   width='100%'
                                   name='upperJawExostosisText'
                                   className={classNames(s.defaultInput, s.title)}
+                                  value={props.field.value}
                                   onChange={props.field.onChange} />}
                             </Field>
                           </Grid>
@@ -1841,6 +1851,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptionsYesOrNot}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -1864,6 +1875,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 width='100%'
                                 name='danglingCombText'
                                 className={classNames(s.defaultInput, s.title)}
+                                value={props.field.value}
                                 onChange={props.field.onChange} />}
                           </Field>
                         </Grid>
@@ -1875,6 +1887,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptionsYesOrNot}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -1930,6 +1943,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 width='100%'
                                 name='upperJawAtrophyText'
                                 className={classNames(s.defaultInput, s.title)}
+                                value={props.field.value}
                                 onChange={props.field.onChange} />}
                           </Field>
                         </Grid>
@@ -1945,6 +1959,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   className={s.optionInfo}
                                   selectNavigate
                                   selectOptions={selectOptionsYesOrNot}
+                                  defaultOption={props.field.value}
                                   {...props}
                                 >
                                   {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -1968,6 +1983,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                   width='100%'
                                   name='lowerJawExostosisText'
                                   className={classNames(s.defaultInput, s.title)}
+                                  value={props.field.value}
                                   onChange={props.field.onChange} />}
                             </Field>
                           </Grid>
@@ -1980,6 +1996,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptionsYesOrNot}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2003,6 +2020,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 width='100%'
                                 name='lowerDanglingCombText'
                                 className={classNames(s.defaultInput, s.title)}
+                                value={props.field.value}
                                 onChange={props.field.onChange} />}
                           </Field>
                         </Grid>
@@ -2014,6 +2032,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptionsYesOrNot}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2075,6 +2094,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 width='100%'
                                 name='lowerJawAtrophyText'
                                 className={classNames(s.defaultInput, s.title)}
+                                value={props.field.value}
                                 onChange={props.field.onChange} />}
                           </Field>
                         </Grid>
@@ -2094,6 +2114,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2118,6 +2139,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2142,6 +2164,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2166,6 +2189,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='salivaryGlandText'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2179,6 +2203,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2203,6 +2228,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2227,6 +2253,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2251,6 +2278,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='parotidPalpationText'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2275,6 +2303,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2299,6 +2328,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2326,6 +2356,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2468,6 +2499,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptionsYesOrNot}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2493,6 +2525,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 width='100%'
                                 name='lipExaminationText'
                                 className={classNames(s.defaultInput, s.title)}
+                                value={props.field.value}
                                 onChange={props.field.onChange} />}
                           </Field>
                         </Grid>
@@ -2516,6 +2549,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2540,6 +2574,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2564,6 +2599,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='tongueExaminationText'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </>
@@ -2583,6 +2619,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2609,6 +2646,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2637,6 +2675,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2664,6 +2703,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2692,6 +2732,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2719,6 +2760,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                             width='100%'
                             name='tongueExaminationField'
                             className={classNames(s.defaultInput, s.title)}
+                            value={props.field.value}
                             onChange={props.field.onChange} />}
                       </Field>
                     </li>
@@ -2740,6 +2782,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptions}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptions.map(({ label, value: link }) => (
@@ -2773,6 +2816,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='300px'
                               name='attachedGingivalHeight'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2786,6 +2830,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2810,6 +2855,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='presenceOfRecessionsText'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2825,6 +2871,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='frenulumLowerLip'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2840,6 +2887,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='frenulumUpperLip'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2855,6 +2903,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='presenceSurgicalScar'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2874,6 +2923,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                             className={s.optionInfo}
                             selectNavigate
                             selectOptions={biteConditionOptions}
+                            defaultOption={props.field.value}
                             {...props}
                           >
                             {biteConditionOptions.map(({ label, value: link }) => (
@@ -2901,6 +2951,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                           width='100%'
                           name='biteConditionField'
                           className={classNames(s.defaultInput, s.title)}
+                          value={props.field.value}
                           onChange={props.field.onChange} />}
                     </Field>
                   )}
@@ -2919,6 +2970,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -2943,6 +2995,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='overlapField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2956,6 +3009,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -2979,6 +3033,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='tremesField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -2992,6 +3047,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -3015,6 +3071,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='diastemasField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3030,6 +3087,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='anomaliesIndividualTeeth'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3045,6 +3103,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -3069,6 +3128,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='toothWearField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3082,6 +3142,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -3105,6 +3166,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='dentoalveolarAdvancementField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3118,6 +3180,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -3141,6 +3204,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='signPopovGodonField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3156,6 +3220,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='overlappingLowerIncisorsUpper'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3169,6 +3234,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={selectOptionsYesOrNot}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {selectOptionsYesOrNot.map(({ label, value: link }) => (
@@ -3192,6 +3258,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='speechDefectField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3216,6 +3283,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={jawOpeningSelect1Options1}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {jawOpeningSelect1Options1.map(({ label, value: link }) => (
@@ -3237,6 +3305,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={jawOpeningSelect1Options2}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {jawOpeningSelect1Options2.map(({ label, value: link }) => (
@@ -3258,6 +3327,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               className={s.optionInfo}
                               selectNavigate
                               selectOptions={jawOpeningSelect1Options3}
+                              defaultOption={props.field.value}
                               {...props}
                             >
                               {jawOpeningSelect1Options3.map(({ label, value: link }) => (
@@ -3281,6 +3351,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='jawOpeningField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3296,6 +3367,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -3320,6 +3392,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='movementArticularHeadsField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3567,6 +3640,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                               width='100%'
                               name='masticatoryMuscleToneField'
                               className={classNames(s.defaultInput, s.title)}
+                              value={props.field.value}
                               onChange={props.field.onChange} />}
                         </Field>
                       </Grid>
@@ -3582,6 +3656,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                                 className={s.optionInfo}
                                 selectNavigate
                                 selectOptions={selectOptions}
+                                defaultOption={props.field.value}
                                 {...props}
                               >
                                 {selectOptions.map(({ label, value: link }) => (
@@ -3609,6 +3684,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                             width='100%'
                             name='examinationField'
                             className={classNames(s.defaultInput, s.title)}
+                            value={props.field.value}
                             onChange={props.field.onChange} />}
                       </Field>
                     </li>
@@ -3627,14 +3703,16 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                         width='100%'
                         name='laboratoryData'
                         className={classNames(s.defaultInput, s.title)}
+                        value={props.field.value}
                         onChange={props.field.onChange} />}
                   </Field>
                 )}
             </div>
-            <div className={classNames(s.title)}>22. Бланк онкологического профилактического медицинского осмотра:
+            <div className={s.title}>22. Бланк онкологического профилактического медицинского осмотра:
               <Grid marginBlock={2} className={s.insertedPicture}>
                 <img src={`${API_URL}/static/1.jpg`} alt='22' />
               </Grid>
+
             </div>
             <div className={classNames(s.title)}>23. Бланк обследования на венерические заболивания:
               <Grid marginBlock={2} className={s.insertedPicture}>
@@ -3703,6 +3781,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                   className={s.submit}
                   type="submit"
                   color="primary"
+
                 >
                   Сохранить
                 </Button>
