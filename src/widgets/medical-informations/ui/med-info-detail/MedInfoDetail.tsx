@@ -42,7 +42,6 @@ type InitialValues = {
   complaints: string
   previousConcomitantDiseases: string
   developmentDisease: string
-  visualInspection: string
   faceSelect: string
   faceText: string
   skinSelect: string
@@ -762,8 +761,9 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
   }
   const medInfo: MedInfoData[] = JSON.parse(patientInfo.medInfo);
   console.log('medInfo', medInfo);
+  console.log('patientInfo', JSON.parse(medInfo?.[12]?.value as string));
 
-  const getDateText = medInfo[0]?.value.toString();
+  const getDateText = medInfo ? medInfo[0]?.value.toString() : '';
   const parts = getDateText.split(' ');
   const startMonth = parts[parts.length - 2];
   const startYear = parts[parts.length - 1];
@@ -771,7 +771,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
   return (
     <Formik
       initialValues={{
-        startDay: medInfo[0]?.value.toString().match(/«([^»]*)»/)![1] || '',
+        startDay: medInfo?.[0]?.value.toString().match(/«([^»]*)»/)![1] || '',
         startMonth: startMonth || '',
         startYear: startYear || '20',
         fullName: patientInfo.fullName,
@@ -779,14 +779,13 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
         address: patientInfo.address,
         phone: patientInfo.phone,
         age: patientInfo.dateOfBirth,
-        specialization: medInfo[6]?.value.toString() || '',
-        diagnosis: medInfo[7]?.value.toString() || '',
-        diagnosisICD: medInfo[8]?.value.toString() || '',
-        complaints: medInfo[9]?.value.toString() || '',
-        previousConcomitantDiseases: medInfo[10]?.value.toString() || '',
-        developmentDisease: medInfo[11]?.value.toString() || '',
-        visualInspection: '',
-        faceSelect: medInfo[11]?.value.toString() || 'cимметричное',
+        specialization: medInfo?.[6]?.value.toString() || '',
+        diagnosis: medInfo?.[7]?.value.toString() || '',
+        diagnosisICD: medInfo?.[8]?.value.toString() || '',
+        complaints: medInfo?.[9]?.value.toString() || '',
+        previousConcomitantDiseases: medInfo?.[10]?.value.toString() || '',
+        developmentDisease: medInfo?.[11]?.value.toString() || '',
+        faceSelect: medInfo?.[12]?.value.toString() || 'cимметричное',
         faceText: '',
         skinSelect: 'чистые',
         skinText: '',
