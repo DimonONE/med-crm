@@ -37,9 +37,9 @@ export function usePatientsListInfinity(initialQuery?: Partial<QueryListOfUsers>
   });
 }
 
-export function usePatientId(patientId: string): UseQueryResult<Api.PatientEntityDto> {
+export function usePatientId(patientId: string, isUpdate: boolean = false): UseQueryResult<Api.PatientEntityDto> {
   return useQuery({
-    queryKey: [patientsKeys.patientId(), patientId],
+    queryKey: [patientsKeys.patientId(), patientId, isUpdate],
     queryFn: async () => {
       const response = await axiosInstance({ url: `/patients/${patientId}`, method: 'GET' });
       return response.data;

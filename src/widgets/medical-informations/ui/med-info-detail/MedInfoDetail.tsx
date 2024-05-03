@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormGroup, Grid, MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -170,7 +170,7 @@ type InitialValues = {
 
 export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
   const navigate = useNavigate();
-  const { data: patientInfo, isLoading } = usePatientId(patientId);
+  const { data: patientInfo, isLoading } = usePatientId(patientId, isUpdate);
   const { mutate } = useCreateUpdateMedInfo();
   const { role } = useRoleUser();
   const [isOpen, setOpen] = useState(false);
@@ -749,8 +749,18 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
 
   const handleEdit = () => {
     navigate(PATH_PAGE.medInfo.edit(patientId, id));
-    window.scrollTo(0, 0);
   };
+
+  const onModal = () => {
+    setOpen(false);
+    if (isUpdate) {
+      navigate(-1);
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [patientInfo, isLoading]);
 
   if (!patientInfo || isLoading) {
     return null;
@@ -3713,6 +3723,7 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                 <img src={`${API_URL}/static/1.jpg`} alt='22' />
               </Grid>
 
+
             </div>
             <div className={classNames(s.title)}>23. Бланк обследования на венерические заболивания:
               <Grid marginBlock={2} className={s.insertedPicture}>
@@ -3791,8 +3802,8 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
 
           <Modal
             isOpen={isOpen}
-            onSuccess={() => setOpen(false)}
-            onClose={() => setOpen(false)}
+            onSuccess={onModal}
+            onClose={onModal}
             type='info' >
             <div>
               {!isUpdate ? <>Сохранить информацию? <br />Поменять ее сможет только<br />Владелец клиники</> : 'Информация сохранена!'}
