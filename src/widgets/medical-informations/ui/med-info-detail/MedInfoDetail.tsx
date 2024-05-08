@@ -20,6 +20,7 @@ import { MedInfoData, downloadPDF, getDataInfo } from './lib/helper';
 import { biteConditionOptions, jawOpeningSelect1Options1, jawOpeningSelect1Options2, jawOpeningSelect1Options3, selectOptionsYesOrNot } from './lib/utils';
 import s from './styles.module.scss';
 import ImplantICO from './svg/implant.svg';
+import PrePlanningICO from './svg/pre-planning.svg';
 
 type MedInfoDetailProps = {
   id: string
@@ -717,14 +718,8 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
       },
       {
         name: '25. Установеленные импланты:',
-        type: 'array',
-        value: JSON.stringify([
-          {
-            name: '',
-            type: 'string',
-            value: `<img src='${ImplantICO}' />`,
-          },
-        ]),
+        type: 'image',
+        value: `${API_URL}/static/6.svg`,
       },
       {
         id: 'default',
@@ -1388,51 +1383,52 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                 <Grid marginRight={1}>13. Состояние зубов: <span>налет на зубах</span></Grid>
                 {
                   !isUpdate ? getDataInfo(medInfo[14]) : (
-                    <Field name="plaqueOnTeeth">
-                      {(props: FieldProps) => {
-                        const selectOptions = [{ value: 'Нет', label: 'Нет' }, { value: 'Есть', label: 'Есть' }];
-                        return (
-                          <SelectField
-                            className={s.optionInfo}
-                            selectNavigate
-                            selectOptions={selectOptions}
-                            defaultOption={props.field.value}
-                            {...props}
+                    <>
+                      <Field name="plaqueOnTeeth">
+                        {(props: FieldProps) => {
+                          const selectOptions = [{ value: 'Нет', label: 'Нет' }, { value: 'Есть', label: 'Есть' }];
+                          return (
+                            <SelectField
+                              className={s.optionInfo}
+                              selectNavigate
+                              selectOptions={selectOptions}
+                              defaultOption={props.field.value}
+                              {...props}
+                            >
+                              {selectOptions.map(({ label, value: link }) => (
+                                <MenuItem
+                                  key={link}
+                                  value={link}
+                                  className='select-link'
+                                >
+                                  {label}
+                                </MenuItem>
+                              ))
+                              }
+                            </SelectField>
+                          );
+                        }}
+                      </Field>
+                      {
+                        values.plaqueOnTeeth !== 'Нет' && (
+                          <Field
+                            name="plaqueOnTeethText"
                           >
-                            {selectOptions.map(({ label, value: link }) => (
-                              <MenuItem
-                                key={link}
-                                value={link}
-                                className='select-link'
-                              >
-                                {label}
-                              </MenuItem>
-                            ))
-                            }
-                          </SelectField>
-                        );
-                      }}
-                    </Field>
-                  )
-                }
-                {
-                  values.plaqueOnTeeth !== 'Нет' && (
-                    <Field
-                      name="plaqueOnTeethText"
-                    >
-                      {(props: FieldProps) =>
-                        <UnderlineText
-                          width='100%'
-                          name='plaqueOnTeethText'
-                          className={classNames(s.defaultInput, s.title)}
-                          value={props.field.value}
-                          onChange={props.field.onChange} />}
-                    </Field>
-                  )
-                }
+                            {(props: FieldProps) =>
+                              <UnderlineText
+                                width='100%'
+                                name='plaqueOnTeethText'
+                                className={classNames(s.defaultInput, s.title)}
+                                value={props.field.value}
+                                onChange={props.field.onChange} />}
+                          </Field>
+                        )
+                      }
+                    </>
+                  )}
               </Grid>
               {
-                values.plaqueOnTeeth !== 'Нет' && (
+                isUpdate && values.plaqueOnTeeth !== 'Нет' && (
                   <>
                     <Grid marginBlock={2} marginLeft={2} className={s.filterOptions}>
                       <Field name="plaqueOnTeethDropdown1">
@@ -3718,27 +3714,217 @@ export function MedInfoDetail({ patientId, id, isUpdate }: MedInfoDetailProps) {
                   </Field>
                 )}
             </div>
-            <div className={s.title}>22. Бланк онкологического профилактического медицинского осмотра:
-              <Grid marginBlock={2} className={s.insertedPicture}>
-                <img src={`${API_URL}/static/1.jpg`} alt='22' />
-              </Grid>
+            <div className={classNames(s.title, s.tableInfo22)}>22. Бланк онкологического профилактического медицинского осмотра:
 
+              <table className={s.table}>
+                <tr>
+                  <th rowSpan={2} style={{ width: 120 }}>Дата осмотра</th>
+                  <th colSpan={8}>Направление на доследование</th>
+                  {/* <th>Наименование медицинского учреждения и специалиста</th> */}
+                </tr>
+                <tr>
+                  <td style={{ writingMode: 'vertical-rl' }}><p className={s.p}>Губа</p></td>
+                  <td style={{ writingMode: 'vertical-rl' }}><p className={s.p} >Рот и глотка</p></td>
+                  <td style={{ writingMode: 'vertical-rl' }}><p className={s.p}>Щитовидная железа</p></td>
+                  <td style={{ writingMode: 'vertical-rl' }}><p className={s.p}>Лимфатические узлы</p></td>
+                  <td style={{ writingMode: 'vertical-rl' }}><p className={s.p}>Кожа</p></td>
+                  <td>Дата</td>
+                  <td>Наименование медицинского учреждения и специалиста</td>
+                </tr>
+                <tr>
+                  {Array.from({ length: 8 }).fill(0).map((_, i) => (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <th key={`column-${i}`} className={s.empty}>{i + 1}</th>
+                  ))}
+                </tr>
+                {Array.from({ length: 6 }).fill(0).map((_, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <tr key={`column-${index}`}>
+                    {Array.from({ length: 7 }).fill(0).map((__, i) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <th key={`column-${i}`} className={classNames(s.empty, { [s.yellow]: i > 0 && i < 6 }, { [s.red]: i >= 6 })}> </th>
+                    ))}
+                    <th className={s.red}><span className={s.nameText}>Наименование организации <br /> Врач: ______________</span>  </th>
+                  </tr>
+                ))}
+              </table>
+
+              <p style={{ color: '#0E5F8C', lineHeight: '25.6px' }}>
+                Примечание: 1. при подозрении на рак или предраковое заболевание, в соответствующем поле ставиться символ «+». <br />
+                2. при отсутствии подозрительных симптомов ставится символ «N» (норма).<br />
+                3. Заполняется 2 раза в год<br />
+                4. При подозрении на рак или предраковое заболевание в соответствующие поле ставится символ «+)), в амбулаторной карте описывается цвет, размер, форма, консистенция очага поражения, указывается размер лимфоузлов, форма, подвижность болезненность, отмечается дата направления в специализированное учреждение и результат обследования. Врач заполняет графу «Ф.И.О.)) и ставит подпись.
+              </p>
 
             </div>
-            <div className={classNames(s.title)}>23. Бланк обследования на венерические заболивания:
-              <Grid marginBlock={2} className={s.insertedPicture}>
-                <img src={`${API_URL}/static/3.jpg`} alt='23' />
-              </Grid>
-            </div>
-            <div className={classNames(s.title)}>24. Предварительное планирование лечения:
-              <Grid marginTop={2} className={s.insertedPicture}>
-                <img src={`${API_URL}/static/4.jpg`} alt='24.1' />
-              </Grid>
-              <div className={s.insertedPicture}>
-                <img src={`${API_URL}/static/5.jpg`} alt='24.2' />
+            <div className={classNames(s.title, s.tableInfo23)}>23. Бланк обследования на венерические заболивания:
+              <table className={s.table}>
+                <tr>
+                  <td>
+                    I. Жалобы больного:
+                    <div className={s.tdInfo}><span className={s.tdName}>снижение зрения</span> <span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>слуха</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>пямяти</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>нарушение координации движения</span><span className={s.tdName}>да/нет</span></div>
+                    <br />
+                    II. Наружный осмотр:
+                    <div className={s.tdInfo}>1. В/ч головы: наличие</div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-алопеций</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-папулы</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-пустулы</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-корочки</span><span className={s.tdName}>да/нет</span></div>
+                    <br />
+                    2. Слизистая полости рта, язык:
+                    <div className={s.tdInfo}><span className={s.tdName}>-пятна</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-папулы</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-эрозии</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-язвы</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-ангина</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-увеличение одной из мендалин</span><span className={s.tdName}>да/нет</span></div>
+                  </td>
+                  <td>
+                    Состояние губ:
+                    <div className={s.tdInfo}><span className={s.tdName}>-папулы</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-заеды</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-эрозии</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-язвы</span><span className={s.tdName}>да/нет</span></div>
+                    <br />
+                    <div className={s.tdInfo}><span className={s.tdName}>3. Осыплость голоса</span><span className={s.tdName}>да/нет</span></div>
+                    <br />
+                    III. Пальпация лимфатических узлов:
+                    <div className={s.tdInfo}><span className={s.tdName}>-шейные</span><span className={s.tdName}>да/нет</span></div>
+                    <div className={s.tdInfo}><span className={s.tdName}>-подчелюстные</span><span className={s.tdName}>да/нет</span></div>
+                  </td>
+                </tr>
+              </table>
+              <div className={s.bottomBlock}>
+                Заключение:___________________________________________________________________________________________________________
+                <div className={s.print}>Дата осмотра_____________________________ Подпись врача___________</div>
+                <div className={s.print}>Дата осмотра_____________________________ Подпись врача___________</div>
+                <div className={s.print}>Дата осмотра_____________________________ Подпись врача___________</div>
               </div>
             </div>
+            <div className={classNames(s.title, s.tableInfo24)}>24. Предварительное планирование лечения:
+              <table className={s.table}>
+                <tr>
+                  <th colSpan={2}> <PrePlanningICO /></th>
+                  <th colSpan={2}> <PrePlanningICO /></th>
+                  <th colSpan={2}> <PrePlanningICO /></th>
+                </tr>
+                <tr>
+                  <td>Консультация</td>
+                  <td />
+                  <td>Консультация</td>
+                  <td />
+                  <td>Консультация</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Гигиена</td>
+                  <td />
+                  <td>Гигиена</td>
+                  <td />
+                  <td>Гигиена</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Лечение</td>
+                  <td />
+                  <td>Лечение</td>
+                  <td />
+                  <td>Лечение</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Удаление</td>
+                  <td />
+                  <td>Удаление</td>
+                  <td />
+                  <td>Удаление</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Пародонтология</td>
+                  <td />
+                  <td>Пародонтология</td>
+                  <td />
+                  <td>Пародонтология</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Синус-лифтинг костная пластика</td>
+                  <td />
+                  <td>Синус-лифтинг костная пластика</td>
+                  <td />
+                  <td>Синус-лифтинг костная пластика</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Имплантация</td>
+                  <td />
+                  <td>Имплантация</td>
+                  <td />
+                  <td>Имплантация</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Протезирование</td>
+                  <td />
+                  <td>Протезирование</td>
+                  <td />
+                  <td>Протезирование</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td />
+                  <td />
+                  <td />
+                  <td />
+                  <td />
+                  <td />
+                </tr>
+                <tr>
+                  <td>ИТОГО</td>
+                  <td />
+                  <td>ИТОГО</td>
+                  <td />
+                  <td>ИТОГО</td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Срок лечения</td>
+                  <td />
+                  <td>Срок лечения</td>
+                  <td />
+                  <td>Срок лечения</td>
+                  <td />
+                </tr>
 
+              </table>
+
+              <table className={s.tableText}>
+                <tr>
+                  <td colSpan={6}>
+                    Составление окончательного плана лечения, гарантирующего надёжный и долгосрочный результат возможно только после полной диагностики и осмотра всех специалистов.<br /><br />
+                    Врач - хирург: _____________________________________<br />
+                    Врач-ортопед: ____________________________________<br />
+                    Врач-терапевт: ________________________________<br />
+                    Особенности плана лечения ______________________________________________________________________________________________________________
+                    ___________________________________________________________________.<br />
+                    Ориентировочный срок реализации предполагаемого плана лечения – ____ месяца(ев). В зависимости от медицинских показаний и реакции организма на проводимое лечение сроки могут быть уменьшены или увеличены. Гарантия сохранения цен по настоящему плану лечения возможна только при условии внесения 100% предоплаты за предполагаемые услуги. В случае оплаты услуг по факту их оказания стоимость определяется прейскурантом, действующим на момент оказания услуги, и со временем может измениться в большую сторону. Если какие-либо услуги, которые предполагается оказать в соответствии с планом лечения, фактически не будут оказаны по медицинским показаниям в случае внесения 100% предоплаты, по окончании лечения будет произведен перерасчет и возврат денег за не оказанные услуги. Услуги, оказанные с согласия пациента сверх плана лечения, оплачиваются дополнительно по прейскуранту на момент оказания.
+                    План лечения может быть дополнен и изменен по предварительному согласованию с пациентом и в соответствии с медицинскими показаниями. В случае несогласия пациента с обязательными изменениями плана лечения по медицинским показаниям или изменением его стоимости лечение прекращается и делается перерасчет с оплатой фактически оказанных услуг.
+                    <br />Я понимаю, что план лечения является предварительным, объем, стоимость и сроки лечения могут меняться в зависимости от клинической картины, успеха лечения, выполнения мною рекомендаций и посещения врачей Исполнителя.
+                    <br />Мне понятен план, объем, срок и предполагаемый результат лечения, возможные осложнения на всех этапах лечения, возможность возникновения необходимости дополнительных обследований, изменения сроков лечения, дополнительной оплаты за иные услуги в случае возникновения медицинских показаний, мне были представлены альтернативные варианты лечения и протезирования, понятны сроки и условия гарантии на оказываемые по лану лечения услуги. Я понимаю необходимость плановых профилактических осмотров 1 раз в 3 месяца после реализации плана лечения в
+                    {/* &quot;{patientInfo.user.clinic.name}&quot;  */}
+                    и обязательное использование для самостоятельной гигиены ирригатора полости рта.  Мне разъяснили значение всех слов и медицинских терминов, связанных с реализацией плана лечения. Я имел возможность задать любые вопросы врачу и получил ответы на все вопросы, касающиеся предстоящего лечения, его сроков и стоимости.
+                    <br /><b>С планом лечения № ___ ознакомлен и согласен:</b>
+                    <br /><b>Подпись пациента_________________________________________ ______________</b>
+                    <br /><br />От предложенных планов лечения № ____отказываюсь__________ (подпись пациента)
+                    <br /><br />Дата «__» __________ 20___ года
+                  </td>
+                </tr>
+              </table>
+            </div>
             <div className={s.title}>25. Установеленные импланты: <br /><br />
               <div className='center'>
                 {Array.from({ length: 4 }).fill(0).map(() => (

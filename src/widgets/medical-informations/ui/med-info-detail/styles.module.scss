@@ -134,14 +134,6 @@
   }
 }
 
-.insertedPicture {
-  width: 100%;
-  img {
-    width: 100%;
-    height: 100%;
-  }
-}
-
 .defaultInput {
   outline: none;
 }
@@ -176,12 +168,19 @@
   background: #029B64 ;
 }
 
-.dentalFormula {
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+
+.dentalFormula {
   table,
   th,
   td {
@@ -200,3 +199,108 @@
   }
 }
 
+
+.tableInfo22 {
+  table,
+  th,
+  td {
+    border: 1px solid black;
+    color: #000;
+  }
+
+    table {
+      margin-block: 20px;
+    }
+
+  td {
+    text-align: center;
+
+    .p {
+      transform: rotate(180deg);
+      text-align: center;
+    }
+  }
+
+  tr {
+    .empty {
+      height: 52px;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+
+    .red {
+      background-color: #ff0000;
+    }
+
+    .nameText {
+      display: flex;
+      justify-content: center;
+      text-align: left;
+    }
+  }
+}
+
+.tableInfo23 {
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+
+  table {
+    margin-top: 20px;
+  }
+
+  td {
+    width: 50%;
+    padding-inline: 40px;
+    vertical-align: baseline;
+    color: #000;
+  }
+  
+  .tdInfo {
+    display: flex;
+    margin-block: 5px;
+
+    .tdName:first-child {
+      width: 80%;
+    }
+  }
+
+  .bottomBlock {
+    display: flex;
+    flex-direction: column;
+    margin-top: 90px;
+    padding-inline: 100px;
+
+    .print {
+      margin-top: 10px;
+      margin-left: auto;
+    }
+  }
+}
+
+.tableInfo24 {
+  table,
+  th,
+  td {
+    border: 1px solid black;
+  }
+
+  .table,
+  .tableText {
+    margin-top: 20px;
+    color: #000;
+  }
+
+
+  td:nth-child(2n) {
+    width: 7%;
+  }
+
+  .tableText {
+    line-height: 23px;
+  }
+}
