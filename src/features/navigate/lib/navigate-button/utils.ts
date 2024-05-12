@@ -15,7 +15,7 @@ export const getNavigateList = (
       return [
         { value: PATH_PAGE.personnel.root, label: 'Персонал' },
         { value: PATH_PAGE.patients.records, label: 'Пациенты' },
-        { value: PATH_PAGE.doctor.root, label: 'Журнал' },
+        { value: PATH_PAGE.doctor.root, label: 'Журнал записи' },
         { value: PATH_PAGE.attendance.root, label: 'Посещаемость' },
         { value: PATH_PAGE.services, label: 'Услуги' },
       ];
@@ -24,7 +24,7 @@ export const getNavigateList = (
       return [
         { value: PATH_PAGE.patients.records, label: 'Пациенты' },
         { value: PATH_PAGE.patients.add, label: 'Добавить пациента' },
-        { value: PATH_PAGE.doctor.root, label: 'Журнал' },
+        { value: PATH_PAGE.doctor.root, label: 'Журнал записи' },
         { value: PATH_PAGE.attendance.root, label: 'Посещаемость' },
       ];
 
