@@ -212,7 +212,16 @@ export function AppointmentSchedule({ userId, patientId: initPatientId }: IProps
             hoursInterval={{ from: HOUR_FROM, to: HOUR_TO }}
             style={{ height: '2000px', width: 'max-content' }}
             headerAttributes={{ className: s.header }}
-            bodyAttributes={{ className: s.bodyAttributes }}
+            bodyAttributes={{
+              className: s.bodyAttributes,
+              onClick: (event) => {
+                const target = event.target as HTMLElement;
+
+                if (target instanceof HTMLElement && target.children.length < 2) {
+                  navigate(PATH_PAGE.patients.records);
+                }
+              },
+            }}
           />
         </div>
       </div>
