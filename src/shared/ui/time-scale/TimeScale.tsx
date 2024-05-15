@@ -6,22 +6,25 @@ import './styles.scss';
 import { Api } from '~shared/api/realworld';
 import ArrowLeftICO from '../../svg/arrow-left-ico.svg';
 import ArrowRightICO from '../../svg/arrow-right-ico.svg';
-import closeICO from './img/close-ico.png';
 import { createIntervals, createIntervalsParse, createNewInterval, findChangedTime, getTodayAtSpecificHour, mergeIntervals } from './utils/fn';
 import { Interval } from './utils/type';
 
 type IProps = {
+  id: string
   startTime: Dayjs
   endTime: Dayjs
   handleChange: (data: Api.TimesDtoDto[]) => void
   width?: string | number
   defaultTimeValue?: Api.TimesDtoDto[]
+  workTimes?: Api.UserWorkTimeEntityDto[]
 };
 
 export function TimeScale(props: IProps) {
   const {
+    id,
     startTime,
     endTime,
+    workTimes,
     width = 650,
     handleChange,
     defaultTimeValue,
@@ -48,6 +51,15 @@ export function TimeScale(props: IProps) {
 
     let intervals: Interval[] = createIntervals(selectedTimeIntervals);
     const changedTime: Dayjs | null = findChangedTime(intervals, selectedIntervals);
+
+
+    if (workTimes && changedTime) {
+      const isTimeWork = workTimes.filter((workTime) => changedTime.isBetween(workTime.startTime, workTime.endTime, null, '[]')).length !== 0;
+
+      if (!isTimeWork) {
+        return;
+      }
+    }
 
     if (changedTime || selectedIntervals.length === 1) {
       const prevInterval: Interval[] = createIntervals(selectedIntervals);
@@ -115,76 +127,45 @@ export function TimeScale(props: IProps) {
   };
 
   const deleteTime = (time: Dayjs, intervals: Interval[]) => {
-    const updatedIntervals: Date[] = intervals.reduce(
-      (result: Interval[], { start, end }: Interval) => {
-        if (start.isSame(time) || end.isSame(time) || (time.isAfter(start) && time.isBefore(end))) {
-          const updatedStart = start.isSame(time) ? start.add(1, 'hour') : start;
-          const updatedEnd = end.isSame(time) ? end.subtract(1, 'hour') : end;
-
-          if (updatedStart.isBefore(updatedEnd)) {
-            result.push({ start: updatedStart, end: updatedEnd });
-          }
-        } else {
-          result.push({ start, end });
-        }
-        return result;
-      },
-      [],
+    const updatedIntervals = intervals.filter(({ start, end }: Interval) =>
+      !time.isBetween(start, end, null, '[]'),
     ).flatMap(
       ({ start, end }: Interval) => [start.toDate(), end.toDate()],
     );
 
-    // isClickToInterval = null;
     setSelectedIntervals(updatedIntervals);
   };
 
   useEffect(() => {
-    const reactTimeRange = document.querySelectorAll('.react_time_range__time_range_container .react_time_range__track');
-    reactTimeRange.forEach((element) => {
-      const existingBorderBlok = element.querySelector('.border-blok');
+    const reactTimeRangeContainer = document.querySelector(`#time-range-${id} .react_time_range__time_range_container`);
+    if (reactTimeRangeContainer) {
+      const reactTimeRange = reactTimeRangeContainer.querySelectorAll('.react_time_range__track');
 
-      if (!existingBorderBlok) {
-        const borderBlok = document.createElement('div');
-        borderBlok.className = 'border-blok';
-        element.appendChild(borderBlok);
-      }
-    });
+      reactTimeRange.forEach((element, index) => {
+        const existingBorderBlok = element.querySelector('.border-blok');
 
-    // Close buttons time line
-    const timeRangeContainer = document.querySelector('.react_time_range__wrapper');
-    const reactTimeRangeLabel = document.querySelectorAll('.react_time_range__time_range_container .react_time_range__tick_label');
-    const existingContainerCloseButton = timeRangeContainer?.querySelector('.react_time_range__close_button_container');
+        if (!existingBorderBlok) {
+          const borderBlok = document.createElement('div');
+          borderBlok.className = 'border-blok';
+          element.appendChild(borderBlok);
+        }
 
-    const containerCloseButton = document.createElement('div');
-    if (!existingContainerCloseButton) {
-      containerCloseButton.className = 'react_time_range__close_button_container';
-      containerCloseButton.style.width = `${typeof width === 'string' ? width : `${width}px`}`;
-      timeRangeContainer?.appendChild(containerCloseButton);
+        if (index % 2 === 0 && !element.hasAttribute('data-contextmenu')) {
+          const contextMenuHandler = (event: Event) => {
+            event.preventDefault();
+            const intervals: Interval[] = createIntervals(selectedIntervals);
+            deleteTime(dayjs(intervals[0].start, 'HH:mm'), intervals);
+          };
+
+          element.setAttribute('data-contextmenu', 'true');
+          element.addEventListener('contextmenu', contextMenuHandler, { once: true });
+        }
+      });
     }
-
-    reactTimeRangeLabel.forEach((element) => {
-      if (timeRangeContainer) {
-        const closeButton = document.createElement('button');
-        closeButton.type = 'button';
-        closeButton.className = 'react_time_range__close-button';
-        closeButton.style.top = `${element.scrollHeight}px`;
-        closeButton.style.width = `calc(100% / ${endTime.diff(startTime, 'hour')})`;
-
-        const intervals: Interval[] = createIntervals(selectedIntervals);
-
-        closeButton.onclick = () => deleteTime(dayjs(element.innerHTML, 'HH:mm'), intervals);
-
-        const closeButtonICO = document.createElement('img');
-        closeButtonICO.src = closeICO;
-
-        closeButton.appendChild(closeButtonICO);
-        containerCloseButton.appendChild(closeButton);
-      }
-    });
 
     const intervals: Interval[] = createIntervals(selectedIntervals);
     const timeIntervals = intervals.map(time => ({
-      startTime: dayjs(time.start).toString(),
+      startTime: dayjs(time.start).toISOString(),
       endTime: dayjs(time.end).toISOString(),
     }));
 
@@ -197,7 +178,7 @@ export function TimeScale(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedIntervals]);
+  }, [selectedIntervals, id]);
 
   useEffect(() => {
     if (defaultTimeValue?.length) {
@@ -206,8 +187,25 @@ export function TimeScale(props: IProps) {
     }
   }, [defaultTimeValue]);
 
+  useEffect(() => {
+    const reactTimeRangeContainer = document.querySelector(`#time-range-${id} .react_time_range__time_range_container`);
+    if (workTimes && reactTimeRangeContainer) {
+      const reactTimeRangeLabel = Array.from(reactTimeRangeContainer.querySelectorAll('.react_time_range__tick_label'));
+      reactTimeRangeLabel.forEach(rangeLabel => {
+        const time = rangeLabel.innerHTML.split(':');
+        const changedTime = dayjs().set('hour', Number(time[0])).set('minute', Number(time[1]));
+        const isTimeWork = workTimes.filter((workTime) => changedTime.isBetween(workTime.startTime, workTime.endTime, null, '[]')).length !== 0;
+
+        if (!isTimeWork) {
+          rangeLabel.classList.add('disabled');
+        }
+      });
+    }
+  }, [workTimes, id]);
+
   return (
     <Box
+      id={`time-range-${id}`}
       className='react_time_range__wrapper'
       sx={
         {

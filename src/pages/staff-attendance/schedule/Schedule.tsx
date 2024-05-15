@@ -21,6 +21,8 @@ type Params = {
 
 type DayType = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 
+dayjs.locale('en');
+
 export function Schedule() {
   const { userId } = useParams<Params>();
   const { data } = sessionApi.useGetUserId(userId!);
@@ -52,8 +54,8 @@ export function Schedule() {
         <Formik
           initialValues={{
             userId: userId!,
-            dayOfWeek: 'Sunday',
-            times: [],
+            dayOfWeek: dayjs().format('dddd') as Api.CreateUpdateWorkTimeDtoDto['dayOfWeek'],
+            times: [] as Api.CreateUpdateWorkTimeDtoDto['times'],
           }}
           validationSchema={object().shape({
             // startVacation: string().required(),
@@ -69,7 +71,9 @@ export function Schedule() {
               <div className={s.label}>Выберите дни работы</div>
               <WorkDay
                 daysWork={daysWork}
-                handleChange={(date) => setValues(prev => ({ ...prev, dayOfWeek: dayjs(date).format('dddd') as DayType }))}
+                handleChange={(date) => {
+                  setValues(prev => ({ ...prev, dayOfWeek: dayjs(date).format('dddd') as DayType }));
+                }}
                 className={s.workDay} />
 
               <div className={s.workTimeBlock}>

@@ -6,16 +6,18 @@ import { TimeScale, getTodayAtSpecificHour } from '../time-scale';
 import s from './styles.module.scss';
 
 type WorkDayInfoProps = {
+  id: string
   vacations: Api.UserVacationEntityDto[]
   workTimes: Api.UserWorkTimeEntityDto[]
   defaultTimeValue: Api.TimesDtoDto[]
   handleChange: (data: Api.TimesDtoDto[]) => void
 };
 
-export function WorkDayInfo({ vacations, workTimes, defaultTimeValue, handleChange }: WorkDayInfoProps) {
+export function WorkDayInfo({ id, vacations, workTimes, defaultTimeValue, handleChange }: WorkDayInfoProps) {
   const [firstLoad, setFirstLoad] = useState(true);
   const isVacation = vacations.find((vacation) => dayjs().isBetween(dayjs(vacation.startTime), dayjs(vacation.endTime), null, '[]'));
-  const dayOff = workTimes.filter((workTime) => workTime.dayOfWeek === dayjs().format('dddd')).length === 0;
+  const dayOfWeek = workTimes.filter((workTime) => workTime.dayOfWeek === dayjs().format('dddd'));
+  const dayOff = dayOfWeek.length === 0;
 
   useEffect(() => {
     setFirstLoad(false);
@@ -39,6 +41,13 @@ export function WorkDayInfo({ vacations, workTimes, defaultTimeValue, handleChan
   };
 
   return (
-    <TimeScale defaultTimeValue={defaultTimeValue} startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(20)} handleChange={onChange} />
+    <TimeScale
+      id={id}
+      defaultTimeValue={defaultTimeValue}
+      startTime={getTodayAtSpecificHour(9)}
+      endTime={getTodayAtSpecificHour(20)}
+      workTimes={dayOfWeek}
+      handleChange={onChange}
+    />
   );
 }

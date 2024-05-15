@@ -41,7 +41,7 @@ export function WorkTime(props: IProps) {
     <div className={classNames(s.root, className)}>
       {
         editTimes && handleChange ? (
-          <TimeScale startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(21)}
+          <TimeScale id='time-work-1' startTime={getTodayAtSpecificHour(9)} endTime={getTodayAtSpecificHour(21)}
             handleChange={handleChange} />
         ) : (
           <div className={s.times}>

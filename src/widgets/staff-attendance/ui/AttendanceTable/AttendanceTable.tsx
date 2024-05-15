@@ -67,6 +67,7 @@ export const AttendanceTable = React.forwardRef<HTMLDivElement, AttendanceListPr
         },
       });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timesVisits]);
 
@@ -131,6 +132,7 @@ export const AttendanceTable = React.forwardRef<HTMLDivElement, AttendanceListPr
                 >
                   <TableCell className='table-body-cell' component="th" scope="row">
                     <WorkDayInfo
+                      id={row.userId}
                       vacations={row.vacations}
                       workTimes={row.workTimes}
                       defaultTimeValue={row.visits}

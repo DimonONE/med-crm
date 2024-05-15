@@ -140,11 +140,15 @@
     margin-top: 0;
     margin-left: 0 !important;
     z-index: 3;
+    opacity: 1;
 
     color: #578695;
     text-align: center;
     font-size: 14px;
     font-weight: 500;
+  }
+  .react_time_range__tick_label.disabled {
+    opacity: 0.5;
   }
 }
 
