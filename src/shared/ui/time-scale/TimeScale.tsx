@@ -153,12 +153,63 @@ export function TimeScale(props: IProps) {
         if (index % 2 === 0 && !element.hasAttribute('data-contextmenu')) {
           const contextMenuHandler = (event: Event) => {
             event.preventDefault();
+            console.log('contextMenuHandler');
             const intervals: Interval[] = createIntervals(selectedIntervals);
             deleteTime(dayjs(intervals[0].start, 'HH:mm'), intervals);
           };
 
+          // const reactTimeRangeLabel = Array.from(document.querySelectorAll('.react_time_range__time_range_container .react_time_range__tick_label'));
+          // const isTimeRange = reactTimeRangeLabel.filter((rangeLabel) => {
+          //   if ((rangeLabel instanceof HTMLElement && rangeLabel.style) &&
+          //     (element instanceof HTMLElement && element.style)) {
+
+          //     const elementLeft = parseInt(element.style.left || '0', 10);
+          //     const rangeLabelLeft = parseInt(rangeLabel.style.left || '0', 10);
+          //     const rangeLabelWidth = parseInt(rangeLabel.style.width || '0', 10);
+
+          //     console.log('rangeLabel.innerHTML:', rangeLabel.innerHTML);
+          //     console.log('rangeLabelLeft <= elementLeft && elementLeft >= (rangeLabelLeft + rangeLabelWidth):', rangeLabelLeft <= elementLeft && elementLeft >= (rangeLabelLeft + rangeLabelWidth));
+
+          //     // console.log('elementLeft:', elementLeft);
+          //     // console.log('rangeLabelLeft:', rangeLabelLeft);
+          //     // console.log('rangeLabelWidth:', rangeLabelWidth);
+          //     // console.log('rangeLabelLeft + rangeLabelWidth', rangeLabelLeft + rangeLabelWidth);
+          //     // console.log('elementLeft <= rangeLabelLeft + rangeLabelWidth:', elementLeft <= (rangeLabelLeft + rangeLabelWidth));
+          //     // console.log('(elementLeft >= (rangeLabelLeft + rangeLabelWidth):', elementLeft >= (rangeLabelLeft + rangeLabelWidth));
+
+          //     if ((elementLeft <= rangeLabelLeft + rangeLabelWidth) && (elementLeft >= (rangeLabelLeft + rangeLabelWidth))) {
+          //       // console.log(element);
+
+          //       return true;
+          //     }
+          //   }
+          //   return false;
+          // });
+
+          // if (isTimeRange.length) {
+          //   console.log('rangeLabel.innerHTML', isTimeRange);
+          //   // element.setAttribute('data-time-range', isTimeRange[0]);
+          // }
+
           element.setAttribute('data-contextmenu', 'true');
           element.addEventListener('contextmenu', contextMenuHandler, { once: true });
+
+          // if (index % 2 === 0 && !element.hasAttribute('data-contextmenu')) {
+          //   contextMenuHandler = (event: Event) => {
+          //     event.preventDefault(); // Предотвращаем стандартное контекстное меню браузера
+          //     const { parentElement } = element;
+          //     if (parentElement) {
+          //       parentElement.removeChild(element);
+          //       console.log('Элемент удален');
+          //     } else {
+          //       console.log('Ошибка: Родительский элемент не найден');
+          //     }
+          //     // Добавьте код для удаления выбранной тайм шкалы или что-то еще
+          //   };
+
+          //   element.setAttribute('data-contextmenu', 'true');
+          //   element.addEventListener('contextmenu', contextMenuHandler, { once: true });
+          // }
         }
       });
     }
@@ -176,6 +227,16 @@ export function TimeScale(props: IProps) {
     if (!isDefault) {
       handleChange(timeIntervals);
     }
+
+    // return () => {
+    //   reactTimeRangeContainer.forEach(item => {
+    //     const reactTimeRange = item.querySelectorAll('.react_time_range__track');
+    //     reactTimeRange.forEach((element) => {
+    //       element.removeAttribute('data-contextmenu');
+    //       element.removeEventListener('contextmenu', contextMenuHandler);
+    //     });
+    //   });
+    // };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIntervals, id]);

@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
+import { sessionApi } from '~entities/session';
 import { Api } from '~shared/api/realworld';
 import CloseICO from '~shared/svg/close-gray-ico.svg';
 import { Button } from '~shared/ui/button';
 import { TimeScale, getTodayAtSpecificHour } from '~shared/ui/time-scale';
 import s from './styles.module.scss';
 
-type Values = {
+export type Values = {
   id: string | number,
   time: string,
   isActive: boolean
@@ -14,16 +16,33 @@ type Values = {
 
 type IProps = {
   timesWork: Values[]
+  handleActiveTimes?: (value: Values[]) => void
   handleChange?: (values: Api.TimesDtoDto[]) => void
   handleDelete?: (id: string | number) => void
+  personnelId?: string
   editTimes?: boolean
   className?: string
 };
 
 export function WorkTime(props: IProps) {
-  const { className, editTimes, timesWork, handleChange, handleDelete } = props;
+  const { className, editTimes, personnelId, timesWork: times, handleActiveTimes, handleChange, handleDelete } = props;
+  const { data } = sessionApi.useGetUserId(personnelId || '', { enabled: !!personnelId });
 
   const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+
+  const timesWork = useMemo(() => times.map((time) => {
+    const timeSplit = time.time.split(':');
+    const hour = Number(timeSplit[0]);
+    const minute = Number(timeSplit[1]);
+    const timeChange = dayjs().set('hour', hour).set('minute', minute);
+    const dayOfWeek = data?.workTimes.filter((workTime) => workTime.dayOfWeek === dayjs().format('dddd'));
+    const isActive = dayOfWeek?.filter(({ startTime, endTime }) => timeChange.isBetween(startTime, endTime, null, '[]')).length !== 0;
+
+    return {
+      ...time,
+      isActive,
+    };
+  }), [times, data]);
 
   const handleTime = (values: Values) => {
     if (editTimes) {
@@ -36,6 +55,14 @@ export function WorkTime(props: IProps) {
       }
     }
   };
+
+  useEffect(() => {
+    if (handleActiveTimes) {
+      const timesWorkActive = timesWork.filter(({ isActive }) => isActive);
+      handleActiveTimes(timesWorkActive);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timesWork]);
 
   return (
     <div className={classNames(s.root, className)}>

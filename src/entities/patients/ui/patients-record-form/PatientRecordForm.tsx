@@ -5,7 +5,7 @@ import { ErrorMessage, Field, FieldProps, Form, Formik, FormikHelpers } from 'fo
 import { toast } from 'react-toastify';
 import { object, string } from 'yup';
 import { useDoctors } from '~entities/doctor';
-import { WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
+import { Values, WorkDay, WorkTime, daysWork, timesWork } from '~entities/work-time';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { Button } from '~shared/ui/button';
@@ -22,6 +22,10 @@ type Props = {
 
 export function PatientRecordForm({ patientId }: Props) {
   const [dateValue, setDateValue] = useState<Dayjs>(dayjs());
+  const [timesOptions, setTimesOptions] = useState<{
+    value: string;
+    label: string;
+  }[]>([]);
 
   const { data: doctors } = useDoctors();
   const { mutate: createMutate } = useCreateRecord();
@@ -40,7 +44,6 @@ export function PatientRecordForm({ patientId }: Props) {
       : [defaultValue];
   }, [doctors]);
 
-  const timesOptions = generateTimeList();
 
   const onSubmit = async (
     values: Api.CreateRecordDtoDto,
@@ -75,6 +78,11 @@ export function PatientRecordForm({ patientId }: Props) {
         toast(errorHandler(error), { type: 'error' });
       },
     });
+  };
+
+  const handleActiveTimes = (value: Values[]) => {
+    const timesList = generateTimeList(value);
+    setTimesOptions(timesList);
   };
 
   return (
@@ -120,21 +128,31 @@ export function PatientRecordForm({ patientId }: Props) {
                   />
                   <WorkDay className={s.workDay} defaultValue={dateValue} daysWork={daysWork} handleChange={(date) => setDateValue(date)} />
                 </div>
-                <WorkTime className={s.workTime} timesWork={timesWork} handleChange={() => false} />
-                <div className={s.times}>
-                  <TimeSelect
-                    title='Время от'
-                    value={values.startTime}
-                    onChange={(time) => setFieldValue('startTime', time.value)}
-                    selectOptions={timesOptions}
-                  />
-                  <TimeSelect
-                    title='Время до'
-                    value={values.endTime}
-                    onChange={(time) => setFieldValue('endTime', time.value)}
-                    selectOptions={timesOptions}
-                  />
-                </div>
+                <WorkTime
+                  className={s.workTime}
+                  personnelId={values.userId}
+                  timesWork={timesWork}
+                  handleActiveTimes={handleActiveTimes}
+                  handleChange={() => false}
+                />
+                {
+                  timesOptions.length ? (
+                    <div className={s.times}>
+                      <TimeSelect
+                        title='Время от'
+                        value={values.startTime}
+                        onChange={(time) => setFieldValue('startTime', time.value)}
+                        selectOptions={timesOptions}
+                      />
+                      <TimeSelect
+                        title='Время до'
+                        value={values.endTime}
+                        onChange={(time) => setFieldValue('endTime', time.value)}
+                        selectOptions={timesOptions}
+                      />
+                    </div>
+                  ) : null
+                }
 
                 <fieldset className={classNames(s.complaint, 'full-width')}>
                   <div className={s.label}>Жалоба</div>

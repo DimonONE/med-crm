@@ -9,8 +9,8 @@ type UseListOfInfinityProps<T, R> = {
 
 export function useListOfInfinity<T, R>({ queryKey, fetchPage, initialQuery }: UseListOfInfinityProps<T, R>) {
   let defaultQuery: T = {
-    offset: 0,
-    limit: 10,
+    offset: 1,
+    limit:10,
     sortBy: 'ASC',
     ...(initialQuery as T),
   };
@@ -19,12 +19,11 @@ export function useListOfInfinity<T, R>({ queryKey, fetchPage, initialQuery }: U
     queryKey,
     queryFn: ({ pageParam }: QueryFunctionContext) => fetchPage({ ...defaultQuery, ...pageParam }),
     getNextPageParam: (lastPage, allPages) => {
-      const dataLength = allPages.reduce((total, page) => total + page.length, 0) || 0;
-
+      const offset = allPages.length + 1;
       if (lastPage.length === 0) {
         return undefined;
       }
-      return { offset: dataLength + 1 };
+      return { offset };
     },
   });
 

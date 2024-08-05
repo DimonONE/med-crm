@@ -29,7 +29,7 @@ export function TimeSelect(props: TimeSelectProps) {
   useEffect(() => {
     onChange(selectOptions[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectOptions]);
 
 
   return (

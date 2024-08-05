@@ -25,7 +25,7 @@ type Options = {
 
 export const useGetUserId = (userId: string, options?: Options | undefined): UseQueryResult<UserEntityDto, unknown> =>
   useQuery({
-    queryKey: [sessionKeys.users.getUserId()],
+    queryKey: [sessionKeys.users.getUserId(), userId],
     queryFn: async () => {
       const response = await axiosInstance({ url: `/users/user/${userId}` });
       return response.data;
