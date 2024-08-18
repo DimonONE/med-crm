@@ -42,6 +42,7 @@
     "react-input-mask": "^2.0.4",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.11.2",
+    "react-timeline-range-slider": "^1.4.1",
     "react-slider": "^2.0.6",
     "react-timetable-events": "^2.0.0",
     "react-toastify": "^9.1.3",
