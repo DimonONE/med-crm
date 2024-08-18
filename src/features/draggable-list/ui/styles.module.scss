@@ -1,0 +1,70 @@
+.draggable {
+    position: relative;
+    max-width: 1200px;
+    margin: 15px auto 0;
+    padding: 20px 0;
+    border-radius: 14px;
+    border: 1px solid #BDE1F6;
+    background: #FCFEFF;
+    cursor: auto;
+}
+
+.dragHandleLeft,
+.contentBlockDraggeble {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: grab;
+}
+
+.dragHandleLeft {
+    left: -19px;
+}
+
+.dragHandleRight {
+    margin-right: 15px;
+    cursor: grab;
+}
+
+.contentBlockDraggeble {
+    display: flex;
+    position: absolute;
+    right: 0px;
+    opacity: 0;
+    transform: translateY(-50%) translateX(100%);
+    cursor: auto;
+}
+
+.contentBlockDraggeble.show {
+    opacity: 1;
+}
+
+.createLineBlock {
+    display: flex;
+    align-items: center;
+
+    .createLine {
+        align-items: center;
+        justify-content: center;
+        width: 21px;
+        height: 21px;
+        border-radius: 50%;
+        background-color: var(--color-base);
+        color: var(--color-white);
+        font-size: 20px;
+        margin-right: 12px;
+    }
+
+    .text {
+        opacity: 0.6;
+        color: var(--color-font);
+    }
+}
+
+.contentBlock {
+    position: relative;
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    border-block: 1px solid #CBECFE;
+}
