@@ -7,16 +7,16 @@ import type {
   UserEntityDto,
 } from './Api';
 
-export const API_URL = 'http://stage.medicare-online.info';
+export const API_URL = 'http://134.209.236.71:3000';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: API_URL, 
-  timeout: 5000, 
+  baseURL: API_URL,
+  timeout: 5000,
 });
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig<AxiosRequestConfig>) => {
-    const token = getCookie('token'); 
+    const token = getCookie('token');
 
     const updatedConfig = { ...config };
     if (!updatedConfig.headers) {
@@ -36,10 +36,10 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (
-      error.response?.status === 401 && 
+      error.response?.status === 401 &&
       window.location.pathname !== PATH_PAGE.register
     ) {
-      window.location.href = PATH_PAGE.logout; 
+      window.location.href = PATH_PAGE.logout;
     }
     return Promise.reject(error);
   },

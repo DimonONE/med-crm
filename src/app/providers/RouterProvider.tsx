@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, useLocation, useRoutes } from 'react-router-dom';
 import {
   AuthGuard,
   DoctorGuard,
@@ -96,6 +96,7 @@ const RegisterPage = Loadable(lazy(() => import('~pages/registration')));
 
 export function Router() {
   const isAuth = sessionModel.useAuth();
+  const location = useLocation();
 
   const superAdmin = SuperAdminGuard({
     path: PATH_PAGE.root,
@@ -161,9 +162,20 @@ export function Router() {
       { path: 'patients/files/:status', element: <PatientFilesPage /> },
     ],
   });
+
+  const headerDefault = () => {
+    const hasCustomHeader = [PATH_PAGE.receptionTable.root, PATH_PAGE.receptionTable.create].some((rout) => rout === location.pathname);
+
+    if (!hasCustomHeader) {
+      return isAuth ? <Header /> : <HeaderLogin />;
+    }
+    return null;
+
+  };
+
   return useRoutes([
     {
-      element: isAuth ? <Header /> : <HeaderLogin />,
+      element: headerDefault(),
       children: [
         superAdmin,
         doctor,
@@ -180,11 +192,12 @@ export function Router() {
           ],
         },
         {
-          path: 'reception-table',
+          path: PATH_PAGE.receptionTable.root,
           children: [
             {
               element: <ReceptionTablePage />,
               index: true,
+              path: ':id?',
             },
             { path: 'create', element: <CreatingTemplatePage /> },
           ],

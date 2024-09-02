@@ -10,6 +10,7 @@
   
   .backButton {
     line-height: 107%;
+    margin-right: 130px;
   }
 
   .tab {
@@ -52,19 +53,17 @@
 
     .createButton {
       display: flex;
-      align-items: center;
-      padding: 12px 18px;
-      border-radius: 28.928px;
-      background: var(--color-success);
-      font-size: 18px;
+      width: max-content;
+      background-color: var(--color-success);
+      color: var(--color-white);
+      padding: 10px 9px;
+      border-radius: 29px;
+      font-size: 14.5px;
       font-weight: 500;
-      line-height: 123.9%;
-
-
+    
       svg {
         margin-right: 5px;
       }
     }
   }
 }
-

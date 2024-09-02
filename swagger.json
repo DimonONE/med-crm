@@ -369,6 +369,26 @@
               "format": "date-time",
               "type": "string"
             }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "description": "Need count patients",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "description": "Page",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -1381,6 +1401,381 @@
           }
         ]
       }
+    },
+    "/treatment/treatment-get": {
+      "get": {
+        "operationId": "TreatmentController_getTreatment",
+        "parameters": [
+          {
+            "name": "patientId",
+            "required": true,
+            "in": "query",
+            "description": "patient id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "doctorId",
+            "required": true,
+            "in": "query",
+            "description": "doctor id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "status",
+            "schema": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "category find",
+            "schema": {
+              "nullable": true,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TreatmentEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Treatment"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/treatment/treatment-get-by-id": {
+      "get": {
+        "operationId": "TreatmentController_getreatmentById",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TreatmentEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Treatment"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/treatment/treatment-create": {
+      "post": {
+        "operationId": "TreatmentController_createTreatment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTreatmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TreatmentEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Treatment"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/treatment/treatment-update": {
+      "post": {
+        "operationId": "TreatmentController_updateTreatment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTreatmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TreatmentEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Treatment"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/treatment/answer-create": {
+      "post": {
+        "operationId": "TreatmentController_createAnswer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SubTreatmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnswerBlockEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Treatment"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/template/create-update-body-block": {
+      "post": {
+        "operationId": "TemplateController_creatOrUpdateBodyBlock",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BodyBlockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Template"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/template/create-sub-template": {
+      "post": {
+        "operationId": "TemplateController_createSubTemplate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubTemplateEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Template"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/template/create-template": {
+      "post": {
+        "operationId": "TemplateController_updateTemplate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Template"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/template/get-one/{id}": {
+      "get": {
+        "operationId": "TemplateController_getTemplate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Template"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/template/get-all/{id}": {
+      "get": {
+        "operationId": "TemplateController_getAllTemplate",
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Template"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
     }
   },
   "info": {
@@ -1430,6 +1825,199 @@
           }
         },
         "required": ["name", "path", "mimetype"]
+      },
+      "CreateServicePriceDto": {
+        "type": "object",
+        "properties": {
+          "price": {
+            "type": "number",
+            "description": "Price service"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name Service"
+          }
+        },
+        "required": ["price", "name"]
+      },
+      "RecordEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "clinicId": {
+            "type": "object"
+          },
+          "patientId": {
+            "type": "string"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "servicePrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateServicePriceDto"
+            }
+          },
+          "notice": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "subTreatments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubTreatmentEntity"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "clinicId",
+          "patientId",
+          "startTime",
+          "endTime",
+          "status",
+          "servicePrices",
+          "user",
+          "subTreatments"
+        ]
+      },
+      "AnswerBlockEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "data": {
+            "type": "string"
+          },
+          "subTreatmentId": {
+            "type": "number"
+          },
+          "subTreatments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubTreatmentEntity"
+            }
+          }
+        },
+        "required": ["id", "data", "subTreatmentId", "subTreatments"]
+      },
+      "SubTreatmentEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "treatmentId": {
+            "type": "number"
+          },
+          "recordId": {
+            "type": "number"
+          },
+          "positionId": {
+            "type": "number"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "treatment": {
+            "$ref": "#/components/schemas/TreatmentEntity"
+          },
+          "record": {
+            "$ref": "#/components/schemas/RecordEntity"
+          },
+          "answerBlock": {
+            "$ref": "#/components/schemas/AnswerBlockEntity"
+          }
+        },
+        "required": [
+          "id",
+          "treatmentId",
+          "recordId",
+          "positionId",
+          "plan",
+          "completed",
+          "comment",
+          "files",
+          "treatment",
+          "record",
+          "answerBlock"
+        ]
+      },
+      "TreatmentEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "doctorId": {
+            "type": "string"
+          },
+          "patientId": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "templateId": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "doctor": {
+            "$ref": "#/components/schemas/UserEntity"
+          },
+          "patient": {
+            "$ref": "#/components/schemas/PatientEntity"
+          },
+          "subTreatments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubTreatmentEntity"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "doctorId",
+          "patientId",
+          "category",
+          "templateId",
+          "status",
+          "doctor",
+          "patient",
+          "subTreatments"
+        ]
       },
       "PatientEntity": {
         "type": "object",
@@ -1502,6 +2090,12 @@
           "updatedAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "treatmentsAsPatient": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TreatmentEntity"
+            }
           }
         },
         "required": [
@@ -1525,7 +2119,8 @@
           "medInfoPath",
           "user",
           "createdAt",
-          "updatedAt"
+          "updatedAt",
+          "treatmentsAsPatient"
         ]
       },
       "UserVisitsEntity": {
@@ -1733,71 +2328,6 @@
           "save"
         ]
       },
-      "CreateServicePriceDto": {
-        "type": "object",
-        "properties": {
-          "price": {
-            "type": "number",
-            "description": "Price service"
-          },
-          "name": {
-            "type": "string",
-            "description": "Name Service"
-          }
-        },
-        "required": ["price", "name"]
-      },
-      "RecordEntity": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "clinicId": {
-            "type": "object"
-          },
-          "patientId": {
-            "type": "string"
-          },
-          "startTime": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "endTime": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "servicePrices": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateServicePriceDto"
-            }
-          },
-          "notice": {
-            "type": "string"
-          },
-          "user": {
-            "$ref": "#/components/schemas/UserEntity"
-          }
-        },
-        "required": [
-          "id",
-          "userId",
-          "clinicId",
-          "patientId",
-          "startTime",
-          "endTime",
-          "status",
-          "servicePrices",
-          "user"
-        ]
-      },
       "UserEntity": {
         "type": "object",
         "properties": {
@@ -1902,6 +2432,12 @@
             "items": {
               "$ref": "#/components/schemas/RecordEntity"
             }
+          },
+          "treatments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TreatmentEntity"
+            }
           }
         },
         "required": [
@@ -1931,7 +2467,8 @@
           "clinic",
           "createdAt",
           "updatedAt",
-          "records"
+          "records",
+          "treatments"
         ]
       },
       "RoleEntity": {
@@ -2864,6 +3401,375 @@
           }
         },
         "required": ["id", "name", "price", "clinicId"]
+      },
+      "CreateTreatmentDto": {
+        "type": "object",
+        "properties": {
+          "patientId": {
+            "type": "string",
+            "description": "patient id"
+          },
+          "doctorId": {
+            "type": "string",
+            "description": "doctor id"
+          },
+          "templateId": {
+            "type": "number",
+            "description": "template id"
+          },
+          "status": {
+            "type": "string",
+            "description": "status"
+          },
+          "category": {
+            "type": "string",
+            "description": "category"
+          }
+        },
+        "required": ["patientId", "doctorId", "templateId"]
+      },
+      "UpdateTreatmentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "id"
+          },
+          "status": {
+            "type": "string",
+            "description": "status"
+          },
+          "category": {
+            "type": "string",
+            "description": "category"
+          }
+        },
+        "required": ["id"]
+      },
+      "SubTreatmentDto": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "number",
+            "description": "record d patient"
+          },
+          "treatmentId": {
+            "type": "number",
+            "description": "treatment id"
+          },
+          "subTemplateId": {
+            "type": "number",
+            "description": "treatment id"
+          },
+          "completed": {
+            "type": "string",
+            "description": "completed"
+          },
+          "comment": {
+            "type": "string",
+            "description": "comment"
+          },
+          "plan": {
+            "type": "string",
+            "description": "plan"
+          },
+          "blocks": {
+            "type": "string",
+            "description": "Block info"
+          },
+          "files": {
+            "type": "string",
+            "format": "binary",
+            "description": "Files"
+          }
+        },
+        "required": [
+          "recordId",
+          "treatmentId",
+          "subTemplateId",
+          "completed",
+          "comment",
+          "plan"
+        ]
+      },
+      "BlockDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "id"
+          },
+          "lineId": {
+            "type": "number",
+            "description": "id"
+          },
+          "sizeX": {
+            "type": "number",
+            "description": "id"
+          },
+          "sizeY": {
+            "type": "number",
+            "description": "id"
+          },
+          "positionId": {
+            "type": "number",
+            "description": "id"
+          },
+          "space": {
+            "type": "number",
+            "description": "id"
+          },
+          "status": {
+            "enum": [
+              "TEXT",
+              "BOLD_TEXT",
+              "CHECK_BOX",
+              "RADIO_BOX",
+              "DATE",
+              "EMPTY",
+              "WRITE_TEXT",
+              "DROPDOWN",
+              "POINT_TEXT"
+            ],
+            "type": "string",
+            "description": "id"
+          }
+        },
+        "required": ["sizeX", "sizeY", "positionId", "space", "status"]
+      },
+      "LineBlockDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "id"
+          },
+          "positionId": {
+            "type": "number",
+            "description": "id"
+          },
+          "bodyBlockId": {
+            "type": "number",
+            "description": "id"
+          },
+          "blockInfo": {
+            "description": "id",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockDto"
+            }
+          }
+        },
+        "required": ["positionId", "blockInfo"]
+      },
+      "BodyBlockDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "id"
+          },
+          "name": {
+            "type": "string",
+            "description": "name body block"
+          },
+          "positionId": {
+            "type": "number",
+            "description": "position"
+          },
+          "subTemplateId": {
+            "type": "number",
+            "description": "sub templates id"
+          },
+          "lineBlocks": {
+            "description": "id",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineBlockDto"
+            }
+          }
+        },
+        "required": ["name", "positionId", "subTemplateId", "lineBlocks"]
+      },
+      "CreateSubTemplateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "name"
+          },
+          "templateId": {
+            "type": "number",
+            "description": "template id"
+          }
+        },
+        "required": ["name", "templateId"]
+      },
+      "BlockEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "lineId": {
+            "type": "number"
+          },
+          "sizeX": {
+            "type": "number"
+          },
+          "sizeY": {
+            "type": "number"
+          },
+          "positionId": {
+            "type": "number"
+          },
+          "space": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "lineBlock": {
+            "$ref": "#/components/schemas/LineBlockEntity"
+          }
+        },
+        "required": [
+          "id",
+          "lineId",
+          "sizeX",
+          "sizeY",
+          "positionId",
+          "space",
+          "status",
+          "lineBlock"
+        ]
+      },
+      "LineBlockEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "positionId": {
+            "type": "number"
+          },
+          "bodyBlockId": {
+            "type": "number"
+          },
+          "bodyBlock": {
+            "$ref": "#/components/schemas/BodyBlockEntity"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockEntity"
+            }
+          }
+        },
+        "required": ["id", "positionId", "bodyBlockId", "bodyBlock", "blocks"]
+      },
+      "BodyBlockEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "positionId": {
+            "type": "number"
+          },
+          "subTemplateId": {
+            "type": "number"
+          },
+          "subTemplate": {
+            "$ref": "#/components/schemas/SubTemplateEntity"
+          },
+          "lineBlocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineBlockEntity"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "positionId",
+          "subTemplateId",
+          "subTemplate",
+          "lineBlocks"
+        ]
+      },
+      "SubTemplateEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "templateId": {
+            "type": "number"
+          },
+          "template": {
+            "$ref": "#/components/schemas/TemplateEntity"
+          },
+          "bodyBlocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BodyBlockEntity"
+            }
+          }
+        },
+        "required": ["id", "name", "templateId", "template", "bodyBlocks"]
+      },
+      "TemplateEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "category": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "techInfo": {
+            "type": "string"
+          },
+          "subTemplates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubTemplateEntity"
+            }
+          }
+        },
+        "required": ["id", "category", "name", "techInfo", "subTemplates"]
+      },
+      "TemplateDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "id"
+          },
+          "category": {
+            "type": "string",
+            "description": "id"
+          },
+          "name": {
+            "type": "string",
+            "description": "id"
+          },
+          "techInfo": {
+            "type": "string",
+            "description": "id"
+          }
+        }
       }
     }
   }

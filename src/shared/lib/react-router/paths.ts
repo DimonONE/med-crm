@@ -37,6 +37,7 @@ export const PATH_PAGE = {
   },
   receptionTable: {
     root: '/reception-table',
+    tab: (id: string) => `/reception-table/${id}`,
     create: '/reception-table/create',
   },
   medInfo: {

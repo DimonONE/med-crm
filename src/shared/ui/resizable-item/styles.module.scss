@@ -1,0 +1,70 @@
+.root {
+  position: relative;
+}
+
+.selectItem {
+  position: relative;
+  border-right: 1px solid #578695;
+  border-left: 1px solid #578695;
+  background-color: #D5FFE8;
+
+  .circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #578695;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    opacity: 40%;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    width: 0;
+    height: 0;
+  }
+
+  &::before {
+    top: 0;
+    left: 0;
+    border-width: 10px 10px 0 0;
+    border-color: #578695 transparent transparent transparent;
+  }
+
+  &::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 0 10px 10px;
+    border-color: transparent transparent #578695 transparent;
+  }
+
+  /* Добавление треугольников на правую и левую стороны */
+  .right::before,
+  .right::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    width: 0;
+    height: 0;
+  }
+
+  /* Верхний треугольник справа */
+  .right::before {
+    top: 0;
+    right: 0;
+    border-width: 10px 0 0 10px;
+    border-color: #578695 transparent transparent transparent;
+  }
+
+  /* Нижний треугольник слева */
+  .right::after {
+    bottom: 0;
+    left: 0;
+    border-width: 10px 10px 0;
+    border-color: transparent transparent transparent #578695;
+  }
+}

@@ -22,6 +22,62 @@ export interface FileSchemaDto {
   mimetype: string;
 }
 
+export interface CreateServicePriceDtoDto {
+  /** Price service */
+  price: number;
+  /** Name Service */
+  name: string;
+}
+
+export interface RecordEntityDto {
+  id: number;
+  userId: string;
+  clinicId: object;
+  patientId: string;
+  /** @format date-time */
+  startTime: string;
+  /** @format date-time */
+  endTime: string;
+  status: string;
+  servicePrices: CreateServicePriceDtoDto[];
+  notice?: string;
+  user: UserEntityDto;
+  subTreatments: SubTreatmentEntityDto[];
+}
+
+export interface AnswerBlockEntityDto {
+  id: number;
+  data: string;
+  subTreatmentId: number;
+  subTreatments: SubTreatmentEntityDto[];
+}
+
+export interface SubTreatmentEntityDto {
+  id: number;
+  treatmentId: number;
+  recordId: number;
+  positionId: number;
+  plan: string;
+  completed: string;
+  comment: string;
+  files: object[];
+  treatment: TreatmentEntityDto;
+  record: RecordEntityDto;
+  answerBlock: AnswerBlockEntityDto;
+}
+
+export interface TreatmentEntityDto {
+  id: number;
+  doctorId: string;
+  patientId: string;
+  category: string;
+  templateId: number;
+  status: string;
+  doctor: UserEntityDto;
+  patient: PatientEntityDto;
+  subTreatments: SubTreatmentEntityDto[];
+}
+
 export interface PatientEntityDto {
   files: FileSchemaDto[];
   medInfo: string;
@@ -47,6 +103,7 @@ export interface PatientEntityDto {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
+  treatmentsAsPatient: TreatmentEntityDto[];
 }
 
 export interface UserVisitsEntityDto {
@@ -122,28 +179,6 @@ export interface ClinicEntityDto {
   save: object;
 }
 
-export interface CreateServicePriceDtoDto {
-  /** Price service */
-  price: number;
-  /** Name Service */
-  name: string;
-}
-
-export interface RecordEntityDto {
-  id: number;
-  userId: string;
-  clinicId: object;
-  patientId: string;
-  /** @format date-time */
-  startTime: string;
-  /** @format date-time */
-  endTime: string;
-  status: string;
-  servicePrices: CreateServicePriceDtoDto[];
-  notice?: string;
-  user: UserEntityDto;
-}
-
 export interface UserEntityDto {
   files: FileSchemaDto;
   id: string;
@@ -176,6 +211,7 @@ export interface UserEntityDto {
   /** @format date-time */
   updatedAt: string;
   records: RecordEntityDto[];
+  treatments: TreatmentEntityDto[];
 }
 
 export interface RoleEntityDto {
@@ -586,6 +622,162 @@ export interface ServicePriceEntityDto {
   clinicId: number;
 }
 
+export interface CreateTreatmentDtoDto {
+  /** patient id */
+  patientId: string;
+  /** doctor id */
+  doctorId: string;
+  /** template id */
+  templateId: number;
+  /** status */
+  status?: string;
+  /** category */
+  category?: string;
+}
+
+export interface UpdateTreatmentDtoDto {
+  /** id */
+  id: number;
+  /** status */
+  status?: string;
+  /** category */
+  category?: string;
+}
+
+export interface SubTreatmentDtoDto {
+  /** record d patient */
+  recordId: number;
+  /** treatment id */
+  treatmentId: number;
+  /** treatment id */
+  subTemplateId: number;
+  /** completed */
+  completed: string;
+  /** comment */
+  comment: string;
+  /** plan */
+  plan: string;
+  /** Block info */
+  blocks?: string;
+  /**
+   * Files
+   * @format binary
+   */
+  files?: File;
+}
+
+export interface BlockDtoDto {
+  /** id */
+  id?: number;
+  /** id */
+  lineId?: number;
+  /** id */
+  sizeX: number;
+  /** id */
+  sizeY: number;
+  /** id */
+  positionId: number;
+  /** id */
+  space: number;
+  /** id */
+  status:
+    | 'TEXT'
+    | 'BOLD_TEXT'
+    | 'CHECK_BOX'
+    | 'RADIO_BOX'
+    | 'DATE'
+    | 'EMPTY'
+    | 'WRITE_TEXT'
+    | 'DROPDOWN'
+    | 'POINT_TEXT';
+}
+
+export interface LineBlockDtoDto {
+  /** id */
+  id?: number;
+  /** id */
+  positionId: number;
+  /** id */
+  bodyBlockId?: number;
+  /** id */
+  blockInfo: BlockDtoDto[];
+}
+
+export interface BodyBlockDtoDto {
+  /** id */
+  id?: number;
+  /** name body block */
+  name: string;
+  /** position */
+  positionId: number;
+  /** sub templates id */
+  subTemplateId: number;
+  /** id */
+  lineBlocks: LineBlockDtoDto[];
+}
+
+export interface CreateSubTemplateDtoDto {
+  /** name */
+  name: string;
+  /** template id */
+  templateId: number;
+}
+
+export interface BlockEntityDto {
+  id: number;
+  lineId: number;
+  sizeX: number;
+  sizeY: number;
+  positionId: number;
+  space: number;
+  status: string;
+  lineBlock: LineBlockEntityDto;
+}
+
+export interface LineBlockEntityDto {
+  id: number;
+  positionId: number;
+  bodyBlockId: number;
+  bodyBlock: BodyBlockEntityDto;
+  blocks: BlockEntityDto[];
+}
+
+export interface BodyBlockEntityDto {
+  id: number;
+  name: string;
+  positionId: number;
+  subTemplateId: number;
+  subTemplate: SubTemplateEntityDto;
+  lineBlocks: LineBlockEntityDto[];
+}
+
+export interface SubTemplateEntityDto {
+  id: number;
+  name: string;
+  templateId: number;
+  template: TemplateEntityDto;
+  bodyBlocks: BodyBlockEntityDto[];
+}
+
+export interface TemplateEntityDto {
+  id: number;
+  category: string;
+  name: string;
+  techInfo: string;
+  subTemplates: SubTemplateEntityDto[];
+}
+
+export interface TemplateDtoDto {
+  /** id */
+  id?: number;
+  /** id */
+  category?: string;
+  /** id */
+  name?: string;
+  /** id */
+  techInfo?: string;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>;
 
@@ -662,9 +854,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected encodeQueryParam(key: string, value: any) {
     const encodedKey = encodeURIComponent(key);
-    return `${encodedKey}=${encodeURIComponent(
-      typeof value === 'number' ? value : `${value}`,
-    )}`;
+    return `${encodedKey}=${encodeURIComponent(typeof value === 'number' ? value : `${value}`)}`;
   }
 
   protected addQueryParam(query: QueryParamsType, key: string) {
@@ -712,8 +902,8 @@ export class HttpClient<SecurityDataType = unknown> {
           property instanceof Blob
             ? property
             : typeof property === 'object' && property !== null
-            ? JSON.stringify(property)
-            : `${property}`,
+              ? JSON.stringify(property)
+              : `${property}`,
         );
         return formData;
       }, new FormData()),
@@ -783,9 +973,7 @@ export class HttpClient<SecurityDataType = unknown> {
     const responseFormat = format || requestParams.format;
 
     return this.customFetch(
-      `${baseUrl || this.baseUrl || ''}${path}${
-        queryString ? `?${queryString}` : ''
-      }`,
+      `${baseUrl || this.baseUrl || ''}${path}${queryString ? `?${queryString}` : ''}`,
       {
         ...requestParams,
         headers: {
@@ -804,7 +992,7 @@ export class HttpClient<SecurityDataType = unknown> {
             : payloadFormatter(body),
       },
     ).then(async (response) => {
-      const r = response as HttpResponse<T, E>;
+      const r = response.clone() as HttpResponse<T, E>;
       r.data = null as unknown as T;
       r.error = null as unknown as E;
 
@@ -1062,7 +1250,7 @@ export class Api<
      * @secure
      */
     usersControllerGetWorkList: (
-      query?: {
+      query: {
         doctorName?: string;
         /**
          * Sort by ASC or DESC
@@ -1072,6 +1260,10 @@ export class Api<
         fieldBySort?: string;
         /** @format date-time */
         date?: string;
+        /** Need count patients */
+        limit: number | null;
+        /** Page */
+        offset: number | null;
       },
       params: RequestParams = {},
     ) =>
@@ -1635,6 +1827,232 @@ export class Api<
         method: 'GET',
         secure: true,
         format: 'json',
+        ...params,
+      }),
+  };
+  treatment = {
+    /**
+     * No description
+     *
+     * @tags Treatment
+     * @name TreatmentControllerGetTreatment
+     * @request GET:/treatment/treatment-get
+     * @secure
+     */
+    treatmentControllerGetTreatment: (
+      query: {
+        /** patient id */
+        patientId: string;
+        /** doctor id */
+        doctorId: string;
+        /** status */
+        status?: string | null;
+        /** category find */
+        category?: number | null;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TreatmentEntityDto[], any>({
+        path: `/treatment/treatment-get`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Treatment
+     * @name TreatmentControllerGetreatmentById
+     * @request GET:/treatment/treatment-get-by-id
+     * @secure
+     */
+    treatmentControllerGetreatmentById: (params: RequestParams = {}) =>
+      this.request<TreatmentEntityDto[], any>({
+        path: `/treatment/treatment-get-by-id`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Treatment
+     * @name TreatmentControllerCreateTreatment
+     * @request POST:/treatment/treatment-create
+     * @secure
+     */
+    treatmentControllerCreateTreatment: (
+      data: CreateTreatmentDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TreatmentEntityDto, any>({
+        path: `/treatment/treatment-create`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Treatment
+     * @name TreatmentControllerUpdateTreatment
+     * @request POST:/treatment/treatment-update
+     * @secure
+     */
+    treatmentControllerUpdateTreatment: (
+      data: UpdateTreatmentDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TreatmentEntityDto, any>({
+        path: `/treatment/treatment-update`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Treatment
+     * @name TreatmentControllerCreateAnswer
+     * @request POST:/treatment/answer-create
+     * @secure
+     */
+    treatmentControllerCreateAnswer: (
+      data: SubTreatmentDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<AnswerBlockEntityDto, any>({
+        path: `/treatment/answer-create`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.FormData,
+        format: 'json',
+        ...params,
+      }),
+  };
+  template = {
+    /**
+     * No description
+     *
+     * @tags Template
+     * @name TemplateControllerCreatOrUpdateBodyBlock
+     * @request POST:/template/create-update-body-block
+     * @secure
+     */
+    templateControllerCreatOrUpdateBodyBlock: (
+      data: BodyBlockDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<string, any>({
+        path: `/template/create-update-body-block`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Template
+     * @name TemplateControllerCreateSubTemplate
+     * @request POST:/template/create-sub-template
+     * @secure
+     */
+    templateControllerCreateSubTemplate: (
+      data: CreateSubTemplateDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<SubTemplateEntityDto, any>({
+        path: `/template/create-sub-template`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Template
+     * @name TemplateControllerUpdateTemplate
+     * @request POST:/template/create-template
+     * @secure
+     */
+    templateControllerUpdateTemplate: (
+      data: TemplateDtoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<TemplateEntityDto, any>({
+        path: `/template/create-template`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Template
+     * @name TemplateControllerGetTemplate
+     * @request GET:/template/get-one/{id}
+     * @secure
+     */
+    templateControllerGetTemplate: (id: number, params: RequestParams = {}) =>
+      this.request<TemplateEntityDto, any>({
+        path: `/template/get-one/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Template
+     * @name TemplateControllerGetAllTemplate
+     * @request GET:/template/get-all/{id}
+     * @secure
+     */
+    templateControllerGetAllTemplate: (
+      id: string,
+      query?: {
+        /** id */
+        offset?: string;
+        /** id */
+        limit?: string;
+        /** id */
+        category?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/template/get-all/${id}`,
+        method: 'GET',
+        query: query,
+        secure: true,
         ...params,
       }),
   };

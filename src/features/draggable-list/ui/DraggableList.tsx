@@ -1,5 +1,9 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { useRef, useState } from 'react';
+import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import {
   DragDropContext,
   Droppable,
@@ -8,40 +12,197 @@ import {
   DraggableProvided,
 } from 'react-beautiful-dnd';
 import CloseICO from '~shared/svg/close-gray-ico.svg';
-import { useDraggableSlice } from '../store/draggableSlice';
-import DropppedLeft from '../svg/dropped-left.svg';
-import DropppedRight from '../svg/dropped-right.svg';
-import { ContentT, LineContentT } from '../types';
+import { Checkbox } from '~shared/ui/checkbox';
+import { DatePicker } from '~shared/ui/date-picker';
+import { ResizableItem } from '~shared/ui/resizable-item';
+import { SelectField } from '~shared/ui/select-field';
+import { UnderlineText } from '~shared/ui/underline-text';
+import { useDraggableSlice } from '../model/draggableSlice';
+import DroppedLeft from '../svg/dropped-left.svg';
+import DroppedRight from '../svg/dropped-right.svg';
+import { Template, TemplateLineBlock, TemplateStatus } from '../types';
 import s from './styles.module.scss';
 
-interface DraggableLineP {
-  templateId: string;
-  contentId: string;
+interface DraggableLineProps extends TemplateLineBlock {
+  templateId: number
   provided: DraggableProvided;
-  content: ContentT[];
-  lineContent: LineContentT[];
-}
-
-interface DraggableItemP {
-  templateId: string;
-  provided: DraggableProvided;
-  content: ContentT[];
   onDelete: () => void;
 }
 
-function DraggableItem(props: DraggableLineP) {
-  const { handleTemplatesContent } = useDraggableSlice();
-  const [isFocused, setFocused] = useState(false);
-  const { templateId, contentId, provided, content, lineContent } = props;
+interface DraggableBlockProps extends Template {
+  provided: DraggableProvided;
+  onDelete: () => void;
+}
 
-  const onDelete = (id: string) => {
-    if (!content.length) return;
+interface ChangeBlockProps {
+  templateId: number
+  bodyBlockId: number
+  lineId: number
+  status: TemplateStatus
+}
 
-    const reorderedItems = Array.from(content);
-    const deleteTemplate = reorderedItems.filter((item) => item.id !== id);
+function ChangeBlock(props: ChangeBlockProps) {
+  const { onCurrentBlockInfo, onToggleVisibility } = useDraggableSlice();
+  const ref = useRef<HTMLDivElement>(null);
+  const [value, setValue] = useState<string | number>('');
+  const { templateId, bodyBlockId, lineId, status } = props;
 
-    handleTemplatesContent(templateId, deleteTemplate);
+  const onCreateItem = () => {
+    onToggleVisibility(true);
+    onCurrentBlockInfo(templateId, bodyBlockId, lineId);
   };
+
+  const onChange = (eventValue: string | number) => {
+    setValue(eventValue);
+  };
+
+  switch (true) {
+    case status === 'text':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <input className={classNames(s.defaultInput, s.text)} value={value} onChange={(e) => onChange(e.target.value)} />
+        </ResizableItem>
+      );
+
+    case status === 'bold':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <input className={classNames(s.defaultInput, s.bold)} value={value} onChange={(e) => onChange(e.target.value)} />
+        </ResizableItem>
+      );
+
+    case status === 'list':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <li className={s.list}>
+            <div className={s.inputBlock}>
+              <input className={classNames(s.defaultInput)} value={value} onChange={(e) => onChange(e.target.value)} />
+            </div>
+          </li>
+        </ResizableItem>
+      );
+
+    case status === 'dropdown':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <SelectField
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className={s.dropdown}
+            selectNavigate
+            selectOptions={[
+              { value: -1, label: 'Не визуализируется' },
+              { value: 1, label: 'Визуализируется' },
+            ]}
+          >
+            {[
+              { value: -1, label: 'Не визуализируется' },
+              { value: 1, label: 'Визуализируется' },
+            ].map(({ label, value: link }) => (
+              <MenuItem
+                key={link}
+                value={link}
+                className="select-link"
+              >
+                {label}
+              </MenuItem>
+            ))}
+          </SelectField>
+        </ResizableItem >
+      );
+    case status === 'checkBox':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <Checkbox
+            className={s.checkbox}
+            checked={Boolean(value)}
+            onChange={() => setValue(prev => !prev ? 'test' : '')}
+          >
+            test
+          </Checkbox>
+        </ResizableItem >
+      );
+
+    case status === 'radioButton':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <>
+            <button type='button' onClick={() => onChange('Yes')} className={classNames(s.lineContent, s.radioBlock)}>
+              <span className={classNames(s.radioButton, { [s.checked]: value === 'Yes' })} />
+              Да
+            </button>
+            <button type='button' onClick={() => onChange('No')} className={classNames(s.lineContent, s.radioBlock)}>
+              <span className={classNames(s.radioButton, { [s.checked]: value !== 'Yes' })} />
+              Нет
+            </button>
+          </>
+        </ResizableItem >
+      );
+
+    case status === 'date':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <DatePicker
+            sx={{
+              '.MuiInputBase-root.MuiOutlinedInput-root': {
+                width: '150px',
+                height: '42px',
+                padding: '0 20px',
+                maxWidth: 'none',
+                background: '#CBECFF',
+                borderRadius: '10px',
+                border: '1px solid #0E5F8C',
+                fontSize: '14px',
+                color: '#0E5F8C',
+              },
+              '.MuiInputBase-root .MuiButtonBase-root.MuiIconButton-root': {
+                color: '#0E5F8C',
+              },
+            }}
+            value={value}
+            onChange={(date) =>
+              date && onChange(dayjs(date).toISOString())
+            } />
+        </ResizableItem>);
+
+    case status === 'empty':
+      return (
+        <ResizableItem className={classNames(s.lineContent, s.empty)} >
+          <p>Пустое место</p>
+        </ResizableItem>
+      );
+
+    case status === 'handwritten':
+      return (
+        <ResizableItem className={s.lineContent} >
+          <UnderlineText
+            value={value.toString()}
+            name=''
+            onChange={(event) => typeof event === 'object' ? onChange(event.target.value) : ''}
+          />
+        </ResizableItem>
+      );
+
+    default:
+      return (
+        <div ref={ref}
+          onClick={onCreateItem}
+          tabIndex={0}
+          onKeyDown={() => false}
+          role="button"
+          className={classNames(s.lineContent, s.createItem)}
+        >
+          <div className={s.circle}> + </div>
+          <div className={s.right} />
+        </div>
+      );
+  }
+}
+
+
+function DraggableItem(props: DraggableLineProps) {
+  const [isFocused, setFocused] = useState(false);
+  const { templateId, bodyBlockId, id, blockInfo, provided, onDelete } = props;
 
   return (
     <div
@@ -57,24 +218,38 @@ function DraggableItem(props: DraggableLineP) {
         ...provided.draggableProps.style,
       }}
     >
-      {lineContent.map(({ id, template }) => (
-        <div key={id} className={s.lineContent}>
-          {template}
-        </div>
-      ))}
+      {blockInfo.length ?
+        blockInfo.map(({ lineId, status }) => (
+          <ChangeBlock
+            key={lineId}
+            templateId={templateId}
+            bodyBlockId={bodyBlockId}
+            lineId={lineId}
+            status={status}
+
+          />
+        )) : (
+          <ChangeBlock
+            templateId={templateId}
+            bodyBlockId={bodyBlockId}
+            lineId={0}
+            status="default"
+
+          />
+        )}
       <div
-        className={classNames(s.contentBlockDraggeble, { [s.show]: isFocused })}
+        className={classNames(s.contentBlockDraggable, { [s.show]: isFocused })}
       >
         <div
           className={classNames(s.dragHandleRight, { [s.show]: isFocused })}
           {...provided.dragHandleProps}
         >
-          <DropppedRight />
+          <DroppedRight />
         </div>
         <button
           className={classNames(s.deleteTemplate, { [s.show]: isFocused })}
           type="button"
-          onClick={() => onDelete(contentId)}
+          onClick={() => onDelete()}
         >
           <CloseICO />
         </button>
@@ -83,21 +258,24 @@ function DraggableItem(props: DraggableLineP) {
   );
 }
 
-function DraggableBlock(props: DraggableItemP) {
-  const { onToggleVisibility, addTemplatesLine, handleTemplatesContent } =
-    useDraggableSlice();
+function DraggableLine(props: DraggableBlockProps) {
+  const { addTemplatesLine, updateTemplatesLine } = useDraggableSlice();
 
   const [isFocused, setFocused] = useState(false);
-  const { templateId, provided, content } = props;
+  const { id, provided, lineBlocks } = props;
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
-    const reorderedItems = Array.from(content);
+    const reorderedItems = Array.from(lineBlocks);
     const [removed] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, removed);
-    console.log('reorderedItems', reorderedItems);
+    updateTemplatesLine(id, reorderedItems);
+  };
 
-    handleTemplatesContent(templateId, reorderedItems);
+  const onDelete = (lineId: number) => {
+    if (!lineBlocks.length) return;
+    const deleteTemplate = lineBlocks.filter((item) => item.id !== lineId);
+    updateTemplatesLine(id, deleteTemplate);
   };
 
   return (
@@ -116,10 +294,13 @@ function DraggableBlock(props: DraggableItemP) {
       <div className={s.draggable}>
         {isFocused && (
           <div className={s.dragHandleLeft} {...provided.dragHandleProps}>
-            <DropppedLeft />
+            <DroppedLeft />
           </div>
         )}
         <div>
+          <div className={s.headBlock}>
+            Тело блока:
+          </div>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppableContent">
               {(providedContent) => (
@@ -127,15 +308,17 @@ function DraggableBlock(props: DraggableItemP) {
                   {...providedContent.droppableProps}
                   ref={providedContent.innerRef}
                 >
-                  {content.map(({ id, lineContent }, index) => (
-                    <Draggable key={id} draggableId={id} index={index}>
+                  {lineBlocks.map(({ id: lineBlocId, bodyBlockId, ...propsLineBlocks }, index) => (
+                    <Draggable key={lineBlocId} draggableId={bodyBlockId.toString()} index={index}>
                       {(providedContentLine) => (
                         <DraggableItem
-                          templateId={templateId}
-                          contentId={id}
+                          key={lineBlocId}
+                          templateId={id}
+                          bodyBlockId={bodyBlockId}
+                          id={lineBlocId}
                           provided={providedContentLine}
-                          lineContent={lineContent}
-                          content={content}
+                          onDelete={() => onDelete(lineBlocId)}
+                          {...propsLineBlocks}
                         />
                       )}
                     </Draggable>
@@ -145,65 +328,24 @@ function DraggableBlock(props: DraggableItemP) {
               )}
             </Droppable>
           </DragDropContext>
-          {/* {content.map(({ id: lineId, lineContent }) => (
-            <div key={lineId} id={lineId} className={s.contentBlock}>
-              {lineContent.map(({ id, template }) => (
-                <div key={id} className={s.lineContent}>
-                  {template}
-                </div>
-              ))}
-              {isFocused && (
-                <>
-                  <div
-                    className={s.dragHandleRight}
-                    {...provided.dragHandleProps}
-                  >
-                    <DropppedRight />
-                  </div>
-                  <button
-                    className={s.deleteTemplate}
-                    type="button"
-                    onClick={onDelete}
-                  >
-                    <CloseICO />
-                  </button>
-                </>
-              )}
-            </div>
-          ))} */}
-          <button
-            type="button"
-            className={s.createLineBlock}
-            onClick={() => addTemplatesLine(templateId)}
-          >
-            <div className={s.createLine}>+</div>
-            <span className={s.text}>Создать строку</span>
-          </button>
+          <div className={classNames(s.blockWithPadding, s.contentBlock)} style={{ border: 'none' }}>
+            <button
+              type="button"
+              className={s.createLineBlock}
+              onClick={() => addTemplatesLine(id)}
+            >
+              <div className={s.createLine}>+</div>
+              <span className={s.text}>Создать строку</span>
+            </button>
+          </div>
         </div>
-
-        {/* <button
-          type="button"
-          className={s.createLineBlock}
-          onClick={() => updateLineContent(templateId)}
-        >
-          <div className={s.createLine}>+</div>
-          <span className={s.text}>Создать строку</span>
-        </button> */}
-        <button
-          type="button"
-          className={s.createLineBlock}
-          onClick={() => onToggleVisibility(true)}
-        >
-          <div className={s.createLine}>+</div>
-          <span className={s.text}>onToggleVisibility</span>
-        </button>
       </div>
     </div>
   );
 }
 
 export function DraggableList() {
-  const { templates, handleTemplates } = useDraggableSlice();
+  const { templates, handleTemplatesTitle, handleTemplates } = useDraggableSlice();
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -211,11 +353,10 @@ export function DraggableList() {
     const reorderedItems = Array.from(templates);
     const [removed] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, removed);
-
     handleTemplates(reorderedItems);
   };
 
-  const onDelete = (id: string) => {
+  const onDelete = (id: number) => {
     if (!templates.length) return;
 
     const reorderedItems = Array.from(templates);
@@ -225,26 +366,46 @@ export function DraggableList() {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(providedD) => (
-          <div {...providedD.droppableProps} ref={providedD.innerRef}>
-            {templates.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided) => (
-                  <DraggableBlock
-                    templateId={item.id}
-                    provided={provided}
-                    content={item.content}
-                    onDelete={() => onDelete(item.id)}
-                  />
-                )}
-              </Draggable>
-            ))}
-            {providedD.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <div className={s.wrapper}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(providedD) => (
+            <div {...providedD.droppableProps} ref={providedD.innerRef}>
+              {templates.map((template) => (
+                <div key={template.id}>
+                  <div
+                    key={template.id}
+                    className={s.draggable}
+                  >
+                    <div className={s.headBlock}>
+                      Название блока:
+                    </div>
+                    <div className={s.blockWithPadding}>
+                      <UnderlineText
+                        value={template.name}
+                        name=''
+                        onChange={(event) => typeof event === 'object' ? handleTemplatesTitle(template.id, event.target.value) : false}
+                      />
+                    </div>
+                  </div>
+
+                  <Draggable key={template.id} draggableId={template.id.toString()} index={template.subTemplateId}>
+                    {(provided) => (
+                      <DraggableLine
+                        key={template.id}
+                        provided={provided}
+                        onDelete={() => onDelete(template.id)}
+                        {...template}
+                      />
+                    )}
+                  </Draggable>
+                </div>
+              ))}
+              {providedD.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </div>
   );
 }

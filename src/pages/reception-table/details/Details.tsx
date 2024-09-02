@@ -1,7 +1,7 @@
 
 import classNames from 'classnames';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
@@ -9,12 +9,22 @@ import { Therapy } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
 
-export function PersonnelDetailsPage() {
-  const navigate = useNavigate();
+type Params = {
+  id: string
+};
 
-  // if ('therapy') {
-  //   return 
-  // }
+enum ReceptionTableEnum {
+  PERIODONTICS = '1',
+  THERAPY = '2',
+  SURGERY = '3',
+  ORTHOPEDICS = '4',
+  OTHER = '5',
+}
+
+export function PersonnelDetailsPage() {
+  const { id } = useParams<Params>();
+
+  const navigate = useNavigate();
 
   const getContent = (key: 'therapy') => {
     switch (key) {
@@ -32,27 +42,33 @@ export function PersonnelDetailsPage() {
             <span className={s.info}>
               У пациента еще нет приемов, чтобы создать <br /> прием, создать прием?
             </span>
+
+            <Button className={s.createButton} onClick={() => navigate(PATH_PAGE.receptionTable.create)}>
+              <AiOutlinePlusCircle />
+              Создать прием
+            </Button>
           </div>
         );
 
     }
   };
 
+  console.log('id', id);
 
   return (
     <div className={s.root}>
       <nav className={s.navigate}>
         <BackButton title='Таблица приема' className={s.backButton} />
 
-        <NavLink className={s.tab} to={PATH_PAGE.receptionTable.root} >ВСЕ</NavLink>
-        <NavLink className={s.tab} to={PATH_PAGE.receptionTable.root} >ПАРОДОНТОЛОГИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: true })} to={PATH_PAGE.receptionTable.root} >ТЕРАПИЯ</NavLink>
-        <NavLink className={classNames(s.tab)} to={PATH_PAGE.receptionTable.root} >ХИРУРГИЯ</NavLink>
-        <NavLink className={classNames(s.tab)} to={PATH_PAGE.receptionTable.root} >ОРТОПЕДИЯ</NavLink>
-        <NavLink className={classNames(s.tab)} to={PATH_PAGE.receptionTable.root} >ПРОЧЕЕ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === undefined })} to={PATH_PAGE.receptionTable.root} >ВСЕ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.PERIODONTICS })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.PERIODONTICS)} >ПАРОДОНТОЛОГИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.THERAPY })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.THERAPY)} >ТЕРАПИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.SURGERY })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.SURGERY)} >ХИРУРГИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.ORTHOPEDICS })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.ORTHOPEDICS)} >ОРТОПЕДИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.OTHER)} >ПРОЧЕЕ</NavLink>
       </nav>
       <div className={s.container} >
-        {getContent('therapy')}
+        {getContent('therap')}
 
 
 
