@@ -1,1 +1,2 @@
-export { Therapy } from './ui/therapy/Therapy'; 
+export { Therapy } from './ui/therapy/Therapy';
+export { Template } from './ui/template/Template'; 

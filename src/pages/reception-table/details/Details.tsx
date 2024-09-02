@@ -5,8 +5,9 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
-import { Therapy } from '~widgets/reception-table';
+import { Therapy, Template } from '~widgets/reception-table';
 import s from './styles.module.scss';
+
 
 
 type Params = {
@@ -21,15 +22,17 @@ enum ReceptionTableEnum {
   OTHER = '5',
 }
 
-export function PersonnelDetailsPage() {
+export function ReceptionTablePage() {
   const { id } = useParams<Params>();
-
   const navigate = useNavigate();
 
-  const getContent = (key: 'therapy') => {
+  const getContent = (key: 'therapy' | 'template' | undefined) => {
     switch (key) {
       case 'therapy':
         return <Therapy />;
+
+      case 'template':
+        return <Template />;
 
       default:
         return (
@@ -53,8 +56,6 @@ export function PersonnelDetailsPage() {
     }
   };
 
-  console.log('id', id);
-
   return (
     <div className={s.root}>
       <nav className={s.navigate}>
@@ -68,15 +69,8 @@ export function PersonnelDetailsPage() {
         <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.OTHER)} >ПРОЧЕЕ</NavLink>
       </nav>
       <div className={s.container} >
-        {getContent('therap')}
-
-
-
+        {getContent('template')}
       </div>
-      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.receptionTable.create)}>
-        <AiOutlinePlusCircle />
-        Создать прием
-      </Button>
     </div >
   );
 }

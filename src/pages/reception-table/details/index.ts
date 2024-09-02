@@ -1,3 +1,3 @@
-import { PersonnelDetailsPage } from './Details';
+import { ReceptionTablePage } from './Details';
 
-export default PersonnelDetailsPage;
+export default ReceptionTablePage;

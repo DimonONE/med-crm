@@ -2,12 +2,17 @@ import { useState } from 'react';
 import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
+import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
+import { PATH_PAGE } from '~shared/lib/react-router';
+import { Button } from '~shared/ui/button';
 import { SelectField } from '~shared/ui/select-field';
 import ListICO from '../../svg/list.svg';
 import TimeICO from '../../svg/time.svg';
 import s from './styles.module.scss';
 
 export function Therapy() {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<string | number>(1);
 
   const selectOptions = [
@@ -141,8 +146,11 @@ export function Therapy() {
             <span className={s.textInfo}>Пломбирование фурмидонтной жидкостью 4\5 пульпита блабла</span>
           </div>
         </div>
-
       </div>
+      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.receptionTable.create)}>
+        <AiOutlinePlusCircle />
+        Создать прием
+      </Button>
     </div>
   );
 }
