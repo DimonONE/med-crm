@@ -147,7 +147,7 @@ export function Therapy() {
           </div>
         </div>
       </div>
-      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.receptionTable.create)}>
+      <Button className='fixed-button' onClick={() => navigate(PATH_PAGE.template.create)}>
         <AiOutlinePlusCircle />
         Создать прием
       </Button>

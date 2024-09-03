@@ -35,10 +35,11 @@ export const PATH_PAGE = {
     root: '/attendance',
     schedule: (id: string) => `/attendance/schedule/${id}`,
   },
-  receptionTable: {
-    root: '/reception-table',
-    tab: (id: string) => `/reception-table/${id}`,
-    create: '/reception-table/create',
+  template: {
+    root: '/template',
+    tab: (id: string) => `/template/${id}`,
+    preview: (id: string) => `/template/preview/${id}`,
+    create: '/template/create',
   },
   medInfo: {
     root: '/med-info',

@@ -2,29 +2,22 @@
 import classNames from 'classnames';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { useRoleUser } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
-import { Therapy, Template } from '~widgets/reception-table';
+import { Therapy, Template, ReceptionTableEnum } from '~widgets/reception-table';
 import s from './styles.module.scss';
-
-
 
 type Params = {
   id: string
 };
 
-enum ReceptionTableEnum {
-  PERIODONTICS = '1',
-  THERAPY = '2',
-  SURGERY = '3',
-  ORTHOPEDICS = '4',
-  OTHER = '5',
-}
 
 export function ReceptionTablePage() {
   const { id } = useParams<Params>();
   const navigate = useNavigate();
+  const { checkUserRole } = useRoleUser();
 
   const getContent = (key: 'therapy' | 'template' | undefined) => {
     switch (key) {
@@ -32,7 +25,7 @@ export function ReceptionTablePage() {
         return <Therapy />;
 
       case 'template':
-        return <Template />;
+        return <Template id={id ?? ReceptionTableEnum.ALL} />;
 
       default:
         return (
@@ -46,7 +39,7 @@ export function ReceptionTablePage() {
               У пациента еще нет приемов, чтобы создать <br /> прием, создать прием?
             </span>
 
-            <Button className={s.createButton} onClick={() => navigate(PATH_PAGE.receptionTable.create)}>
+            <Button className={s.createButton} onClick={() => navigate(PATH_PAGE.template.create)}>
               <AiOutlinePlusCircle />
               Создать прием
             </Button>
@@ -61,16 +54,23 @@ export function ReceptionTablePage() {
       <nav className={s.navigate}>
         <BackButton title='Таблица приема' className={s.backButton} />
 
-        <NavLink className={classNames(s.tab, { [s.active]: id === undefined })} to={PATH_PAGE.receptionTable.root} >ВСЕ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.PERIODONTICS })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.PERIODONTICS)} >ПАРОДОНТОЛОГИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.THERAPY })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.THERAPY)} >ТЕРАПИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.SURGERY })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.SURGERY)} >ХИРУРГИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.ORTHOPEDICS })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.ORTHOPEDICS)} >ОРТОПЕДИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.receptionTable.tab(ReceptionTableEnum.OTHER)} >ПРОЧЕЕ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === undefined })} to={PATH_PAGE.template.root} >ВСЕ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.PERIODONTICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.PERIODONTICS)} >ПАРОДОНТОЛОГИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.THERAPY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.THERAPY)} >ТЕРАПИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.SURGERY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.SURGERY)} >ХИРУРГИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.ORTHOPEDICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.ORTHOPEDICS)} >ОРТОПЕДИЯ</NavLink>
+        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.template.tab(ReceptionTableEnum.OTHER)} >ПРОЧЕЕ</NavLink>
       </nav>
       <div className={s.container} >
         {getContent('template')}
       </div>
+
+      {checkUserRole('superAdmin') && (
+        <Button className='fixed-button' style={{ background: '#229CE1' }} onClick={() => navigate(PATH_PAGE.template.create)}>
+          <AiOutlinePlusCircle />
+          Создать шаблон
+        </Button>
+      )}
     </div >
   );
 }

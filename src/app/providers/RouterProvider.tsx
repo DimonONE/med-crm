@@ -164,7 +164,7 @@ export function Router() {
   });
 
   const headerDefault = () => {
-    const hasCustomHeader = [PATH_PAGE.receptionTable.root, PATH_PAGE.receptionTable.create].some((rout) => rout === location.pathname);
+    const hasCustomHeader = [PATH_PAGE.template.root, PATH_PAGE.template.create].some((rout) => rout === location.pathname);
 
     if (!hasCustomHeader) {
       return isAuth ? <Header /> : <HeaderLogin />;
@@ -192,13 +192,14 @@ export function Router() {
           ],
         },
         {
-          path: PATH_PAGE.receptionTable.root,
+          path: PATH_PAGE.template.root,
           children: [
             {
               element: <ReceptionTablePage />,
               index: true,
               path: ':id?',
             },
+            { path: 'preview/:id', element: <CreatingTemplatePage /> },
             { path: 'create', element: <CreatingTemplatePage /> },
           ],
         },
