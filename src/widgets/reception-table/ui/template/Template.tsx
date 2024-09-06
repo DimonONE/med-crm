@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useTemplateGetOne } from '~features/draggable-list';
+import { useRoleUser } from '~entities/session';
+import { useTemplateGetAll } from '~features/draggable-list';
 import { PATH_PAGE } from '~shared/lib/react-router';
-import { CardsNavigate, ServicesICO } from '~shared/ui/cards-navigate';
+import { CardsNavigate, ServicesICO, TCardEvent } from '~shared/ui/cards-navigate';
 import s from './styles.module.scss';
 
 type Props = {
@@ -19,33 +20,69 @@ export enum ReceptionTableEnum {
   OTHER = '1',
 }
 
+export const ReversedReceptionTableEnum: { [key: string]: string } = {
+  '1': 'OTHER',
+  '4': 'PERIODONTICS',
+  '5': 'THERAPY',
+  '6': 'SURGERY',
+  '7': 'ORTHOPEDICS',
+};
+
 export function Template({ id }: Props) {
-  const { data } = useTemplateGetOne(id);
+  // const { data } = useTemplateGetOne(id);
+  const { data } = useTemplateGetAll({
+    offset: 0,
+    limit: 100,
+    category: ReversedReceptionTableEnum[id] ?? ReceptionTableEnum.ALL,
+  });
+
+  console.log('data', data);
+
   const navigate = useNavigate();
+  const { checkUserRole } = useRoleUser();
+
+  // const cards = useMemo(() => {
+  //   if (!data?.subTemplates?.length) return [];
+
+  //   return data.subTemplates.map(({ id: templateId, name }) => ({
+  //     id: templateId,
+  //     title: name,
+  //     ico: <ServicesICO />,
+  //     link: PATH_PAGE.template.preview(id, templateId.toString()),
+  //   }));
+  // }, [data]);
 
   const cards = useMemo(() => {
-    if (!data?.subTemplates?.length) return [];
+    if (!data?.data.length) return [];
 
-    return data.subTemplates.map(({ id: templateId, name }) => ({
+    return data.data.map(({ id: templateId, name }) => ({
       id: templateId,
       title: name,
       ico: <ServicesICO />,
-      link: PATH_PAGE.template.preview(templateId.toString()),
+      link: PATH_PAGE.template.preview(id, templateId?.toString() as string),
     }));
   }, [data]);
-
 
   const onCopy = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
     alert('onCopy');
   };
+
+  const onClick = ({ link }: TCardEvent) => {
+    if (checkUserRole('superAdmin')) {
+      navigate(link);
+
+    }
+
+  };
+
   return (
     <CardsNavigate
       className={s.root}
       cards={cards}
       onCopy={onCopy}
-      onClick={({ link }) => navigate(link)}
+      onClick={onClick}
       menuItems={<>
         <MenuItem onClick={() => false}>Просмотр</MenuItem>
         <MenuItem onClick={() => false}>Копировать</MenuItem>

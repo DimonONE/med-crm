@@ -1,0 +1,26 @@
+.wrapper {
+  font-size: 16px;
+  font-weight: 400;
+  color: #0E5F8C;
+}
+
+.draggable {
+  position: relative;
+  max-width: 1200px;
+  margin: 15px auto 0;
+  padding: 30px 0;
+  border-radius: 14px;
+  border: 1px solid #BDE1F6;
+  background: #FCFEFF;
+  cursor: auto;
+}
+
+.headBlock,
+.blockWithPadding {
+  padding: 0 32px;
+}
+
+.headBlock {
+  font-weight: 600;
+  line-height: 17.12px;
+}

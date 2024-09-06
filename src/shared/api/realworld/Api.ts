@@ -2033,11 +2033,10 @@ export class Api<
      *
      * @tags Template
      * @name TemplateControllerGetAllTemplate
-     * @request GET:/template/get-all/{id}
+     * @request GET:/template/get-all
      * @secure
      */
     templateControllerGetAllTemplate: (
-      id: string,
       query?: {
         /** id */
         offset?: string;
@@ -2049,7 +2048,7 @@ export class Api<
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/template/get-all/${id}`,
+        path: `/template/get-all`,
         method: 'GET',
         query: query,
         secure: true,

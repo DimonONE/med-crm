@@ -24,6 +24,9 @@ const EmployeeManagementPage = Loadable(
 const ClinicApplicationPage = Loadable(
   lazy(() => import('~pages/super-admin/clinic-applications')),
 );
+const TemplatePreviewPage = Loadable(
+  lazy(() => import('~pages/template/preview')),
+);
 
 // Doctor
 const DoctorHomePage = Loadable(lazy(() => import('~pages/doctor/home')));
@@ -112,6 +115,7 @@ export function Router() {
         element: <ClinicApplicationPage />,
       },
       { path: 'clinic/:clinicId?', element: <AllClinicsPage /> },
+      { path: 'template/preview/:subTemplateId/:id', element: <TemplatePreviewPage /> },
     ],
   });
 

@@ -1,6 +1,6 @@
 import { HomeNavigation } from '~features/home-navigation';
 import { PATH_PAGE } from '~shared/lib/react-router';
-import { AddClinicICO, ApplicationsICO, ClinicsICO, RatesICO, SettingsICO } from '~shared/ui/cards-navigate';
+import { AddClinicICO, ApplicationsICO, ClinicsICO, RatesICO, SettingsICO, TemplateICO } from '~shared/ui/cards-navigate';
 
 
 export function SuperAdminHome() {
@@ -17,6 +17,12 @@ export function SuperAdminHome() {
       title: 'ЗАЯВКИ',
       ico: <ApplicationsICO />,
       link: PATH_PAGE.superAdmin.clinicApplications,
+    },
+    {
+      id: 6,
+      title: 'ШАБЛОНЫ',
+      ico: <TemplateICO />,
+      link: PATH_PAGE.template.root,
     },
     {
       id: 3,

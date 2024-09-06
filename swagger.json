@@ -1732,7 +1732,7 @@
         ]
       }
     },
-    "/template/get-all/{id}": {
+    "/template/get-all": {
       "get": {
         "operationId": "TemplateController_getAllTemplate",
         "parameters": [

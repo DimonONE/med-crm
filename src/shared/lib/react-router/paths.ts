@@ -38,7 +38,7 @@ export const PATH_PAGE = {
   template: {
     root: '/template',
     tab: (id: string) => `/template/${id}`,
-    preview: (id: string) => `/template/preview/${id}`,
+    preview: (id: string, subTemplateId: string) => `/template/preview/${subTemplateId}/${id}`,
     create: '/template/create',
   },
   medInfo: {
