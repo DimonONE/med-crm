@@ -7,6 +7,18 @@ type TemplateGetAllR = {
   total: number
 };
 
+type CreateTemplate = {
+  id: number,
+  category: string,
+  name: string,
+  techInfo: string
+};
+
+type CreateSubTemplate = {
+  name: string,
+  templateId: number,
+};
+
 export type TemplateGetAllType = { offset: number, limit: number, category: string };
 
 export const appointmentTableKeys = {
@@ -14,14 +26,46 @@ export const appointmentTableKeys = {
   templateGetAll: (category: string) => [...appointmentTableKeys.root, `template-get-all-${category}`],
   templateGetOne: (id: string) => [...appointmentTableKeys.root, `template-get-one-${id}`],
   createUpdateBodyBlock: () => [...appointmentTableKeys.root, 'create-update-body-block'],
+  createTemplate: () => [...appointmentTableKeys.root, 'create-template'],
+  createSubTemplate: () => [...appointmentTableKeys.root, 'create-sub-template'],
 };
 
 export function useCreateUpdateBodyBlock() {
   return useMutation({
     mutationKey: appointmentTableKeys.createUpdateBodyBlock(),
-    mutationFn: async (data: Template[]): Promise<Template[]> => {
+    mutationFn: async (data: Template): Promise<Template[]> => {
       const response = await axiosInstance({
         url: '/template/create-update-body-block',
+        method: 'POST',
+        data,
+
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useCreateTemplate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.createTemplate(),
+    mutationFn: async (data: CreateTemplate) => {
+      const response = await axiosInstance({
+        url: '/template/create-template',
+        method: 'POST',
+        data,
+
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useCreateSubTemplate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.createSubTemplate(),
+    mutationFn: async (data: CreateSubTemplate) => {
+      const response = await axiosInstance({
+        url: '/template/create-sub-template',
         method: 'POST',
         data,
 

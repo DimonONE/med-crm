@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import classNames from 'classnames';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
@@ -6,7 +7,7 @@ import { useRoleUser } from '~entities/session';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
-import { Therapy, Template, ReceptionTableEnum } from '~widgets/reception-table';
+import { Therapy, Template, ReceptionTableEnum, CreateTemplateModal } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
 type Params = {
@@ -18,6 +19,8 @@ export function ReceptionTablePage() {
   const { id } = useParams<Params>();
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
+
+  const [isOpenCreate, setOpenCreate] = useState(false);
 
   const getContent = (key: 'therapy' | 'template' | undefined) => {
     switch (key) {
@@ -39,7 +42,7 @@ export function ReceptionTablePage() {
               У пациента еще нет приемов, чтобы создать <br /> прием, создать прием?
             </span>
 
-            <Button className={s.createButton} onClick={() => navigate(PATH_PAGE.template.create)}>
+            <Button className={s.createButton} onClick={() => navigate(PATH_PAGE.template.create())}>
               <AiOutlinePlusCircle />
               Создать прием
             </Button>
@@ -66,11 +69,16 @@ export function ReceptionTablePage() {
       </div>
 
       {checkUserRole('superAdmin') && (
-        <Button className='fixed-button' style={{ background: '#229CE1' }} onClick={() => navigate(PATH_PAGE.template.create)}>
+        <Button className='fixed-button' style={{ background: '#229CE1' }} onClick={() => setOpenCreate(true)}>
           <AiOutlinePlusCircle />
           Создать шаблон
         </Button>
       )}
+
+      <CreateTemplateModal
+        isOpen={isOpenCreate}
+        handleClose={() => setOpenCreate(false)}
+      />
     </div >
   );
 }

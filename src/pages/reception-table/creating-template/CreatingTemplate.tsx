@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { Form, Formik, FormikHelpers } from 'formik';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { DraggableList, useCreateUpdateBodyBlock, useDraggableSlice } from '~features/draggable-list';
 import { errorHandler } from '~shared/lib/react-query';
@@ -9,7 +10,13 @@ import { DatePicker } from '~shared/ui/date-picker';
 import { Header } from '~widgets/header';
 import s from './styles.module.scss';
 
+type Params = {
+  subTemplateId: string
+};
+
 export function CreatingTemplate() {
+  const { subTemplateId } = useParams<Params>();
+
   const { mutate } = useCreateUpdateBodyBlock();
   const { templates, currentBlockInfo, toggleVisibility, onToggleVisibility, addCurrentBlock } = useDraggableSlice();
 
@@ -21,9 +28,20 @@ export function CreatingTemplate() {
   };
 
   const onSave = () => {
-    console.log('onSave');
+    const template = {
+      ...templates[0],
+      lineBlocks: templates[0].lineBlocks.map((lineBlock) => ({
+        ...lineBlock,
+        blockInfo: lineBlock.blockInfo.filter(({ status }) => status !== 'default'),
+      })),
+    };
 
-    mutate(templates, {
+    const templateData = {
+      ...template,
+      subTemplateId: Number(subTemplateId),
+    };
+
+    mutate(templateData, {
       onSuccess: async () => {
         toast('Success!', { type: 'success' });
       },
@@ -51,14 +69,14 @@ export function CreatingTemplate() {
             <div className={s.createTemplateBlock}>
               {toggleVisibility && (
                 <div className={s.createTemplatePanel}>
-                  <button type='button' onClick={() => addCurrentBlock('text')} className={s.text}>Текст</button>
-                  <button type='button' onClick={() => addCurrentBlock('bold')} className={s.textBold}>Выделенный текст</button>
-                  <button type='button' onClick={() => addCurrentBlock('list')} className={s.textList}><li>Текст</li></button>
+                  <button type='button' onClick={() => addCurrentBlock('TEXT')} className={s.text}>Текст</button>
+                  <button type='button' onClick={() => addCurrentBlock('BOLD_TEXT')} className={s.textBold}>Выделенный текст</button>
+                  <button type='button' onClick={() => addCurrentBlock('POINT_TEXT')} className={s.textList}><li>Текст</li></button>
 
-                  <button type='button' onClick={() => addCurrentBlock('dropdown')} className={s.dropdown}>Дропдаун</button>
-                  <button type='button' onClick={() => addCurrentBlock('checkBox')} className={s.checkbox}><span className={s.checked} /> Чекбокс</button>
-                  <button type='button' onClick={() => addCurrentBlock('radioButton')} className={s.radioButton}> <span className={s.checked} />Радиобатон</button>
-                  <button type='button' onClick={() => addCurrentBlock('date')} className={s.textList}>
+                  <button type='button' onClick={() => addCurrentBlock('DROPDOWN')} className={s.dropdown}>Дропдаун</button>
+                  <button type='button' onClick={() => addCurrentBlock('CHECK_BOX')} className={s.checkbox}><span className={s.checked} /> Чекбокс</button>
+                  <button type='button' onClick={() => addCurrentBlock('RADIO_BOX')} className={s.radioButton}> <span className={s.checked} />Радиобатон</button>
+                  <button type='button' onClick={() => addCurrentBlock('DATE')} className={s.textList}>
                     <DatePicker
                       sx={{
                         '.MuiInputBase-root.MuiOutlinedInput-root': {
@@ -79,8 +97,8 @@ export function CreatingTemplate() {
                       value=""
                       onChange={() => false} />
                   </button>
-                  <button type='button' onClick={() => addCurrentBlock('empty')} className={s.empty}>Пустое место</button>
-                  <button type='button' onClick={() => addCurrentBlock('handwritten')} className={s.handwritten}>+Рукописный заполнения</button>
+                  <button type='button' onClick={() => addCurrentBlock('EMPTY')} className={s.empty}>Пустое место</button>
+                  <button type='button' onClick={() => addCurrentBlock('WRITE_TEXT')} className={s.handwritten}>+Рукописный заполнения</button>
                 </div>
               )}
 
@@ -103,6 +121,7 @@ export function CreatingTemplate() {
               className={classNames(s.submit, 'form-submit')}
               type="submit"
               color="primary"
+              onClick={onSave}
             >
               Сохранить
             </Button>

@@ -12,7 +12,7 @@ type Props = {
 };
 
 export enum ReceptionTableEnum {
-  ALL = '',
+  ALL = 'all',
   PERIODONTICS = '4',
   THERAPY = '5',
   SURGERY = '6',
@@ -23,44 +23,31 @@ export enum ReceptionTableEnum {
 export const ReversedReceptionTableEnum: { [key: string]: string } = {
   '1': 'OTHER',
   '4': 'PERIODONTICS',
-  '5': 'THERAPY',
+  '5': 'Терапия',
   '6': 'SURGERY',
   '7': 'ORTHOPEDICS',
 };
 
 export function Template({ id }: Props) {
-  // const { data } = useTemplateGetOne(id);
   const { data } = useTemplateGetAll({
     offset: 0,
     limit: 100,
-    category: ReversedReceptionTableEnum[id] ?? ReceptionTableEnum.ALL,
+    category: id === ReceptionTableEnum.ALL ? '' : ReversedReceptionTableEnum[id] ?? '',
   });
-
-  console.log('data', data);
 
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
-
-  // const cards = useMemo(() => {
-  //   if (!data?.subTemplates?.length) return [];
-
-  //   return data.subTemplates.map(({ id: templateId, name }) => ({
-  //     id: templateId,
-  //     title: name,
-  //     ico: <ServicesICO />,
-  //     link: PATH_PAGE.template.preview(id, templateId.toString()),
-  //   }));
-  // }, [data]);
 
   const cards = useMemo(() => {
     if (!data?.data.length) return [];
 
     return data.data.map(({ id: templateId, name }) => ({
-      id: templateId,
-      title: name,
+      id: templateId as number,
+      title: name ?? '',
       ico: <ServicesICO />,
       link: PATH_PAGE.template.preview(id, templateId?.toString() as string),
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const onCopy = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

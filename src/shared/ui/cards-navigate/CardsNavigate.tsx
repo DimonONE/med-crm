@@ -37,7 +37,7 @@ export function CardsNavigate(props: TCardsNavigate) {
     <div className={classNames(s.root, className)}>
       {
         cards.map(({ id, title, ico, link, notification }) => (
-          <DropDownMenu menuItems={menuItems}>
+          <DropDownMenu menuItems={() => menuItems}>
             <NavLink
               key={id}
               to={link}

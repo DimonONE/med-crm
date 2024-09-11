@@ -1,33 +1,33 @@
-// @ts-nocheck
 import { create } from 'zustand';
-import { Template, TemplateLineBlock, TemplateStatus } from '../types';
+import { Template, TemplateLineBlock, TemplateStatus, TemplateBlockInfo, UpdateCurrentBlock } from '../types';
 
 
 type DraggableSlice = {
   templates: Template[];
 
   currentBlockInfo: {
-    templateId: number
+    subTemplateId: number
     bodyBlockId: number
     lineId: number
   } | null
 
   handleTemplates: (templates: Template[]) => void;
-  handleTemplatesTitle: (id: number, name: string) => void;
-  updateTemplatesLine: (templateId: number, lineBlocks: TemplateLineBlock[]) => void;
-  onCurrentBlockInfo: (templateId: number, bodyBlockId: number, lineId: number) => void
+  handleTemplatesTitle: (subTemplateId: number, name: string) => void;
+  updateTemplatesLine: (subTemplateId: number, lineBlocks: TemplateLineBlock[]) => void;
+  updateTemplatesLineItem: (subTemplateId: number, bodyBlockId: number, lineId: number) => void;
+  onCurrentBlockInfo: (subTemplateId: number, bodyBlockId: number, lineId: number) => void
   addCurrentBlock: (status: TemplateStatus) => void
-
+  updateCurrentBlock: (subTemplateId: number, bodyBlockId: number, lineId: number, updateParams: Partial<UpdateCurrentBlock>) => void;
   toggleVisibility: boolean;
   selectTemplateItem: string;
   onToggleVisibility: (toggleVisibility: boolean) => void;
-  addTemplatesLine: (templateId: number) => void;
+  addTemplatesLine: (subTemplateId: number) => void;
 };
 
-const updateTemplate = (set, templateId: number, updateFn: (template: Template) => Template) => {
-  set((state) => ({
+const updateTemplate = (set: any, subTemplateId: number, updateFn: (template: Template) => Template) => {
+  set((state: DraggableSlice) => ({
     templates: state.templates.map((template) =>
-      template.id === templateId ? updateFn(template) : template,
+      template.subTemplateId === subTemplateId ? updateFn(template) : template,
     ),
   }));
 };
@@ -35,37 +35,35 @@ const updateTemplate = (set, templateId: number, updateFn: (template: Template) 
 export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
   toggleVisibility: false,
   selectTemplateItem: '',
+  currentBlockInfo: null,
   templates: [{
-    id: 1,
     name: '',
     positionId: 0,
     subTemplateId: 0,
     lineBlocks: [
       {
-        'id': 0,
-        'positionId': 0,
-        'bodyBlockId': 0,
-        'blockInfo': [],
+        positionId: 0,
+        bodyBlockId: 0,
+        blockInfo: [],
       },
     ],
   }],
 
-  handleTemplatesTitle: (id: number, name: string) => {
+  handleTemplatesTitle: (subTemplateId: number, name: string) => {
     set((state) => ({
       templates: state.templates.map((template) =>
-        template.id === id
+        template.subTemplateId === subTemplateId
           ? { ...template, name }
           : template,
       ),
     }));
   },
 
-  addTemplatesLine: (templateId: number) => {
-    updateTemplate(set, templateId, (template) => {
+  addTemplatesLine: (subTemplateId: number) => {
+    updateTemplate(set, subTemplateId, (template) => {
       const createId = template.lineBlocks.length;
 
       const newLineBlock = {
-        id: createId,
         positionId: createId,
         bodyBlockId: createId,
         blockInfo: [],
@@ -78,12 +76,14 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
     });
   },
 
-  updateTemplatesLine: (templateId: number, lineBlocks: TemplateLineBlock[]) => {
-    updateTemplate(set, templateId, (template) => ({
+  updateTemplatesLine: (subTemplateId: number, lineBlocks: TemplateLineBlock[]) => {
+    updateTemplate(set, subTemplateId, (template) => ({
       ...template,
       lineBlocks,
     }));
   },
+
+
 
   onToggleVisibility: (toggleVisibility: boolean) => {
     set({
@@ -96,14 +96,34 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
     set({ templates });
   },
 
-  onCurrentBlockInfo: (templateId: number, bodyBlockId: number, lineId: number) => {
+  onCurrentBlockInfo: (subTemplateId: number, bodyBlockId: number, lineId: number) => {
     set({
       currentBlockInfo: {
-        templateId,
+        subTemplateId,
         bodyBlockId,
         lineId,
       },
     });
+  },
+
+  updateTemplatesLineItem: (subTemplateId: number, bodyBlockId: number, lineId: number) => {
+    const { templates } = get();
+
+    const updatedTemplates = templates.map(template => {
+      if (template.subTemplateId !== subTemplateId) return template;
+
+      const updatedLineBlocks = template.lineBlocks.map(lineBlock => {
+        if (lineBlock.bodyBlockId !== bodyBlockId) return lineBlock;
+
+        const updatedBlockInfo = lineBlock.blockInfo.filter(({ lineId: id }) => id !== lineId);
+
+        return { ...lineBlock, blockInfo: updatedBlockInfo };
+      });
+
+      return { ...template, lineBlocks: updatedLineBlocks };
+    });
+
+    set({ templates: updatedTemplates });
   },
 
   addCurrentBlock: (status: TemplateStatus) => {
@@ -113,9 +133,9 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
       return;
     }
 
-    const { templateId, bodyBlockId, lineId } = currentBlockInfo;
+    const { subTemplateId, bodyBlockId, lineId } = currentBlockInfo;
 
-    updateTemplate(set, templateId, (template) => ({
+    updateTemplate(set, subTemplateId, (template) => ({
       ...template,
       lineBlocks: template.lineBlocks.map((lineBlock) => {
         if (lineBlock.bodyBlockId === bodyBlockId) {
@@ -124,7 +144,6 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
               ...lineBlock,
               blockInfo: [
                 {
-                  id: 0,
                   lineId: 0,
                   positionId: 0,
                   sizeX: 0,
@@ -133,7 +152,6 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
                   status,
                 },
                 {
-                  id: 1,
                   lineId: 1,
                   positionId: 1,
                   sizeX: 0,
@@ -153,7 +171,6 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
                 const createId = lineBlock.blockInfo.length + 1;
 
                 return {
-                  id: createId,
                   lineId: createId,
                   positionId: createId,
                   sizeX: 0,
@@ -165,7 +182,6 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
               return info;
             }),
             {
-              id: defaultId,
               lineId: defaultId,
               positionId: defaultId,
               sizeX: 0,
@@ -184,5 +200,35 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
       toggleVisibility: false,
       currentBlockInfo: null,
     });
+  },
+
+  updateCurrentBlock: (subTemplateId: number, bodyBlockId: number, lineId: number, updateParams: Partial<TemplateBlockInfo>) => {
+    const { templates } = get();
+
+    const updatedTemplates = templates.map(template => {
+      if (template.subTemplateId !== subTemplateId) return template;
+
+      const updatedLineBlocks = template.lineBlocks.map(lineBlock => {
+        if (lineBlock.bodyBlockId !== bodyBlockId) return lineBlock;
+
+        const updatedBlockInfo = lineBlock.blockInfo.map((blockInfo) => {
+          if (blockInfo.lineId === lineId) {
+            return {
+              ...blockInfo,
+              ...updateParams,
+            };
+          }
+
+          return blockInfo;
+        });
+
+        return { ...lineBlock, blockInfo: updatedBlockInfo };
+      });
+
+      return { ...template, lineBlocks: updatedLineBlocks };
+    });
+    console.log('templates', updatedTemplates);
+
+    set({ templates: updatedTemplates });
   },
 }));

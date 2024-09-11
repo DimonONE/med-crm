@@ -3,7 +3,7 @@ import { Menu } from '@mui/material';
 
 type Props = {
   children: React.JSX.Element
-  menuItems: React.JSX.Element | undefined
+  menuItems: (handleCloseMenu: () => void) => React.JSX.Element | undefined
 };
 
 export type AnchorEl = {
@@ -53,7 +53,7 @@ export function DropDownMenu({ children, menuItems }: Props) {
     });
   };
 
-  if (menuItems === undefined) {
+  if (menuItems(handleCloseMenu) === undefined) {
     return children;
   }
 
@@ -76,7 +76,7 @@ export function DropDownMenu({ children, menuItems }: Props) {
             anchorReference="anchorPosition"
             anchorPosition={anchorEl.mouseX !== null && anchorEl.mouseY !== null ? { top: anchorEl.mouseY, left: anchorEl.mouseX } : undefined}
           >
-            {menuItems}
+            {menuItems(handleCloseMenu)}
           </Menu>
         )
       }

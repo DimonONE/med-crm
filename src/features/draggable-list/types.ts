@@ -1,5 +1,5 @@
 export interface Template {
-  id: number
+  id?: number
   name: string
   positionId: number
   subTemplateId: number
@@ -7,14 +7,14 @@ export interface Template {
 }
 
 export interface TemplateLineBlock {
-  id: number
+  id?: number
   positionId: number
   bodyBlockId: number
   blockInfo: TemplateBlockInfo[]
 }
 
 export interface TemplateBlockInfo {
-  id: number
+  id?: number
   lineId: number
   sizeX: number
   sizeY: number
@@ -23,4 +23,9 @@ export interface TemplateBlockInfo {
   status: TemplateStatus
 }
 
-export type TemplateStatus = 'text' | 'bold' | 'dropdown' | 'checkBox' | 'radioButton' | 'date' | 'empty' | 'list' | 'handwritten' | 'default';
+export interface UpdateCurrentBlock extends TemplateBlockInfo {
+  value: string
+  checked: boolean
+}
+
+export type TemplateStatus = 'TEXT' | 'BOLD_TEXT' | 'DROPDOWN' | 'CHECK_BOX' | 'RADIO_BOX' | 'DATE' | 'EMPTY' | 'POINT_TEXT' | 'WRITE_TEXT' | 'default';

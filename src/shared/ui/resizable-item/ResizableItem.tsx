@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import classNames from 'classnames';
+import { debounce } from 'lodash';
+import { TemplateBlockInfo } from '~features/draggable-list';
 import s from './styles.module.scss';
 
 export type AnchorEl = {
@@ -10,18 +12,30 @@ export type AnchorEl = {
 
 type Props = {
   children: React.JSX.Element;
+  positionParams: Partial<TemplateBlockInfo>
+  onDelete: () => void
+  onEdit?: () => void
   className?: string
+  preview?: boolean
+  onUpdate?: (updateData: Partial<TemplateBlockInfo>) => void
 };
 
 export function ResizableItem(props: Props) {
   const [isSelected, setSelected] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const { children, className } = props;
+  const { children, preview, className, positionParams, onDelete, onEdit, onUpdate } = props;
 
   const [anchorEl, setAnchorEl] = useState<AnchorEl>({
     element: null,
     offsetX: 0,
   });
+
+
+  const debouncedUpdate = debounce((newWidth: number) => {
+    if (onUpdate) {
+      onUpdate({ sizeX: newWidth }); // Вызываем функцию onUpdate с новой шириной
+    }
+  }, 200);
 
   const handleResize = (event: React.MouseEvent) => {
     if (ref.current) {
@@ -46,6 +60,8 @@ export function ResizableItem(props: Props) {
 
           if (newWidth && newWidth > 0) {
             ref.current!.style.width = `${newWidth}px`;
+
+            debouncedUpdate(newWidth);
           }
         };
 
@@ -97,8 +113,16 @@ export function ResizableItem(props: Props) {
     });
   };
 
+  const stylesPosition = {
+    ...(positionParams?.sizeX && { width: positionParams.sizeX }),
+  };
+
+  if (preview) {
+    return <div style={stylesPosition} className={className}>{children}</div>;
+  }
+
   return (
-    <div className={s.root}>
+    <div className={s.root} style={stylesPosition}>
       <div ref={ref}
         onClick={handleSelect}
         tabIndex={0}
@@ -121,9 +145,14 @@ export function ResizableItem(props: Props) {
             anchorPosition={{ top: 0, left: 0 }}
             style={{ marginLeft: anchorEl.offsetX / 2, marginTop: -20 }}
           >
-            <MenuItem onClick={() => { handleCloseMenu(); }}>Редактировать</MenuItem>
-            {/* onDelete(); */}
-            <MenuItem onClick={() => { handleCloseMenu(); }}>Удалить</MenuItem>
+            {onEdit && <MenuItem onClick={() => {
+              onEdit();
+              handleCloseMenu();
+            }}>Редактировать</MenuItem>}
+            <MenuItem onClick={() => {
+              onDelete();
+              handleCloseMenu();
+            }}>Удалить</MenuItem>
           </Menu>
         )
       }

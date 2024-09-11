@@ -8,6 +8,7 @@ interface UnderlineTextProps {
   name: string
   width?: string
   className?: string
+  readOnly?: boolean
 }
 
 export function UnderlineText(props: UnderlineTextProps): JSX.Element {

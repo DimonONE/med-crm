@@ -115,7 +115,7 @@ export function Router() {
         element: <ClinicApplicationPage />,
       },
       { path: 'clinic/:clinicId?', element: <AllClinicsPage /> },
-      { path: 'template/preview/:subTemplateId/:id', element: <TemplatePreviewPage /> },
+      { path: 'template/preview/:id/:subTemplateId', element: <TemplatePreviewPage /> },
     ],
   });
 
@@ -203,8 +203,7 @@ export function Router() {
               index: true,
               path: ':id?',
             },
-            { path: 'preview/:id', element: <CreatingTemplatePage /> },
-            { path: 'create', element: <CreatingTemplatePage /> },
+            { path: 'create/:subTemplateId', element: <CreatingTemplatePage /> },
           ],
         },
         {
