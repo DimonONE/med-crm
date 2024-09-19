@@ -104,12 +104,21 @@
   }
 }
 
-.submit {
-  float: right;
-  margin-top: 40px;
-  padding: 12px 40px ;
-  width: auto;
+.submitBlock {
+  margin-left: auto;
+  .submit {
+    width: max-content;
+    height: auto;
+    padding: 9px 24px;
+    font-size: 18px;
+    font-weight: 500;
+    text-decoration: underline;
+
+    &.save {
+      background: #fff;
+      color: #0E5F8C;
+      text-decoration: none;
+    }
+  }
 }
-
-
 

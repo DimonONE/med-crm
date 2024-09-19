@@ -102,7 +102,8 @@ function DraggableLine(props: DraggableBlockProps) {
 
   const onDelete = (lineId: number) => {
     if (!lineBlocks.length) return;
-    const deleteTemplate = lineBlocks.filter((item) => item.id !== lineId);
+    const deleteTemplate = lineBlocks.filter((item) => item.bodyBlockId !== lineId);
+
     updateTemplatesLine(subTemplateId, deleteTemplate);
   };
 

@@ -1,0 +1,48 @@
+.root {
+}
+
+.button {
+  display: flex;
+  width: max-content;
+  padding-block: 9px;
+  padding-inline: 23px;
+  border: 1px solid #fff;
+  color: #fff;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.menu {
+  max-height: 600px;
+  overflow: hidden;
+  border-radius: 8px;
+
+  .title,
+  .subTitle {
+    font-family: Montserrat;
+    font-size: 16px;
+    text-transform: lowercase;
+
+    .label::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  .title {
+      width: 400px;
+      font-weight: 600;
+      line-height: 35.52px;
+      color: #0E5F8C;
+      text-decoration: underline;
+  
+      .label {
+        margin-left: 10px;
+      }
+    }
+
+    .subTitle {
+      margin-left: 20px;
+      color: #000;
+    }
+}
+

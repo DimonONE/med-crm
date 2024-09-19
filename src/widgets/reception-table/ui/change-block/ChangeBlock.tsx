@@ -41,6 +41,9 @@ export function ChangeBlock(props: ChangeBlockProps) {
 
   const onChange = (eventValue: string | number) => {
     setValue(eventValue);
+
+    console.log('updateCurrentBlock', value);
+
     updateCurrentBlock(subTemplateId, bodyBlockId, lineId, {
       value: value.toString(),
       ...(status === 'CHECK_BOX' && { checked }),
@@ -64,6 +67,9 @@ export function ChangeBlock(props: ChangeBlockProps) {
       setValue(positionParams.value?.toString() ?? '');
     }
   }, []);
+
+  console.log('value', value);
+
 
   const renderItem = () => {
     switch (true) {

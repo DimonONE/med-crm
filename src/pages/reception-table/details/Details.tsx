@@ -4,10 +4,12 @@ import classNames from 'classnames';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useRoleUser } from '~entities/session';
+import { HeaderTemplate } from '~features/header-template';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
-import { Therapy, Template, ReceptionTableEnum, CreateTemplateModal } from '~widgets/reception-table';
+import { ReceptionTableEnum } from '~shared/utils';
+import { Therapy, Template, CreateTemplateModal } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
 type Params = {
@@ -22,12 +24,12 @@ export function ReceptionTablePage() {
 
   const [isOpenCreate, setOpenCreate] = useState(false);
 
-  const getContent = (key: 'therapy' | 'template' | undefined) => {
+  const getContent = (key: 'therapy' | 'templates' | undefined) => {
     switch (key) {
       case 'therapy':
         return <Therapy />;
 
-      case 'template':
+      case 'templates':
         return <Template id={id ?? ReceptionTableEnum.ALL} />;
 
       default:
@@ -53,32 +55,36 @@ export function ReceptionTablePage() {
   };
 
   return (
-    <div className={s.root}>
-      <nav className={s.navigate}>
-        <BackButton title='Таблица приема' className={s.backButton} />
+    <>
+      <HeaderTemplate />
+      <div className={s.root}>
 
-        <NavLink className={classNames(s.tab, { [s.active]: id === undefined })} to={PATH_PAGE.template.root} >ВСЕ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.PERIODONTICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.PERIODONTICS)} >ПАРОДОНТОЛОГИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.THERAPY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.THERAPY)} >ТЕРАПИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.SURGERY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.SURGERY)} >ХИРУРГИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.ORTHOPEDICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.ORTHOPEDICS)} >ОРТОПЕДИЯ</NavLink>
-        <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.template.tab(ReceptionTableEnum.OTHER)} >ПРОЧЕЕ</NavLink>
-      </nav>
-      <div className={s.container} >
-        {getContent('template')}
-      </div>
+        <nav className={s.navigate}>
+          <BackButton title='Шаблоны' link={PATH_PAGE.root} className={s.backButton} />
 
-      {checkUserRole('superAdmin') && (
-        <Button className='fixed-button' style={{ background: '#229CE1' }} onClick={() => setOpenCreate(true)}>
-          <AiOutlinePlusCircle />
-          Создать шаблон
-        </Button>
-      )}
+          <NavLink className={classNames(s.tab, { [s.active]: id === undefined })} to={PATH_PAGE.template.root} >ВСЕ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.PERIODONTICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.PERIODONTICS)} >ПАРОДОНТОЛОГИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.THERAPY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.THERAPY)} >ТЕРАПИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.SURGERY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.SURGERY)} >ХИРУРГИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.ORTHOPEDICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.ORTHOPEDICS)} >ОРТОПЕДИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.template.tab(ReceptionTableEnum.OTHER)} >ПРОЧЕЕ</NavLink>
+        </nav>
+        <div className={s.container} >
+          {getContent('templates')}
+        </div>
 
-      <CreateTemplateModal
-        isOpen={isOpenCreate}
-        handleClose={() => setOpenCreate(false)}
-      />
-    </div >
+        {checkUserRole('superAdmin') && (
+          <Button className='fixed-button' style={{ background: '#229CE1' }} onClick={() => setOpenCreate(true)}>
+            <AiOutlinePlusCircle />
+            Создать шаблон
+          </Button>
+        )}
+
+        <CreateTemplateModal
+          isOpen={isOpenCreate}
+          handleClose={() => setOpenCreate(false)}
+        />
+      </div >
+    </>
   );
 }

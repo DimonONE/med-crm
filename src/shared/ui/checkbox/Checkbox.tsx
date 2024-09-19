@@ -30,12 +30,24 @@ export function Checkbox(props: ICheckbox) {
   return (
     <FormControlLabel
       className={classNames(s.root, { [s.checked]: isChecked }, className)}
+      sx={{
+        '.MuiCheckbox-root': {
+          width: 'max-content',
+          'svg': {
+            maxWidth: 'none',
+          },
+        },
+        '.MuiTypography-root': {
+          width: '100%',
+        },
+      }}
       control={
         <CheckboxUI
           icon={<BorderCheckedICO />}
           checkedIcon={<CheckedICO />}
           {...props}
           onChange={handleChange}
+
         />
       }
       label={children}

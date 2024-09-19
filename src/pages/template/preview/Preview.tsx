@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { TemplateStatus, useCreateSubTemplate, useTemplateGetOne } from '~features/draggable-list';
+import { TemplateStatus, useCreateSubTemplate, useDeleteSubTemplate, useDeleteTemplate, useTemplateGetOne } from '~features/draggable-list';
+import { HeaderTemplate } from '~features/header-template';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
+import { BackButton } from '~shared/ui/back-button';
 import { DropDownMenu } from '~shared/ui/drop-down-menu';
 import { ChangeBlock } from '~widgets/reception-table';
 import s from './styles.module.scss';
@@ -20,27 +22,25 @@ type Params = {
 type IProps = {
   template: Api.SubTemplateEntityDto
   onCreateReception: () => void
+  onDeleteSubTemplate: (id: number) => void
 };
 
 function Reception(props: IProps) {
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
-  const { template, onCreateReception } = props;
+  const { template, onCreateReception, onDeleteSubTemplate } = props;
 
-  const firstAppointment = template.name.includes('№1');
 
-  const menuItemsReception = (handleCloseMenu: () => void) => firstAppointment
-    ? undefined
-    : <>
-      <MenuItem onClick={() => {
-        onCreateReception();
-        handleCloseMenu();
-      }}>Создать прием</MenuItem>
-      <MenuItem onClick={() => false}>Редактировать</MenuItem>
-      <MenuItem onClick={() => false}>Вставить</MenuItem>
-      <MenuItem onClick={() => false}>Копировать</MenuItem>
-      <MenuItem onClick={() => false}>Удалить прием</MenuItem>
-    </>;
+  const menuItemsReception = (handleCloseMenu: () => void) => <>
+    <MenuItem onClick={() => {
+      onCreateReception();
+      handleCloseMenu();
+    }}>Создать прием</MenuItem>
+    <MenuItem onClick={() => false}>Редактировать</MenuItem>
+    <MenuItem onClick={() => false}>Вставить</MenuItem>
+    <MenuItem onClick={() => false}>Копировать</MenuItem>
+    <MenuItem onClick={() => onDeleteSubTemplate(template.id)}>Удалить прием</MenuItem>
+  </>;
 
   const menuItemsBlock = (handleCloseMenu: () => void, id?: number) => (<>
     <MenuItem onClick={() => {
@@ -118,11 +118,10 @@ function Reception(props: IProps) {
 
 function TechInfo({ techInfo }: { techInfo: string }) {
   return (
-    <div >
-      <p>Приложение к амбулаторной карте:  Номер карты,   Название организации</p>
-      <p>Дата приема: Число приема</p>
-      <p>ФИО пациента: ФИО  пациента</p>
-      <p>ФИО пациента: ФИО  пациента</p>
+    <div className={s.techInfo} >
+      <p className={s.info}>Приложение к амбулаторной карте: <span className={s.value}> Номер карты,   Название организации</span> </p>
+      <p className={s.info}>Дата приема: <span className={s.value}>Число приема</span> </p>
+      <p className={s.info}>ФИО пациента: <span className={s.value}>ФИО  пациента</span> </p>
       <p>{techInfo}</p>
     </div>
   );
@@ -134,6 +133,9 @@ export function Preview() {
   const navigate = useNavigate();
   const { data, isLoading, refetch } = useTemplateGetOne(params.subTemplateId as string);
   const { mutate } = useCreateSubTemplate();
+  const { mutate: deleteSubTemplate } = useDeleteSubTemplate();
+  const { mutate: deleteTemplate } = useDeleteTemplate();
+  const [toggle, setToggle] = useState(false);
 
   const subTemplate = useMemo(() => data?.subTemplates.sort((a, b) => a.id - b.id) ?? [], [data]);
 
@@ -146,6 +148,29 @@ export function Preview() {
     mutate(createData, {
       onSuccess: () => {
         refetch();
+      },
+
+      onError: (error) => {
+        toast(errorHandler(error), { type: 'error' });
+      },
+    });
+  };
+
+  const onDeleteTemplate = (templateId: number) => {
+    deleteTemplate(templateId, {
+      onSuccess: () => {
+        toast('Success!', { type: 'success' });
+      },
+      onError: (error) => {
+        toast(errorHandler(error), { type: 'error' });
+      },
+    });
+  };
+
+  const onDeleteSubTemplate = (id: number) => {
+    deleteSubTemplate(id, {
+      onSuccess: () => {
+        toast('Success!', { type: 'success' });
       },
 
       onError: (error) => {
@@ -167,33 +192,62 @@ export function Preview() {
     return null;
   }
 
-  console.log('subTemplate', subTemplate);
-
-
   return (
-    <div className={s.wrapper}>
-      <div
-        className={s.draggable}
-      >
-        <div className={s.headBlock}>
-          {data.category}. {data.name}
-        </div>
-      </div>
-      <div className={s.draggable}>
-        <div className={s.headBlock} >
-          <TechInfo techInfo={data.techInfo} />
-        </div>
-      </div>
-      {
-        subTemplate.map((template) => (
-          <div key={template.id}>
-            <Reception
-              template={template}
-              onCreateReception={() => createReception(data.subTemplates.length + 1)}
-            />
+    <>
+      <HeaderTemplate />
+      <div className={s.wrapper}>
+        <BackButton
+          title=''
+          link={PATH_PAGE.template.root}
+          className={s.backButton}
+        />
+
+        <div
+          className={s.draggable}
+        >
+          <div className={s.headBlock}>
+            {data.category}. {data.name}
           </div>
-        ))
-      }
-    </div>
+        </div>
+        <div className={s.draggable}>
+          <div className={s.headBlock} >
+            <TechInfo techInfo={data.techInfo} />
+          </div>
+        </div>
+        {
+          subTemplate.map((template) => (
+            <div key={template.id}>
+              <Reception
+                template={template}
+                onCreateReception={() => createReception(data.subTemplates.length + 1)}
+                onDeleteSubTemplate={(id) => onDeleteSubTemplate(id)}
+              />
+            </div>
+          ))
+        }
+
+        <div className={s.toggleBlock}>
+          <Menu
+            open={toggle}
+            onClose={() => setToggle(false)}
+            style={{ top: -50, left: 30 }}
+          >
+            <MenuItem onClick={() => false}>Копировать</MenuItem>
+            <MenuItem onClick={() => false}>Редактировать</MenuItem>
+            <MenuItem onClick={() => onDeleteTemplate(Number(params.id))}>Удалить</MenuItem>
+          </Menu>
+
+          <button
+            type="button"
+            onClick={() => setToggle(true)}
+            className={classNames(s.toggle, {
+              [s.active]: toggle,
+            })}
+          >
+            +
+          </button>
+        </div>
+      </div >
+    </>
   );
 }

@@ -168,7 +168,11 @@ export function Router() {
   });
 
   const headerDefault = () => {
-    const hasCustomHeader = [PATH_PAGE.template.root, PATH_PAGE.template.create].some((rout) => rout === location.pathname);
+    const path = location.pathname;
+    const hasCustomHeader =
+      path.startsWith(PATH_PAGE.template.root) ||
+      path.startsWith('/template/preview') ||
+      path.startsWith('/template/create');
 
     if (!hasCustomHeader) {
       return isAuth ? <Header /> : <HeaderLogin />;

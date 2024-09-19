@@ -6,7 +6,7 @@ import { errorHandler } from '~shared/lib/react-query';
 import { Button } from '~shared/ui/button';
 import { Modal } from '~shared/ui/modal';
 import { SelectField } from '~shared/ui/select-field';
-import { ReversedReceptionTableEnum } from '../template/Template';
+import { ReversedReceptionTableEnum } from '~shared/utils';
 import s from './styles.module.scss';
 
 type IProps = {

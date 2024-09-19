@@ -54,3 +54,47 @@
     margin-bottom: 10px;
   }
 }
+
+
+
+
+.toggle {
+  position: fixed;
+  left: 20px;
+  bottom: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-base);
+  color: var(--color-white);
+  font-size: 40px;
+  transition: 0.3s transform;
+
+  &.active {
+    transform: rotate(45deg);
+  }
+}
+
+.backButton {
+  margin: 28px 28px 0px;
+  position: absolute;
+}
+
+.techInfo {
+  font-size: 16px;
+  font-weight: 500;
+
+  .info {
+    margin-bottom: 10px;
+    font-weight: 600;
+    line-height: 25.6px;
+
+    .value {
+      color: #A41111;
+    }
+  }
+}

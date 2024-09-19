@@ -24,6 +24,8 @@ export type TemplateGetAllType = { offset: number, limit: number, category: stri
 export const appointmentTableKeys = {
   root: ['appointment-table'],
   templateGetAll: (category: string) => [...appointmentTableKeys.root, `template-get-all-${category}`],
+  deleteTemplate: () => [...appointmentTableKeys.root, 'template-delete-template'],
+  deleteSubTemplate: () => [...appointmentTableKeys.root, 'template-delete-sub-template'],
   templateGetOne: (id: string) => [...appointmentTableKeys.root, `template-get-one-${id}`],
   createUpdateBodyBlock: () => [...appointmentTableKeys.root, 'create-update-body-block'],
   createTemplate: () => [...appointmentTableKeys.root, 'create-template'],
@@ -90,6 +92,32 @@ export function useTemplateGetAll({ offset, limit, category }: TemplateGetAllTyp
     queryKey: appointmentTableKeys.templateGetAll(category),
     queryFn: async (): Promise<TemplateGetAllR> => {
       const response = await axiosInstance({ url: '/template/get-all', method: 'GET', params: { offset, limit, category } });
+      return response.data;
+    },
+  });
+}
+
+export function useDeleteTemplate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.deleteTemplate(),
+    mutationFn: async (id: number) => {
+      const response = await axiosInstance({
+        url: `/template/delete-template/${id}`,
+        method: 'DELETE',
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useDeleteSubTemplate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.deleteSubTemplate(),
+    mutationFn: async (id: number) => {
+      const response = await axiosInstance({
+        url: `/template/delete-sub-template/${id}`,
+        method: 'DELETE',
+      });
       return response.data;
     },
   });

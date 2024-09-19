@@ -1,13 +1,13 @@
 import classNames from 'classnames';
 import { Form, Formik, FormikHelpers } from 'formik';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { DraggableList, useCreateUpdateBodyBlock, useDraggableSlice } from '~features/draggable-list';
+import { HeaderTemplate } from '~features/header-template';
 import { errorHandler } from '~shared/lib/react-query';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { DatePicker } from '~shared/ui/date-picker';
-import { Header } from '~widgets/header';
 import s from './styles.module.scss';
 
 type Params = {
@@ -16,9 +16,11 @@ type Params = {
 
 export function CreatingTemplate() {
   const { subTemplateId } = useParams<Params>();
+  const navigate = useNavigate();
 
   const { mutate } = useCreateUpdateBodyBlock();
-  const { templates, currentBlockInfo, toggleVisibility, onToggleVisibility, addCurrentBlock } = useDraggableSlice();
+  const { templates, currentBlockInfo, toggleVisibility, handleTemplates, onToggleVisibility, addCurrentBlock } = useDraggableSlice();
+
 
   const handleSubmit = async (
     values: any,
@@ -27,7 +29,7 @@ export function CreatingTemplate() {
     resetForm();
   };
 
-  const onSave = () => {
+  const onSave = (isClose = false) => {
     const template = {
       ...templates[0],
       lineBlocks: templates[0].lineBlocks.map((lineBlock) => ({
@@ -44,6 +46,21 @@ export function CreatingTemplate() {
     mutate(templateData, {
       onSuccess: async () => {
         toast('Success!', { type: 'success' });
+        if (isClose) {
+          handleTemplates([{
+            name: '',
+            positionId: 0,
+            subTemplateId: 0,
+            lineBlocks: [
+              {
+                positionId: 0,
+                bodyBlockId: 0,
+                blockInfo: [],
+              },
+            ],
+          }]);
+          navigate(-1);
+        }
       },
       onError: (error) => {
         toast(errorHandler(error), { type: 'error' });
@@ -53,12 +70,25 @@ export function CreatingTemplate() {
 
   return (
     <>
-      <Header >
-        <div>
-          <Button>Сохранить и закрыть</Button>
-          <Button onClick={onSave}>Сохранить</Button>
+      <HeaderTemplate >
+        <div className={s.submitBlock}>
+          <Button
+            className={s.submit}
+            onClick={() => onSave(true)}
+          >
+            Сохранить и закрыть
+          </Button>
+
+          <Button
+            type="submit"
+            color="primary"
+            onClick={() => onSave()}
+            className={classNames(s.submit, s.save)}
+          >
+            Сохранить
+          </Button>
         </div>
-      </Header>
+      </HeaderTemplate>
       <Formik initialValues={{}} onSubmit={handleSubmit}>
         {() => (
           <Form className={s.root}>
@@ -116,15 +146,6 @@ export function CreatingTemplate() {
                 )
               }
             </div>
-
-            <Button
-              className={classNames(s.submit, 'form-submit')}
-              type="submit"
-              color="primary"
-              onClick={onSave}
-            >
-              Сохранить
-            </Button>
           </Form>
         )}
       </Formik>

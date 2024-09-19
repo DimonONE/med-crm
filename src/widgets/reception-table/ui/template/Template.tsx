@@ -1,42 +1,42 @@
-import { useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useRoleUser } from '~entities/session';
-import { useTemplateGetAll } from '~features/draggable-list';
+import { useDeleteTemplate, useTemplateGetAll } from '~features/draggable-list';
+import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { CardsNavigate, ServicesICO, TCardEvent } from '~shared/ui/cards-navigate';
+import { ReceptionTableEnum, ReversedReceptionTableEnum } from '~shared/utils';
 import s from './styles.module.scss';
 
 type Props = {
   id: string
 };
 
-export enum ReceptionTableEnum {
-  ALL = 'all',
-  PERIODONTICS = '4',
-  THERAPY = '5',
-  SURGERY = '6',
-  ORTHOPEDICS = '7',
-  OTHER = '1',
-}
-
-export const ReversedReceptionTableEnum: { [key: string]: string } = {
-  '1': 'OTHER',
-  '4': 'PERIODONTICS',
-  '5': 'Терапия',
-  '6': 'SURGERY',
-  '7': 'ORTHOPEDICS',
-};
+const MenuItems = memo(({ templateId, onDeleteTemplate }: any) => (
+  <>
+    <MenuItem onClick={() => false}>Просмотр</MenuItem>
+    <MenuItem onClick={() => false}>Копировать</MenuItem>
+    <MenuItem onClick={() => false}>Копировать все</MenuItem>
+    <MenuItem onClick={() => false}>Вставить</MenuItem>
+    <MenuItem onClick={() => false}>Переименовать</MenuItem>
+    <MenuItem onClick={() => onDeleteTemplate(templateId)}>Удалить</MenuItem>
+  </>
+));
 
 export function Template({ id }: Props) {
-  const { data } = useTemplateGetAll({
+  const { data, refetch } = useTemplateGetAll({
     offset: 0,
     limit: 100,
     category: id === ReceptionTableEnum.ALL ? '' : ReversedReceptionTableEnum[id] ?? '',
   });
 
+  const { mutate: deleteTemplate } = useDeleteTemplate();
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
+
+  const hasCopy = checkUserRole('superAdmin');
 
   const cards = useMemo(() => {
     if (!data?.data.length) return [];
@@ -61,23 +61,37 @@ export function Template({ id }: Props) {
       navigate(link);
 
     }
-
+    // navigate(PATH_PAGE.template.tab('therapy'));
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onDeleteTemplate = useCallback((templateId: number) => {
+    deleteTemplate(templateId, {
+      onSuccess: () => {
+        toast('Success!', { type: 'success' });
+        refetch();
+      },
+      onError: (error) => {
+        toast(errorHandler(error), { type: 'error' });
+      },
+    });
+  }, [deleteTemplate]);
+
+  const renderMenuItems = useCallback(
+    (templateId: number) => (
+      <MenuItems templateId={templateId} onDeleteTemplate={onDeleteTemplate} />
+    ),
+    [onDeleteTemplate],
+  );
 
   return (
     <CardsNavigate
       className={s.root}
       cards={cards}
+      hasCopy={hasCopy}
       onCopy={onCopy}
       onClick={onClick}
-      menuItems={<>
-        <MenuItem onClick={() => false}>Просмотр</MenuItem>
-        <MenuItem onClick={() => false}>Копировать</MenuItem>
-        <MenuItem onClick={() => false}>Копировать все</MenuItem>
-        <MenuItem onClick={() => false}>Вставить</MenuItem>
-        <MenuItem onClick={() => false}>Переименовать</MenuItem>
-        <MenuItem onClick={() => false}>Удалить</MenuItem>
-      </>}
+      menuItems={renderMenuItems}
     />
   );
 }
