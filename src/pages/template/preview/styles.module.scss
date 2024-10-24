@@ -55,9 +55,6 @@
   }
 }
 
-
-
-
 .toggle {
   position: fixed;
   left: 20px;
@@ -84,17 +81,3 @@
   position: absolute;
 }
 
-.techInfo {
-  font-size: 16px;
-  font-weight: 500;
-
-  .info {
-    margin-bottom: 10px;
-    font-weight: 600;
-    line-height: 25.6px;
-
-    .value {
-      color: #A41111;
-    }
-  }
-}

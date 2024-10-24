@@ -21,6 +21,7 @@ export interface TemplateBlockInfo {
   positionId: number
   space: number
   status: TemplateStatus
+  value: string
 }
 
 export interface UpdateCurrentBlock extends TemplateBlockInfo {
@@ -29,3 +30,11 @@ export interface UpdateCurrentBlock extends TemplateBlockInfo {
 }
 
 export type TemplateStatus = 'TEXT' | 'BOLD_TEXT' | 'DROPDOWN' | 'CHECK_BOX' | 'RADIO_BOX' | 'DATE' | 'EMPTY' | 'POINT_TEXT' | 'WRITE_TEXT' | 'default';
+
+
+export type TreatmentParamsType = {
+  patientId: string,
+  doctorId: string,
+  status?: string,
+  category?: string,
+};

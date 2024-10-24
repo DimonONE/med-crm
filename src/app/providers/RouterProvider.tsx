@@ -34,6 +34,10 @@ const DoctorPage = Loadable(
   lazy(() => import('~pages/doctor/medical-journal')),
 );
 
+const CreateReceptionPage = Loadable(
+  lazy(() => import('~pages/reception-table/create-reception')),
+);
+
 // Personnel
 const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
 const PersonnelListPage = Loadable(
@@ -61,10 +65,14 @@ const PatientFilesPage = Loadable(lazy(() => import('~pages/patients/files')));
 
 // Reception Table
 const ReceptionTablePage = Loadable(
-  lazy(() => import('~pages/reception-table/details')),
+  lazy(() => import('~pages/template/details')),
 );
 const CreatingTemplatePage = Loadable(
-  lazy(() => import('~pages/reception-table/creating-template')),
+  lazy(() => import('~pages/template/creating-template')),
+);
+
+const DetailTherapyPage = Loadable(
+  lazy(() => import('~pages/reception-table/therapy')),
 );
 
 // Services
@@ -200,12 +208,24 @@ export function Router() {
           ],
         },
         {
+          path: PATH_PAGE.reception.root,
+          children: [
+            {
+              element: <DetailTherapyPage />,
+              index: true,
+              path: ':patientId/:doctorId/:id?',
+            },
+            { path: 'create/:patientId/:doctorId/:id/:treatmentId', element: <CreateReceptionPage /> },
+
+          ],
+        },
+        {
           path: PATH_PAGE.template.root,
           children: [
             {
               element: <ReceptionTablePage />,
               index: true,
-              path: ':id?',
+              path: ':id?/:patientId?/:doctorId?',
             },
             { path: 'create/:subTemplateId', element: <CreatingTemplatePage /> },
           ],

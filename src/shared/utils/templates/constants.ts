@@ -8,9 +8,9 @@ export enum ReceptionTableEnum {
 }
 
 export const ReversedReceptionTableEnum: { [key: string]: string } = {
-  '1': 'OTHER',
-  '4': 'PERIODONTICS',
+  '1': 'Другое',
+  '4': 'Пародонтология',
   '5': 'Терапия',
-  '6': 'SURGERY',
-  '7': 'ORTHOPEDICS',
+  '6': 'Хирургия',
+  '7': 'Ортопедия',
 };

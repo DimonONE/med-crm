@@ -43,6 +43,7 @@ export function UnderlineText(props: UnderlineTextProps): JSX.Element {
       rows={1}
       onChange={handleChange}
       className={classNames(s.root, className)}
+      value={value}
       {...prevProps}
     />
   );

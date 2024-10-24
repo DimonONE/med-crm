@@ -49,13 +49,15 @@ function DraggableItem(props: DraggableLineProps) {
       }}
     >
       {blockInfo.length ?
-        blockInfo.map(({ lineId, status }) => (
+        blockInfo.map(({ lineId, status, value, ...params }) => (
           <ChangeBlock
             key={lineId}
             subTemplateId={subTemplateId}
             bodyBlockId={bodyBlockId}
             lineId={lineId}
             status={status}
+            value={value}
+            {...params}
           />
         )) : (
           <ChangeBlock

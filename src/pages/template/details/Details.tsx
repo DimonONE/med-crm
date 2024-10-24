@@ -3,34 +3,59 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import { AiOutlinePlusCircle } from 'react-icons/ai';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useRoleUser } from '~entities/session';
+import { useTreatmentCreate } from '~features/draggable-list';
 import { HeaderTemplate } from '~features/header-template';
+import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
-import { ReceptionTableEnum } from '~shared/utils';
-import { Therapy, Template, CreateTemplateModal } from '~widgets/reception-table';
+import { ReceptionTableEnum, ReversedReceptionTableEnum } from '~shared/utils';
+import { Template, CreateTemplateModal } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
 type Params = {
-  id: string
+  id: string,
+  patientId: string,
+  doctorId: string,
 };
 
-
-export function ReceptionTablePage() {
-  const { id } = useParams<Params>();
+export function DetailTemplatePage() {
+  const { id, patientId, doctorId } = useParams<Params>();
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
+  const { mutate } = useTreatmentCreate();
 
   const [isOpenCreate, setOpenCreate] = useState(false);
 
-  const getContent = (key: 'therapy' | 'templates' | undefined) => {
-    switch (key) {
-      case 'therapy':
-        return <Therapy />;
+  const titleBack = checkUserRole('superAdmin') ? 'Шаблоны' : 'Создание приема';
+  const titleBackLink = checkUserRole('superAdmin') ? PATH_PAGE.root : PATH_PAGE.patients.records;
 
+  const onNavigate = (templateId: number) => {
+    const createData = {
+      'patientId': patientId!,
+      'doctorId': doctorId!,
+      'templateId': templateId,
+      'status': 'in progress',
+      'category': id === ReceptionTableEnum.ALL ? '' : ReversedReceptionTableEnum[id!] ?? '',
+    };
+
+    mutate(createData, {
+      onSuccess: (data) => {
+        navigate(PATH_PAGE.reception.create(patientId!, doctorId!, templateId.toString(), data.id.toString()));
+      },
+
+      onError: (error) => {
+        toast(errorHandler(error), { type: 'error' });
+      },
+    });
+  };
+
+  const getContent = (key: 'templates' | undefined) => {
+    switch (key) {
       case 'templates':
-        return <Template id={id ?? ReceptionTableEnum.ALL} />;
+        return <Template id={id ?? ReceptionTableEnum.ALL} onNavigate={onNavigate} />;
 
       default:
         return (
@@ -41,16 +66,15 @@ export function ReceptionTablePage() {
             </svg>
 
             <span className={s.info}>
-              У пациента еще нет приемов, чтобы создать <br /> прием, создать прием?
+              У вас еще нет шаблонов, чтобы создать <br /> шаблон, создать шаблон?
             </span>
 
             <Button className={s.createButton} onClick={() => navigate(PATH_PAGE.template.create())}>
               <AiOutlinePlusCircle />
-              Создать прием
+              Создать шаблон
             </Button>
           </div>
         );
-
     }
   };
 
@@ -60,14 +84,14 @@ export function ReceptionTablePage() {
       <div className={s.root}>
 
         <nav className={s.navigate}>
-          <BackButton title='Шаблоны' link={PATH_PAGE.root} className={s.backButton} />
+          <BackButton title={titleBack} link={titleBackLink} className={s.backButton} />
 
-          <NavLink className={classNames(s.tab, { [s.active]: id === undefined })} to={PATH_PAGE.template.root} >ВСЕ</NavLink>
-          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.PERIODONTICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.PERIODONTICS)} >ПАРОДОНТОЛОГИЯ</NavLink>
-          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.THERAPY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.THERAPY)} >ТЕРАПИЯ</NavLink>
-          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.SURGERY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.SURGERY)} >ХИРУРГИЯ</NavLink>
-          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.ORTHOPEDICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.ORTHOPEDICS)} >ОРТОПЕДИЯ</NavLink>
-          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.template.tab(ReceptionTableEnum.OTHER)} >ПРОЧЕЕ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === undefined || id === 'undefined' })} to={PATH_PAGE.template.tab('undefined', patientId, doctorId)} >ВСЕ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.PERIODONTICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.PERIODONTICS, patientId, doctorId)} >ПАРОДОНТОЛОГИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.THERAPY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.THERAPY, patientId, doctorId)} >ТЕРАПИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.SURGERY })} to={PATH_PAGE.template.tab(ReceptionTableEnum.SURGERY, patientId, doctorId)} >ХИРУРГИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.ORTHOPEDICS })} to={PATH_PAGE.template.tab(ReceptionTableEnum.ORTHOPEDICS, patientId, doctorId)} >ОРТОПЕДИЯ</NavLink>
+          <NavLink className={classNames(s.tab, { [s.active]: id === ReceptionTableEnum.OTHER })} to={PATH_PAGE.template.tab(ReceptionTableEnum.OTHER, patientId, doctorId)} >ПРОЧЕЕ</NavLink>
         </nav>
         <div className={s.container} >
           {getContent('templates')}
@@ -83,6 +107,7 @@ export function ReceptionTablePage() {
         <CreateTemplateModal
           isOpen={isOpenCreate}
           handleClose={() => setOpenCreate(false)}
+          defaultTemplateId={id!}
         />
       </div >
     </>

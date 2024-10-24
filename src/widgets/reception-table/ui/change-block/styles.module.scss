@@ -112,13 +112,28 @@ input.defaultInput {
     font-weight: 600;
   }
 
+  .inputBlock {
+    position: relative;
+    width: 100%;
+    min-width: 50px;
+    
+    .defaultInput {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
   .list {
     .inputBlock {
+      width: auto;
       float: right;
     }
 
     .defaultInput {
+      position: static;
       text-align: left;
+      transform: translateY(-25%);
     }
   }
 

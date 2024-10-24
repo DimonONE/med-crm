@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axiosInstance, { Api } from '~shared/api/realworld';
-import { Template } from '../types';
+import { Template, TreatmentParamsType } from '../types';
 
 type TemplateGetAllR = {
   data: Api.TemplateDtoDto[]
@@ -19,7 +19,15 @@ type CreateSubTemplate = {
   templateId: number,
 };
 
-export type TemplateGetAllType = { offset: number, limit: number, category: string };
+type TemplateGetAllType = { offset: number, limit: number, category: string };
+
+type TreatmentCreate = {
+  'patientId': string,
+  'doctorId': string,
+  'templateId': number,
+  'status': string,
+  'category': string
+};
 
 export const appointmentTableKeys = {
   root: ['appointment-table'],
@@ -30,6 +38,13 @@ export const appointmentTableKeys = {
   createUpdateBodyBlock: () => [...appointmentTableKeys.root, 'create-update-body-block'],
   createTemplate: () => [...appointmentTableKeys.root, 'create-template'],
   createSubTemplate: () => [...appointmentTableKeys.root, 'create-sub-template'],
+
+  // Treatment
+  treatment: (patientId: string, category: string) => [...appointmentTableKeys.root, `treatment-treatment-get-${patientId}-${category}`],
+  treatmentId: () => [...appointmentTableKeys.root, 'treatment-treatment-get-by-id'],
+  treatmentCreate: () => [...appointmentTableKeys.root, 'treatment-treatment-create'],
+  treatmentUpdate: () => [...appointmentTableKeys.root, 'treatment-treatment-update'],
+  treatmentAnswerCreate: () => [...appointmentTableKeys.root, 'treatment-answer-create'],
 };
 
 export function useCreateUpdateBodyBlock() {
@@ -117,6 +132,71 @@ export function useDeleteSubTemplate() {
       const response = await axiosInstance({
         url: `/template/delete-sub-template/${id}`,
         method: 'DELETE',
+      });
+      return response.data;
+    },
+  });
+}
+
+// Treatment
+
+export function useTreatment(data: TreatmentParamsType) {
+  return useQuery({
+    queryKey: appointmentTableKeys.treatment(data.patientId, data.category ?? ''),
+    queryFn: async (): Promise<Api.TreatmentEntityDto[]> => {
+      const response = await axiosInstance({ url: '/treatment/treatment-get', method: 'GET', params: data });
+      return response.data;
+    },
+  });
+}
+export function useTreatmentId(id: string) {
+  return useQuery({
+    queryKey: appointmentTableKeys.treatmentId(),
+    queryFn: async (): Promise<Api.TreatmentEntityDto> => {
+      const response = await axiosInstance({ url: `/treatment/treatment-get-by-id/${id}`, method: 'GET' });
+      return response?.data[0];
+    },
+  });
+}
+
+export function useTreatmentCreate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.treatmentCreate(),
+    mutationFn: async (data: TreatmentCreate) => {
+      const response = await axiosInstance({
+        url: '/treatment/treatment-create',
+        method: 'POST',
+        data,
+
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useTreatmentUpdate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.treatmentCreate(),
+    mutationFn: async (data: any) => {
+      const response = await axiosInstance({
+        url: '/treatment/treatment-update',
+        method: 'POST',
+        data,
+
+      });
+      return response.data;
+    },
+  });
+}
+export function useTreatmentAnswerCreate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.treatmentCreate(),
+    mutationFn: async (data: Api.SubTreatmentDtoDto) => {
+      const response = await axiosInstance({
+        url: '/treatment/answer-create',
+        method: 'POST',
+        data,
+
       });
       return response.data;
     },

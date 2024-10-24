@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Menu, MenuItem, List, Collapse } from '@mui/material';
+import classNames from 'classnames';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import { Button } from '../button';
@@ -18,9 +19,10 @@ type IProps = {
   title: string
   selectOptions: SelectWithSubTemplatesOptions[]
   onClick: (templateId: string, subTemplateId: string) => void
+  className?: string
 };
 
-export function SelectWithSubTemplates({ title, selectOptions, onClick }: IProps) {
+export function SelectWithSubTemplates({ title, selectOptions, onClick, className }: IProps) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
@@ -42,7 +44,7 @@ export function SelectWithSubTemplates({ title, selectOptions, onClick }: IProps
   };
 
   return (
-    <div className={s.root}>
+    <div className={classNames(s.root, className)}>
       <Button
         className={s.button}
         onClick={handleClick}>

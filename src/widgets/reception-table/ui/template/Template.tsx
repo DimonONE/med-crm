@@ -12,6 +12,7 @@ import s from './styles.module.scss';
 
 type Props = {
   id: string
+  onNavigate?: (templateId: number) => void
 };
 
 const MenuItems = memo(({ templateId, onDeleteTemplate }: any) => (
@@ -25,7 +26,7 @@ const MenuItems = memo(({ templateId, onDeleteTemplate }: any) => (
   </>
 ));
 
-export function Template({ id }: Props) {
+export function Template({ id, onNavigate }: Props) {
   const { data, refetch } = useTemplateGetAll({
     offset: 0,
     limit: 100,
@@ -36,7 +37,7 @@ export function Template({ id }: Props) {
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
 
-  const hasCopy = checkUserRole('superAdmin');
+  const isSuperAdmin = checkUserRole('superAdmin');
 
   const cards = useMemo(() => {
     if (!data?.data.length) return [];
@@ -56,15 +57,17 @@ export function Template({ id }: Props) {
     alert('onCopy');
   };
 
-  const onClick = ({ link }: TCardEvent) => {
+  const onClick = ({ link, id: templateId }: TCardEvent) => {
     if (checkUserRole('superAdmin')) {
       navigate(link);
-
+      return;
     }
-    // navigate(PATH_PAGE.template.tab('therapy'));
+
+    if (onNavigate) {
+      onNavigate(templateId);
+    }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onDeleteTemplate = useCallback((templateId: number) => {
     deleteTemplate(templateId, {
       onSuccess: () => {
@@ -88,10 +91,10 @@ export function Template({ id }: Props) {
     <CardsNavigate
       className={s.root}
       cards={cards}
-      hasCopy={hasCopy}
+      hasCopy={isSuperAdmin}
       onCopy={onCopy}
       onClick={onClick}
-      menuItems={renderMenuItems}
+      menuItems={isSuperAdmin ? renderMenuItems : undefined}
     />
   );
 }

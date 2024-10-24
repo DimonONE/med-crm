@@ -11,18 +11,19 @@ import s from './styles.module.scss';
 
 type IProps = {
   isOpen: boolean;
+  defaultTemplateId: string
   handleClose: () => void;
 };
 
 export function CreateTemplateModal(props: IProps) {
+  const { isOpen, handleClose, defaultTemplateId } = props;
   const [value, setValue] = useState('');
-  const [templateValue, setTemplateValue] = useState<string | number>(0);
-  const { isOpen, handleClose } = props;
+  const [templateValue, setTemplateValue] = useState<string | number>(defaultTemplateId);
   const { mutate } = useCreateTemplate();
 
-  const templates = Object.values(ReversedReceptionTableEnum).map((template, index) => ({
-    value: index,
-    label: template,
+  const templates = Object.entries(ReversedReceptionTableEnum).map(([key, label]) => ({
+    value: key,
+    label,
   }));
 
   const onSave = () => {
@@ -30,16 +31,16 @@ export function CreateTemplateModal(props: IProps) {
       id: 0,
       category: templates.find(({ value: categoryId }) => categoryId === templateValue)?.label as string,
       name: value,
-      techInfo: '<div>{test1} tyssss</div>',
+      techInfo: 'Настоящее приложение разработано на основании «Клинических рекомендаций (протоколов ведения) при диагнозе болезни периапикальных тканей» (Утверждены Постановлением № 15 Совета Ассоциации общественных объединений «Стоматологическая Ассоциация России» от 30 сентября 2014 года, актуализированы 02 августа 2018 года).',
     };
 
     mutate(createData, {
-      onSuccess: (data) => {
-        console.log('data222', data);
-
+      onSuccess: () => {
         setValue('');
         setTemplateValue(0);
         handleClose();
+        toast('Success!', { type: 'success' });
+        window.location.reload();
       },
 
       onError: (error) => {

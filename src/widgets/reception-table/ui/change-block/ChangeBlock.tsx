@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -17,10 +17,11 @@ interface ChangeBlockProps extends Partial<UpdateCurrentBlock> {
   bodyBlockId: number
   lineId: number
   status: TemplateStatus
+  value?: string
   type?: 'create' | 'preview'
 }
 
-export function ChangeBlock(props: ChangeBlockProps) {
+const ChangeBlock = React.memo((props: ChangeBlockProps) => {
   const { onCurrentBlockInfo, onToggleVisibility, updateTemplatesLineItem, updateCurrentBlock } = useDraggableSlice();
   const ref = useRef<HTMLDivElement>(null);
   const [value, setValue] = useState<string | number>('');
@@ -32,7 +33,7 @@ export function ChangeBlock(props: ChangeBlockProps) {
     label: '',
   }]);
 
-  const { subTemplateId, bodyBlockId, lineId, status, type = 'create', ...positionParams } = props;
+  const { subTemplateId, bodyBlockId, lineId, status, type = 'create', value: defaultValue, ...positionParams } = props;
 
   const onCreateItem = () => {
     onToggleVisibility(true);
@@ -42,11 +43,9 @@ export function ChangeBlock(props: ChangeBlockProps) {
   const onChange = (eventValue: string | number) => {
     setValue(eventValue);
 
-    console.log('updateCurrentBlock', value);
-
     updateCurrentBlock(subTemplateId, bodyBlockId, lineId, {
-      value: value.toString(),
-      ...(status === 'CHECK_BOX' && { checked }),
+      value: eventValue.toString(),
+      ...(status === 'DROPDOWN' && { value: JSON.stringify(dropdownVariables) }),
     });
   };
 
@@ -59,17 +58,22 @@ export function ChangeBlock(props: ChangeBlockProps) {
   };
 
   useEffect(() => {
-    if (type === 'create' && status === 'DROPDOWN') {
-      setOpen(true);
+    if (defaultValue) {
+      setValue(defaultValue);
     }
 
-    if (type === 'preview') {
-      setValue(positionParams.value?.toString() ?? '');
+    if (defaultValue && status === 'DROPDOWN') {
+      const variables = JSON.parse(defaultValue ?? '');
+      setDropdownVariables(variables);
+      setValue(variables[0]?.value);
+
     }
+
+    // if (type === 'create' && status === 'DROPDOWN') {
+    //   setOpen(true);
+    // }
+
   }, []);
-
-  console.log('value', value);
-
 
   const renderItem = () => {
     switch (true) {
@@ -77,11 +81,15 @@ export function ChangeBlock(props: ChangeBlockProps) {
         return (
           <ResizableItem
             positionParams={positionParams}
-            onUpdate={onUpdate} preview={type === 'preview'}
+            preview={type === 'preview'}
+            onUpdate={onUpdate}
             onDelete={onDelete}
             className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
           >
-            <input readOnly={type === 'preview'} className={classNames(s.defaultInput, s.text)} value={value} onChange={(e) => onChange(e.target.value)} />
+            <div className={s.inputBlock}>
+              <input readOnly={type === 'preview'} className={classNames(s.defaultInput, s.text)}
+                value={value} onChange={(e) => onChange(e.target.value)} />
+            </div>
           </ResizableItem>
         );
 
@@ -89,11 +97,17 @@ export function ChangeBlock(props: ChangeBlockProps) {
         return (
           <ResizableItem
             positionParams={positionParams}
-            onUpdate={onUpdate} preview={type === 'preview'}
+            preview={type === 'preview'}
+            onUpdate={onUpdate}
             onDelete={onDelete}
             className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
           >
-            <input readOnly={type === 'preview'} className={classNames(s.defaultInput, s.bold)} value={value} onChange={(e) => onChange(e.target.value)} />
+
+            <div className={s.inputBlock}>
+              <input readOnly={type === 'preview'} className={classNames(s.defaultInput, s.bold)}
+                value={value} onChange={(e) => onChange(e.target.value)} />
+            </div>
+
           </ResizableItem>
         );
 
@@ -101,13 +115,15 @@ export function ChangeBlock(props: ChangeBlockProps) {
         return (
           <ResizableItem
             positionParams={positionParams}
-            onUpdate={onUpdate} preview={type === 'preview'}
+            preview={type === 'preview'}
+            onUpdate={onUpdate}
             onDelete={onDelete}
             className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
           >
             <li className={s.list}>
               <div className={s.inputBlock}>
-                <input readOnly={type === 'preview'} className={classNames(s.defaultInput)} value={value} onChange={(e) => onChange(e.target.value)} />
+                <input readOnly={type === 'preview'} className={classNames(s.defaultInput)}
+                  value={value} onChange={(e) => onChange(e.target.value)} />
               </div>
             </li>
           </ResizableItem>
@@ -156,7 +172,8 @@ export function ChangeBlock(props: ChangeBlockProps) {
               checked={checked}
               onChange={() => setChecked(prev => !prev)}
             >
-              <input placeholder='Ваше значение' className={classNames(s.defaultInput, s.text)} value={value} onChange={(e) => onChange(e.target.value)} />
+              <input readOnly={type === 'preview'} placeholder='Ваше значение'
+                className={classNames(s.defaultInput, s.text)} value={value} onChange={(e) => onChange(e.target.value)} />
             </Checkbox>
           </ResizableItem >
         );
@@ -328,7 +345,10 @@ export function ChangeBlock(props: ChangeBlockProps) {
               className={s.submit}
               type="submit"
               color="primary"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                onUpdate({ value: JSON.stringify(dropdownVariables) });
+                setOpen(false);
+              }}
             >
               Сохранить
             </Button>
@@ -338,4 +358,6 @@ export function ChangeBlock(props: ChangeBlockProps) {
 
     </>
   );
-}
+});
+
+export { ChangeBlock };

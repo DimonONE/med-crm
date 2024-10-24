@@ -204,6 +204,8 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
 
   updateCurrentBlock: (subTemplateId: number, bodyBlockId: number, lineId: number, updateParams: Partial<TemplateBlockInfo>) => {
     const { templates } = get();
+    console.log('templates', templates);
+    console.log('updateParams', updateParams);
 
     const updatedTemplates = templates.map(template => {
       if (template.subTemplateId !== subTemplateId) return template;

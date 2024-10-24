@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { TemplateStatus, useCreateSubTemplate, useDeleteSubTemplate, useDeleteTemplate, useTemplateGetOne } from '~features/draggable-list';
+import { Template, TemplateStatus, useCreateSubTemplate, useDeleteSubTemplate, useDeleteTemplate, useDraggableSlice, useTemplateGetOne } from '~features/draggable-list';
 import { HeaderTemplate } from '~features/header-template';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
@@ -11,6 +12,7 @@ import { PATH_PAGE } from '~shared/lib/react-router';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
 import { BackButton } from '~shared/ui/back-button';
 import { DropDownMenu } from '~shared/ui/drop-down-menu';
+import { TechInfo } from '~shared/ui/tech-info';
 import { ChangeBlock } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
@@ -23,13 +25,32 @@ type IProps = {
   template: Api.SubTemplateEntityDto
   onCreateReception: () => void
   onDeleteSubTemplate: (id: number) => void
+  onDeleteBlockTemplate: (templateId: number, id: number) => void
 };
 
 function Reception(props: IProps) {
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);
-  const { template, onCreateReception, onDeleteSubTemplate } = props;
+  const { template, onCreateReception, onDeleteSubTemplate, onDeleteBlockTemplate } = props;
+  const { handleTemplates } = useDraggableSlice();
 
+  const onEdit = (id?: number) => {
+    const selectTemplate = template.bodyBlocks.find(({ id: templateId }) => templateId === id);
+
+    if (!selectTemplate) return;
+
+    const templates = {
+      ...selectTemplate,
+      lineBlocks: selectTemplate.lineBlocks.map(({ blocks, ...lineBlock }) => ({
+        ...lineBlock,
+        blockInfo: blocks,
+      })),
+    };
+
+
+    handleTemplates([templates as any] as Template[]);
+    navigate(PATH_PAGE.template.create(template.id.toString()));
+  };
 
   const menuItemsReception = (handleCloseMenu: () => void) => <>
     <MenuItem onClick={() => {
@@ -37,8 +58,8 @@ function Reception(props: IProps) {
       handleCloseMenu();
     }}>Создать прием</MenuItem>
     <MenuItem onClick={() => false}>Редактировать</MenuItem>
-    <MenuItem onClick={() => false}>Вставить</MenuItem>
-    <MenuItem onClick={() => false}>Копировать</MenuItem>
+    <MenuItem disabled onClick={() => false}>Вставить</MenuItem>
+    <MenuItem disabled onClick={() => false}>Копировать</MenuItem>
     <MenuItem onClick={() => onDeleteSubTemplate(template.id)}>Удалить прием</MenuItem>
   </>;
 
@@ -47,10 +68,13 @@ function Reception(props: IProps) {
       navigate(PATH_PAGE.template.create(template.id.toString()));
       handleCloseMenu();
     }}>Создать блок</MenuItem>
-    <MenuItem onClick={() => false}>Копировать {id}</MenuItem>
-    <MenuItem onClick={() => false}>Вставить</MenuItem>
-    <MenuItem onClick={() => false}>Редактировать</MenuItem>
-    <MenuItem onClick={() => false}>Удалить</MenuItem>
+    <MenuItem disabled onClick={() => false}>Копировать</MenuItem>
+    <MenuItem disabled onClick={() => false}>Вставить</MenuItem>
+    <MenuItem onClick={() => {
+      onEdit(id);
+      handleCloseMenu();
+    }}>Редактировать</MenuItem>
+    <MenuItem onClick={() => id && onDeleteBlockTemplate(template.id, id)}>Удалить</MenuItem>
   </>);
 
   return (<>
@@ -116,18 +140,6 @@ function Reception(props: IProps) {
   );
 }
 
-function TechInfo({ techInfo }: { techInfo: string }) {
-  return (
-    <div className={s.techInfo} >
-      <p className={s.info}>Приложение к амбулаторной карте: <span className={s.value}> Номер карты,   Название организации</span> </p>
-      <p className={s.info}>Дата приема: <span className={s.value}>Число приема</span> </p>
-      <p className={s.info}>ФИО пациента: <span className={s.value}>ФИО  пациента</span> </p>
-      <p>{techInfo}</p>
-    </div>
-  );
-}
-
-
 export function Preview() {
   const params = useParams<Params>();
   const navigate = useNavigate();
@@ -135,9 +147,10 @@ export function Preview() {
   const { mutate } = useCreateSubTemplate();
   const { mutate: deleteSubTemplate } = useDeleteSubTemplate();
   const { mutate: deleteTemplate } = useDeleteTemplate();
-  const [toggle, setToggle] = useState(false);
 
-  const subTemplate = useMemo(() => data?.subTemplates.sort((a, b) => a.id - b.id) ?? [], [data]);
+
+  const [toggle, setToggle] = useState(false);
+  const [subTemplate, setSubTemplate] = useState<Api.SubTemplateEntityDto[]>([]);
 
   const createReception = (reception: number) => {
     const createData = {
@@ -160,6 +173,7 @@ export function Preview() {
     deleteTemplate(templateId, {
       onSuccess: () => {
         toast('Success!', { type: 'success' });
+        navigate(-1);
       },
       onError: (error) => {
         toast(errorHandler(error), { type: 'error' });
@@ -179,6 +193,17 @@ export function Preview() {
     });
   };
 
+  const onDeleteBlockTemplate = (templateId: number, id: number) => {
+    const deleteBlock = subTemplate.map((block) => block.id === templateId
+      ? {
+        ...block,
+        bodyBlocks: block.bodyBlocks.filter((bodyBlock) => bodyBlock.id !== id),
+      }
+      : block);
+
+    setSubTemplate(deleteBlock);
+  };
+
 
   useEffect(() => {
     if (!isLoading && !data?.subTemplates.length) {
@@ -186,6 +211,12 @@ export function Preview() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, data]);
+
+
+  useEffect(() => {
+    const subTemplates = data?.subTemplates.sort((a, b) => a.id - b.id) ?? [];
+    setSubTemplate(subTemplates);
+  }, [data]);
 
   if (!data?.subTemplates) {
     navigate(-1);
@@ -209,11 +240,11 @@ export function Preview() {
             {data.category}. {data.name}
           </div>
         </div>
-        <div className={s.draggable}>
-          <div className={s.headBlock} >
-            <TechInfo techInfo={data.techInfo} />
-          </div>
-        </div>
+
+        <TechInfo techInfo={{
+          info: data.techInfo,
+        }} />
+
         {
           subTemplate.map((template) => (
             <div key={template.id}>
@@ -221,7 +252,13 @@ export function Preview() {
                 template={template}
                 onCreateReception={() => createReception(data.subTemplates.length + 1)}
                 onDeleteSubTemplate={(id) => onDeleteSubTemplate(id)}
+                onDeleteBlockTemplate={onDeleteBlockTemplate}
               />
+              <div className={classNames(s.draggable, s.reception)}>
+                <div className={s.headBlock}>
+                  Краткое резюме посещения
+                </div>
+              </div>
             </div>
           ))
         }
@@ -234,7 +271,7 @@ export function Preview() {
           >
             <MenuItem onClick={() => false}>Копировать</MenuItem>
             <MenuItem onClick={() => false}>Редактировать</MenuItem>
-            <MenuItem onClick={() => onDeleteTemplate(Number(params.id))}>Удалить</MenuItem>
+            <MenuItem onClick={() => onDeleteTemplate(Number(params.subTemplateId))}>Удалить</MenuItem>
           </Menu>
 
           <button

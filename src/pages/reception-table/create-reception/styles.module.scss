@@ -1,0 +1,109 @@
+.root {
+  padding: 0 37px;
+  color: var(--color-font);
+  font-weight: 600;
+
+  .backButton {
+    line-height: 107%;
+    margin-top: 24px;
+  }
+}
+
+.draggable {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 15px auto 0;
+  padding: 30px;
+  border-radius: 14px;
+  border: 1px solid #BDE1F6;
+  background: #FCFEFF;
+  cursor: auto;
+
+  .headBlock {
+    font-weight: 600;
+    line-height: 17.12px;
+  }
+
+  .lineBlock {
+    margin-block: 20px;
+    margin-left: 10px;
+
+    .itemBlock {
+      display: flex;
+      margin-bottom: 10px;
+    }
+  }
+
+  .visitSummary {
+    display: flex;
+    width: 100%;
+    margin-top: 27px;
+    padding-inline: 32px;
+    color: #229CE1;
+    font-size: 16px;
+    font-weight: 500;
+
+    .name {
+      text-wrap: nowrap;
+      margin-right: 10px;
+    }
+
+    .visitSummaryText {
+      border-bottom-color: #229CE1;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 15px auto 0;
+
+  .statusBlock,
+  .submitBlock {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    margin-left: auto;
+  }
+
+  .statusBlock {
+    .selectTemplate {
+      margin-left: 10px;
+    }
+  }
+
+  .submitBlock {
+    margin-top: 15px;
+  }
+}
+
+.selectTemplate {
+  border : 1px solid #0E5F8C;
+  color: #0E5F8C;
+  background: #C0FFE8;
+  padding: 0 20px;
+  width: max-content;
+  min-height: 38px;
+  font-size: 18px;
+}
+
+.submit {
+  border: none;
+  background: #229CE1;
+  color: #FFFFFF;
+  margin-left: 10px;
+}
+.save {
+  margin-block: 13px;
+  margin-left: auto;
+  padding: 0 43px;
+  width: max-content;
+  min-height: 50px;
+  font-size: 18px;
+}

@@ -17,7 +17,7 @@ export function useListOfInfinity<T, R>({
 }: UseListOfInfinityProps<T, R>) {
   let defaultQuery: T = {
     offset: 1,
-    limit: 10,
+    limit: 100,
     sortBy: 'ASC',
     ...(initialQuery as T),
   };
@@ -33,6 +33,7 @@ export function useListOfInfinity<T, R>({
       if (lastPage.length === 0) {
         return undefined;
       }
+
       return { offset: dataLength + 1 };
     },
   });
