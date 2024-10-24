@@ -21,7 +21,6 @@
 .card {
   position: relative;
   padding: 40px 0 23px 0;
-  width: 270px;
   height: max-content;
   border-radius: 9.391px;
   background: #F9FDFF;
@@ -74,4 +73,10 @@
   border-radius: 50%;
   background-color: #029B64;
   animation: blink 3s infinite;
+}
+
+.copyButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }

@@ -5,15 +5,19 @@ import checker from 'vite-plugin-checker';
 import eslint from 'vite-plugin-eslint';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    eslint(),
-    checker({ typescript: true }),
+    eslint({
+      include: ['src/**/*.ts', 'src/**/*.tsx'],
+      fix: true,
+    }),
+    checker({
+      typescript: true,
+    }),
     svgr({
-      include: "**/*.svg",
+      include: '**/*.svg',
     }),
     unfonts({
       google: {
@@ -38,10 +42,9 @@ export default defineConfig({
       exclude: ['src/shared/api/realworld/**'],
     },
   },
-  server: { 
-    port: 3000
-
-   },
+  server: {
+    port: 3000,
+  },
   preview: { open: true, host: true },
   resolve: {
     alias: {

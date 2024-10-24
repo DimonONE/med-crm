@@ -1,0 +1,83 @@
+.wrapper {
+  font-size: 16px;
+  font-weight: 400;
+  color: #0E5F8C;
+}
+
+.draggable {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 15px auto 0;
+  padding: 30px 0;
+  border-radius: 14px;
+  border: 1px solid #BDE1F6;
+  background: #FCFEFF;
+  cursor: auto;
+}
+
+.reception {
+  cursor: pointer;
+  background: #EDF7FD;
+}
+
+.headBlock,
+.blockWithPadding {
+  padding-inline: 32px;
+}
+
+.headBlock {
+  font-weight: 600;
+  line-height: 17.12px;
+}
+
+.arrowBottom {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  opacity: 0.5;
+  transition: 0.5s;
+
+  &.active {
+    transform: rotateX(180deg);
+  }
+}
+
+.lineBlock {
+  margin-block: 20px;
+  margin-left: 10px;
+
+  .itemBlock {
+    display: flex;
+    margin-bottom: 10px;
+  }
+}
+
+.toggle {
+  position: fixed;
+  left: 20px;
+  bottom: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-base);
+  color: var(--color-white);
+  font-size: 40px;
+  transition: 0.3s transform;
+
+  &.active {
+    transform: rotate(45deg);
+  }
+}
+
+.backButton {
+  margin: 28px 28px 0px;
+  position: absolute;
+}
+

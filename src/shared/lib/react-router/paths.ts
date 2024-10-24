@@ -35,9 +35,16 @@ export const PATH_PAGE = {
     root: '/attendance',
     schedule: (id: string) => `/attendance/schedule/${id}`,
   },
-  receptionTable: {
-    root: '/reception-table',
-    create: '/reception-table/create',
+  template: {
+    root: '/template',
+    tab: (id: string, patientId?: string, doctorId?: string) => `/template/${id}/${patientId ? `${patientId}/` : ''}${doctorId ? `${doctorId}/` : ''}`,
+    preview: (id: string, subTemplateId: string) => `/template/preview/${id}/${subTemplateId}`,
+    create: (id?: string) => `/template/create/${id ?? ''}`,
+  },
+  reception: {
+    root: '/reception',
+    info: (patientId: string, doctorId: string, id?: string) => `/reception/${patientId}/${doctorId}/${id}`,
+    create: (patientId: string, doctorId: string, id: string, treatmentId: string) => `/reception/create/${patientId}/${doctorId}/${id}/${treatmentId}`,
   },
   medInfo: {
     root: '/med-info',

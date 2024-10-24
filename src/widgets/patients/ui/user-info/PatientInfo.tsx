@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAllRecordsPatient } from '~entities/doctor';
 import { PatientAddServicesForm, usePatientId } from '~entities/patients';
-import { useRoleUser } from '~entities/session';
+import { useCurrentUser, useRoleUser } from '~entities/session';
 import { LoadImage } from '~features/patients';
 import { Api } from '~shared/api/realworld';
 import { PATH_PAGE } from '~shared/lib/react-router';
@@ -24,6 +24,7 @@ type PatientInfoProps = {
 
 export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
   const navigate = useNavigate();
+  const userInfo = useCurrentUser();
   const { checkUserRole } = useRoleUser();
   const [selectRecord, setSelectRecord] = useState<Api.RecordEntityDto | null>(null);
 
@@ -157,7 +158,7 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
               <div className={s.textBold}>Жалоба:</div>
 
               <div className={s.contentInfo}>
-                <div className={s.noteInfo}>Болят зубы, желтый налет, смешение швардевита.</div>
+                <div className={s.noteInfo}>{record.notice}</div>
               </div>
             </div>
 
@@ -200,7 +201,7 @@ export function PatientInfo({ patientId, backButtonLink }: PatientInfoProps) {
       </div>
 
 
-      <NavLink to={PATH_PAGE.receptionTable.root} className={s.tableInfo}>
+      <NavLink to={PATH_PAGE.reception.info(patientId, userInfo?.id!)} className={s.tableInfo}>
         Таблица приема
       </NavLink>
       <NavLink to={PATH_PAGE.medInfo.cards(patientId)} className={s.tableInfo}>

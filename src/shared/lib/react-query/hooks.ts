@@ -1,29 +1,39 @@
-import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query';
-
+import {
+  QueryFunctionContext,
+  QueryKey,
+  useInfiniteQuery,
+} from '@tanstack/react-query';
 
 type UseListOfInfinityProps<T, R> = {
-  queryKey: QueryKey,
-  fetchPage: (query: T) => Promise<R[]>
-  initialQuery?: Partial<T>,
+  queryKey: QueryKey;
+  fetchPage: (query: T) => Promise<R[]>;
+  initialQuery?: Partial<T>;
 };
 
-export function useListOfInfinity<T, R>({ queryKey, fetchPage, initialQuery }: UseListOfInfinityProps<T, R>) {
+export function useListOfInfinity<T, R>({
+  queryKey,
+  fetchPage,
+  initialQuery,
+}: UseListOfInfinityProps<T, R>) {
   let defaultQuery: T = {
-    offset: 0,
-    limit: 10,
+    offset: 1,
+    limit: 100,
     sortBy: 'ASC',
     ...(initialQuery as T),
   };
 
   const { data, refetch, ...props } = useInfiniteQuery({
     queryKey,
-    queryFn: ({ pageParam }: QueryFunctionContext) => fetchPage({ ...defaultQuery, ...pageParam }),
+    queryFn: ({ pageParam }: QueryFunctionContext) =>
+      fetchPage({ ...defaultQuery, ...pageParam }),
     getNextPageParam: (lastPage, allPages) => {
-      const dataLength = allPages.reduce((total, page) => total + page.length, 0) || 0;
+      const dataLength =
+        allPages.reduce((total, page) => total + page.length, 0) || 0;
 
       if (lastPage.length === 0) {
         return undefined;
       }
+
       return { offset: dataLength + 1 };
     },
   });

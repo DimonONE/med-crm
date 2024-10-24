@@ -14,4 +14,5 @@ export { default as AddClinicICO } from './svg/add-clinic-ico.svg';
 export { default as PersonnelICO } from './svg/personnel-ico.svg';
 export { default as CheckListICO } from './svg/check-list-ico.svg';
 export { default as FinanceICO } from './svg/finance-ico.svg';
+export { default as TemplateICO } from './svg/template.svg';
 

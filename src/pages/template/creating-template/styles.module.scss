@@ -1,0 +1,124 @@
+.root {
+  padding: 28px 37px;
+}
+
+.createTemplateBlock {
+  position: fixed;
+  left: 20px;
+  bottom: 25px;
+
+  .toggleVisibility {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--color-base);
+    color: var(--color-white);
+    font-size: 40px;
+    transition: 0.3s transform;
+
+    &.active {
+      transform: rotate(45deg);
+    }    
+  }
+}
+
+.createTemplatePanel {
+  display: grid;
+  row-gap: 24px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 6.2px 0px #00000040;
+  padding: 25px;
+  margin-bottom: 5px;
+  z-index: 100;
+  background-color: #ECF9FF;
+  color: var(--color-font);
+
+  button {
+    display: flex;
+    align-items: start;
+  }
+
+  .text {
+    font-size: 16px;
+  }
+
+  .textBold {
+    font-weight: 600;
+  }
+
+  .dropdown, .empty {
+    max-width: 150px;
+  }
+
+  .dropdown {
+    position: relative;
+    border-radius: 100px;
+    border: 1px solid var(--color-font);
+    background: #CBECFF;
+    color: var(--color-font);
+    padding: 12px 15px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      right: 15px;
+      border-style: solid;
+      border-width: 10px 10px 0 0;
+      border-color:  transparent #578695 transparent transparent;
+      transform: rotate(45deg);
+    }
+  }
+
+  .checkbox,
+  .radioButton {
+    display: flex;
+    align-items: center;
+
+    .checked {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #0E5F8C;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+  }
+
+  .radioButton .checked {
+    border-radius: 50%;
+  }
+
+  .empty {
+    padding: 12px 15px;
+    border: 1px solid #0E5F8C;
+    border-radius: 10px;
+  }
+
+  .handwritten {
+    padding: 7px 0;
+    border-bottom: 1px solid #0E5F8C;
+  }
+}
+
+.submitBlock {
+  margin-left: auto;
+  .submit {
+    width: max-content;
+    height: auto;
+    padding: 9px 24px;
+    font-size: 18px;
+    font-weight: 500;
+    text-decoration: underline;
+
+    &.save {
+      background: #fff;
+      color: #0E5F8C;
+      text-decoration: none;
+    }
+  }
+}
+

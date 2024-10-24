@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { sessionModel, useRoleUser } from '~entities/session';
 import { NavigateButton } from '~features/navigate';
@@ -7,10 +8,13 @@ import FingerprintICO from '~shared/svg/settings-ico.svg';
 import { Button } from '~shared/ui/button';
 import s from './styles.module.scss';
 
-export function Header() {
+type Props = {
+  children?: React.JSX.Element
+};
+
+export function Header({ children }: Props) {
   const navigate = useNavigate();
   const { checkUserRole } = useRoleUser();
-
 
   const statusLogo = () => {
     switch (true) {
@@ -35,21 +39,29 @@ export function Header() {
             <HeartICO />
           </div>
         </NavLink>
+        {children && children}
 
-        <nav className={s.navbar}>
-          <NavigateButton />
+        {
+          !children && (
+            <>
+              <nav className={s.navbar}>
+                <NavigateButton />
 
-          <NavLink className={s.navLink} to="#">
-            <FingerprintICO />
-            <span className={s.name}>
-              Настройки
-            </span>
-          </NavLink>
-        </nav>
-        <Button onClick={() => {
-          sessionModel.logout();
-          navigate(PATH_PAGE.login);
-        }}>Выйти</Button>
+                <NavLink className={s.navLink} to="#">
+                  <FingerprintICO />
+                  <span className={s.name}>
+                    Настройки
+                  </span>
+                </NavLink>
+              </nav>
+              <Button onClick={() => {
+                sessionModel.logout();
+                navigate(PATH_PAGE.login);
+              }}>Выйти</Button>
+            </>
+          )
+        }
+
       </div>
       <Outlet />
     </>

@@ -1,0 +1,254 @@
+.wrapper {
+    font-size: 16px;
+    font-weight: 400;
+    color: #0E5F8C;
+}
+
+.draggable {
+    position: relative;
+    max-width: 1200px;
+    margin: 15px auto 0;
+    padding: 37px 0 ;
+    border-radius: 14px;
+    border: 1px solid #BDE1F6;
+    background: #FCFEFF;
+    cursor: auto;
+}
+
+.headBlock,
+.blockWithPadding {
+    padding: 0 32px;
+}
+
+.headBlock {
+    margin-bottom: 18px;
+    font-weight: 600;
+    line-height: 17.12px;
+}
+
+.defaultInput {
+    width: 100%;
+    border-bottom: 1px solid #0E5F8C;
+    text-decoration: underline;
+    text-underline-position: under;
+    text-decoration-color: #0E5F8C;
+    line-height: 19px;
+    height: 20px;
+}
+
+input.defaultInput {
+    text-align: center;
+    outline: none;
+    border-bottom: none;
+    background: transparent;
+}
+
+
+.dragHandleLeft,
+.contentBlockDraggable {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: grab;
+}
+
+.dragHandleLeft {
+    left: -19px;
+}
+
+.dragHandleRight {
+    margin-right: 15px;
+    cursor: grab;
+}
+
+.contentBlockDraggable {
+    display: flex;
+    position: absolute;
+    right: 0px;
+    opacity: 0;
+    transform: translateY(-50%) translateX(100%);
+    cursor: auto;
+}
+
+.contentBlockDraggable.show {
+    opacity: 1;
+}
+
+.createLineBlock {
+    display: flex;
+    align-items: center;
+
+    .createLine {
+        align-items: center;
+        justify-content: center;
+        width: 21px;
+        height: 21px;
+        border-radius: 50%;
+        background-color: var(--color-base);
+        color: var(--color-white);
+        font-size: 20px;
+        margin-right: 12px;
+    }
+
+    .text {
+        opacity: 0.6;
+        color: var(--color-font);
+    }
+}
+
+.contentBlock {
+    position: relative;
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    border-block: 1px solid #CBECFE;
+}
+
+.lineContent {
+    display: flex;
+    align-items: center;
+    min-width: max-content ;
+    min-height: 42px;
+    padding-inline: 10px;
+    border-right: 1px solid #CBECFE;
+
+    .text {
+        font-weight: 400;
+    }
+
+    .bold {
+        font-weight: 600;
+    }
+
+    .list {
+        .inputBlock {
+            float: right;
+        }
+
+        .defaultInput {
+            text-align: left;
+        }
+    }
+
+    .radioBlock {
+        .radioButton {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            border: 2px solid #0E5F8C;
+            border-radius: 50%;
+            margin-right: 5px;
+           
+           &.checked::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                background: #0E5F8C;
+            }
+        }
+
+        &:first-child  {
+            padding-right: 20px;
+        }
+        &:last-child  {
+            border: none;
+        }
+    }
+
+    .dropdown {
+        width: 100%;
+        border-radius: 100px;
+        border: 1px solid var(--color-font);
+        background: #CBECFF;
+        color: var(--color-font);
+        padding: clamp(2px, 2vw, 5px) clamp(10px, 2vw, 15px);
+    }
+
+    &.empty {
+        color: #A1B6C1;
+    }
+
+}
+
+.selectItem,
+.createItem {
+    position: relative;
+    border-right: 1px solid #578695;
+    border-left: 1px solid #578695;
+    background-color: #D5FFE8;
+
+    .circle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #578695;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        opacity: 40%;
+    }
+    
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        width: 0;
+        height: 0;
+    }
+
+    &::before {
+        top: 0;
+        left: 0;
+        border-width: 10px 10px 0 0;
+        border-color: #578695 transparent transparent transparent;
+    }
+
+    &::after {
+        bottom: 0;
+        right: 0;
+        border-width: 0 0 10px 10px;
+        border-color: transparent transparent #578695 transparent;
+    }
+
+    /* Добавление треугольников на правую и левую стороны */
+    .right::before,
+    .right::after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        width: 0;
+        height: 0;
+    }
+
+    /* Верхний треугольник справа */
+    .right::before {
+        top: 0;
+        right: 0;
+        border-width: 10px 0 0 10px;
+        border-color: #578695 transparent transparent transparent;
+    }
+
+    /* Нижний треугольник слева */
+    .right::after {
+        bottom: 0;
+        left: 0;
+        border-width: 10px 10px 0;
+        border-color: transparent transparent transparent #578695;
+    }
+}
+
+.createItem {
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    max-width: 90px;
+    padding-inline: 10px;
+}
+
