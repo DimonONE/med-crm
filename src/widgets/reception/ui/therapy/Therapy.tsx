@@ -27,9 +27,6 @@ export function Therapy({ id, doctorId, patientId }: Props) {
     category: id === ReceptionTableEnum.ALL ? '' : ReversedReceptionTableEnum[id] ?? '',
   });
 
-  console.log('dataіі', data);
-
-
   const [filter, setFilter] = useState<string | number>(1);
 
   const selectOptions = [

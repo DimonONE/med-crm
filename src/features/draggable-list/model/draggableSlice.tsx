@@ -150,6 +150,8 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
                   sizeY: 0,
                   space: 0,
                   status,
+                  value: '',
+
                 },
                 {
                   lineId: 1,
@@ -158,6 +160,7 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
                   sizeY: 0,
                   space: 0,
                   status: 'default',
+                  value: '',
                 },
               ],
             };
@@ -177,6 +180,7 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
                   sizeY: 0,
                   space: 0,
                   status,
+                  value: '',
                 };
               }
               return info;
@@ -188,6 +192,7 @@ export const useDraggableSlice = create<DraggableSlice>((set, get) => ({
               sizeY: 0,
               space: 0,
               status: 'default',
+              value: '',
             },
             ],
           };

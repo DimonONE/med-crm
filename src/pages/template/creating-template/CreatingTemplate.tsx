@@ -23,9 +23,11 @@ export function CreatingTemplate() {
 
 
   const handleSubmit = async (
-    values: any,
+    values: {},
     { resetForm }: FormikHelpers<any>,
   ) => {
+    console.log('values', values);
+
     resetForm();
   };
 
