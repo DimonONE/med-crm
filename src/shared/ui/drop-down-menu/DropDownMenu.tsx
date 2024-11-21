@@ -2,14 +2,14 @@ import { useRef, useState } from 'react';
 import { Menu } from '@mui/material';
 
 type Props = {
-  children: React.JSX.Element
-  menuItems: (handleCloseMenu: () => void) => React.JSX.Element | undefined
+  children: React.JSX.Element;
+  menuItems: (handleCloseMenu: () => void) => React.JSX.Element | undefined;
 };
 
 export type AnchorEl = {
-  element: null | HTMLElement
-  mouseX: number | null
-  mouseY: number | null
+  element: null | HTMLElement;
+  mouseX: number | null;
+  mouseY: number | null;
 };
 
 export function DropDownMenu({ children, menuItems }: Props) {
@@ -40,7 +40,10 @@ export function DropDownMenu({ children, menuItems }: Props) {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+    if (
+      event.key === 'ContextMenu' ||
+      (event.shiftKey && event.key === 'F10')
+    ) {
       handleContextMenu(event);
     }
   };
@@ -68,18 +71,20 @@ export function DropDownMenu({ children, menuItems }: Props) {
       >
         {children}
       </div>
-      {
-        Boolean(anchorEl.mouseX) && Boolean(anchorEl.mouseY) && (
-          <Menu
-            open={Boolean(anchorEl.element)}
-            onClose={handleCloseMenu}
-            anchorReference="anchorPosition"
-            anchorPosition={anchorEl.mouseX !== null && anchorEl.mouseY !== null ? { top: anchorEl.mouseY, left: anchorEl.mouseX } : undefined}
-          >
-            {menuItems(handleCloseMenu)}
-          </Menu>
-        )
-      }
+      {Boolean(anchorEl.mouseX) && Boolean(anchorEl.mouseY) && (
+        <Menu
+          open={Boolean(anchorEl.element)}
+          onClose={handleCloseMenu}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            anchorEl.mouseX !== null && anchorEl.mouseY !== null
+              ? { top: anchorEl.mouseY, left: anchorEl.mouseX }
+              : undefined
+          }
+        >
+          {menuItems(handleCloseMenu)}
+        </Menu>
+      )}
     </>
   );
 }

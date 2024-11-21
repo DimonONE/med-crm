@@ -123,7 +123,10 @@ export function Router() {
         element: <ClinicApplicationPage />,
       },
       { path: 'clinic/:clinicId?', element: <AllClinicsPage /> },
-      { path: 'template/preview/:id/:subTemplateId', element: <TemplatePreviewPage /> },
+      {
+        path: 'template/preview/:id/:subTemplateId',
+        element: <TemplatePreviewPage />,
+      },
     ],
   });
 
@@ -186,7 +189,6 @@ export function Router() {
       return isAuth ? <Header /> : <HeaderLogin />;
     }
     return null;
-
   };
 
   return useRoutes([
@@ -215,8 +217,10 @@ export function Router() {
               index: true,
               path: ':patientId/:doctorId/:id?',
             },
-            { path: 'create/:patientId/:doctorId/:id/:treatmentId', element: <CreateReceptionPage /> },
-
+            {
+              path: 'create/:patientId/:doctorId/:id/:treatmentId',
+              element: <CreateReceptionPage />,
+            },
           ],
         },
         {
@@ -227,7 +231,10 @@ export function Router() {
               index: true,
               path: ':id?/:patientId?/:doctorId?',
             },
-            { path: 'create/:subTemplateId', element: <CreatingTemplatePage /> },
+            {
+              path: 'create/:subTemplateId',
+              element: <CreatingTemplatePage />,
+            },
           ],
         },
         {

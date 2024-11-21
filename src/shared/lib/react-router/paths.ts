@@ -44,7 +44,8 @@ export const PATH_PAGE = {
   reception: {
     root: '/reception',
     info: (patientId: string, doctorId: string, id?: string) => `/reception/${patientId}/${doctorId}/${id}`,
-    create: (patientId: string, doctorId: string, id: string, treatmentId: string) => `/reception/create/${patientId}/${doctorId}/${id}/${treatmentId}`,
+    create: (patientId: string, doctorId: string, id: string, treatmentId: string) =>
+      `/reception/create/${patientId}/${doctorId}/${id}/${treatmentId}`,
   },
   medInfo: {
     root: '/med-info',

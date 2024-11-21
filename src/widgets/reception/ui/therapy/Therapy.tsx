@@ -81,6 +81,7 @@ export function Therapy({ id, doctorId, patientId }: Props) {
       </div>
     );
   }
+  console.log('data', data);
 
 
   return (
@@ -133,7 +134,14 @@ export function Therapy({ id, doctorId, patientId }: Props) {
 
       {
         data.map((treatment) => (
-          <div key={treatment.id} className={s.card}>
+          <div
+            key={treatment.id}
+            className={s.card}
+            onClick={() => navigate(PATH_PAGE.reception.create(patientId!, doctorId!, treatment.templateId.toString(), treatment.id.toString()))}
+            onKeyDown={() => false}
+            role="button"
+            tabIndex={0}
+          >
             <div className={classNames(s.blockInfo, s.headInfo)}>
               <div className={s.category}>
                 <span className={s.categoryName}> <ListICO /> {treatment.category}</span>

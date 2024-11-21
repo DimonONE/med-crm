@@ -122,13 +122,13 @@ export interface UserVisitsEntityDto {
 export interface UserWorkTimeEntityDto {
   id: number;
   dayOfWeek:
-    | 'Monday'
-    | 'Tuesday'
-    | 'Wednesday'
-    | 'Thursday'
-    | 'Friday'
-    | 'Saturday'
-    | 'Sunday';
+  | 'Monday'
+  | 'Tuesday'
+  | 'Wednesday'
+  | 'Thursday'
+  | 'Friday'
+  | 'Saturday'
+  | 'Sunday';
   /** @format date-time */
   startTime: string;
   /** @format date-time */
@@ -326,13 +326,13 @@ export interface CreateUpdateWorkTimeDtoDto {
   userId: string;
   /** Day of week  */
   dayOfWeek:
-    | 'Monday'
-    | 'Tuesday'
-    | 'Wednesday'
-    | 'Thursday'
-    | 'Friday'
-    | 'Saturday'
-    | 'Sunday';
+  | 'Monday'
+  | 'Tuesday'
+  | 'Wednesday'
+  | 'Thursday'
+  | 'Friday'
+  | 'Saturday'
+  | 'Sunday';
   times: TimesDtoDto[];
 }
 
@@ -681,15 +681,15 @@ export interface BlockDtoDto {
   space: number;
   /** id */
   status:
-    | 'TEXT'
-    | 'BOLD_TEXT'
-    | 'CHECK_BOX'
-    | 'RADIO_BOX'
-    | 'DATE'
-    | 'EMPTY'
-    | 'WRITE_TEXT'
-    | 'DROPDOWN'
-    | 'POINT_TEXT';
+  | 'TEXT'
+  | 'BOLD_TEXT'
+  | 'CHECK_BOX'
+  | 'RADIO_BOX'
+  | 'DATE'
+  | 'EMPTY'
+  | 'WRITE_TEXT'
+  | 'DROPDOWN'
+  | 'POINT_TEXT';
 }
 
 export interface LineBlockDtoDto {
@@ -732,6 +732,7 @@ export interface BlockEntityDto {
   space: number;
   status: string;
   lineBlock: LineBlockEntityDto;
+  value: any;
 }
 
 export interface LineBlockEntityDto {
@@ -999,18 +1000,18 @@ export class HttpClient<SecurityDataType = unknown> {
       const data = !responseFormat
         ? r
         : await response[responseFormat]()
-            .then((data) => {
-              if (r.ok) {
-                r.data = data;
-              } else {
-                r.error = data;
-              }
-              return r;
-            })
-            .catch((e) => {
-              r.error = e;
-              return r;
-            });
+          .then((data) => {
+            if (r.ok) {
+              r.data = data;
+            } else {
+              r.error = data;
+            }
+            return r;
+          })
+          .catch((e) => {
+            r.error = e;
+            return r;
+          });
 
       if (cancelToken) {
         this.abortControllers.delete(cancelToken);

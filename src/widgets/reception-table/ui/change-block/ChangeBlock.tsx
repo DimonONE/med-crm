@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { TemplateBlockInfo, TemplateStatus, UpdateCurrentBlock, useDraggableSlice } from '~features/draggable-list';
+import {
+  TemplateBlockInfo,
+  TemplateStatus,
+  UpdateCurrentBlock,
+  useDraggableSlice,
+} from '~features/draggable-list';
 import { Button } from '~shared/ui/button';
 import { Checkbox } from '~shared/ui/checkbox';
 import { DatePicker } from '~shared/ui/date-picker';
@@ -12,28 +17,50 @@ import { SelectField } from '~shared/ui/select-field';
 import { UnderlineText } from '~shared/ui/underline-text';
 import s from './styles.module.scss';
 
+export type AnswerT = {
+  id: number;
+  value: string;
+};
+
 interface ChangeBlockProps extends Partial<UpdateCurrentBlock> {
-  subTemplateId: number
-  bodyBlockId: number
-  lineId: number
-  status: TemplateStatus
-  value?: string
-  type?: 'create' | 'preview'
+  subTemplateId: number;
+  bodyBlockId: number;
+  lineId: number;
+  status: TemplateStatus;
+  value?: string;
+  type?: 'create' | 'preview';
+  handleChange?: ({ id, value }: AnswerT) => void;
 }
 
 const ChangeBlock = React.memo((props: ChangeBlockProps) => {
-  const { onCurrentBlockInfo, onToggleVisibility, updateTemplatesLineItem, updateCurrentBlock } = useDraggableSlice();
+  const {
+    onCurrentBlockInfo,
+    onToggleVisibility,
+    updateTemplatesLineItem,
+    updateCurrentBlock,
+  } = useDraggableSlice();
   const ref = useRef<HTMLDivElement>(null);
   const [value, setValue] = useState<string | number>('');
   const [checked, setChecked] = useState<boolean>(false);
   const [isOpen, setOpen] = useState(false);
-  const [dropdownVariables, setDropdownVariables] = useState([{
-    id: 0,
-    value: -1,
-    label: '',
-  }]);
+  const [dropdownVariables, setDropdownVariables] = useState([
+    {
+      id: 0,
+      value: -1,
+      label: '',
+    },
+  ]);
 
-  const { subTemplateId, bodyBlockId, lineId, status, type = 'create', value: defaultValue, ...positionParams } = props;
+  const {
+    subTemplateId,
+    bodyBlockId,
+    lineId,
+    status,
+    type = 'create',
+    value: defaultValue,
+    handleChange,
+    ...positionParams
+  } = props;
 
   const onCreateItem = () => {
     onToggleVisibility(true);
@@ -41,12 +68,26 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
   };
 
   const onChange = (eventValue: string | number) => {
-    setValue(eventValue);
-
-    updateCurrentBlock(subTemplateId, bodyBlockId, lineId, {
+    const values = {
       value: eventValue.toString(),
-      ...(status === 'DROPDOWN' && { value: JSON.stringify(dropdownVariables) }),
-    });
+      ...(status === 'DROPDOWN' && {
+        value: JSON.stringify(dropdownVariables),
+      }),
+      ...(status === 'CHECK_BOX' && {
+        value: JSON.stringify({
+          value: eventValue.toString(),
+          isChecked: checked,
+        }),
+      }),
+    };
+
+    setValue(eventValue);
+    updateCurrentBlock(subTemplateId, bodyBlockId, lineId, values);
+    console.log('handleChange', handleChange);
+
+    if (handleChange) {
+      handleChange({ id: lineId, value: values.value });
+    }
   };
 
   const onDelete = () => {
@@ -66,14 +107,27 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       const variables = JSON.parse(defaultValue ?? '');
       setDropdownVariables(variables);
       setValue(variables[0]?.value);
-
     }
-
-    // if (type === 'create' && status === 'DROPDOWN') {
-    //   setOpen(true);
-    // }
-
   }, []);
+
+  useEffect(() => {
+    if (status === 'CHECK_BOX') {
+      const values = JSON.parse(defaultValue || '{"value": ""}');
+      const newValues = {
+        value: JSON.stringify({
+          value: values.value,
+          isChecked: checked,
+        }),
+      };
+
+      updateCurrentBlock(subTemplateId, bodyBlockId, lineId, newValues);
+
+      if (handleChange) {
+        handleChange({ id: lineId, value: values });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checked]);
 
   const renderItem = () => {
     switch (true) {
@@ -84,11 +138,17 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             preview={type === 'preview'}
             onUpdate={onUpdate}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent, {
+              [s.preview]: type === 'preview',
+            })}
           >
             <div className={s.inputBlock}>
-              <input readOnly={type === 'preview'} className={classNames(s.defaultInput, s.text)}
-                value={value} onChange={(e) => onChange(e.target.value)} />
+              <input
+                readOnly={type === 'preview'}
+                className={classNames(s.defaultInput, s.text)}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+              />
             </div>
           </ResizableItem>
         );
@@ -100,14 +160,18 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             preview={type === 'preview'}
             onUpdate={onUpdate}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent, {
+              [s.preview]: type === 'preview',
+            })}
           >
-
             <div className={s.inputBlock}>
-              <input readOnly={type === 'preview'} className={classNames(s.defaultInput, s.bold)}
-                value={value} onChange={(e) => onChange(e.target.value)} />
+              <input
+                readOnly={type === 'preview'}
+                className={classNames(s.defaultInput, s.bold)}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+              />
             </div>
-
           </ResizableItem>
         );
 
@@ -118,12 +182,18 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             preview={type === 'preview'}
             onUpdate={onUpdate}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent, {
+              [s.preview]: type === 'preview',
+            })}
           >
             <li className={s.list}>
               <div className={s.inputBlock}>
-                <input readOnly={type === 'preview'} className={classNames(s.defaultInput)}
-                  value={value} onChange={(e) => onChange(e.target.value)} />
+                <input
+                  readOnly={type === 'preview'}
+                  className={classNames(s.defaultInput)}
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                />
               </div>
             </li>
           </ResizableItem>
@@ -137,7 +207,9 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             preview={type === 'preview'}
             onEdit={() => setOpen(true)}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent, {
+              [s.preview]: type === 'preview',
+            })}
           >
             <SelectField
               value={value || -1}
@@ -147,36 +219,46 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
               selectOptions={dropdownVariables}
             >
               {dropdownVariables.map(({ label, value: link }) => (
-                <MenuItem
-                  key={link}
-                  value={link}
-                  className="select-link"
-                >
+                <MenuItem key={link} value={link} className="select-link">
                   {label}
                 </MenuItem>
               ))}
             </SelectField>
-          </ResizableItem >
+          </ResizableItem>
         );
-      case status === 'CHECK_BOX':
+      case status === 'CHECK_BOX': {
+        const checkboxValue =
+          type !== 'preview'
+            ? value
+            : (typeof value === 'string' && JSON.parse(value || '{}'))?.value ??
+              '';
+
         return (
           <ResizableItem
             positionParams={positionParams}
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent, {
+              [s.preview]: type === 'preview',
+            })}
           >
             <Checkbox
               className={s.checkbox}
               checked={checked}
-              onChange={() => setChecked(prev => !prev)}
+              onChange={() => setChecked((prev) => !prev)}
             >
-              <input readOnly={type === 'preview'} placeholder='Ваше значение'
-                className={classNames(s.defaultInput, s.text)} value={value} onChange={(e) => onChange(e.target.value)} />
+              <input
+                readOnly={type === 'preview'}
+                placeholder="Ваше значение"
+                className={classNames(s.defaultInput, s.text)}
+                value={checkboxValue}
+                onChange={(e) => onChange(e.target.value)}
+              />
             </Checkbox>
-          </ResizableItem >
+          </ResizableItem>
         );
+      }
 
       case status === 'RADIO_BOX':
         return (
@@ -185,19 +267,37 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent, {
+              [s.preview]: type === 'preview',
+            })}
           >
             <>
-              <button type='button' onClick={() => onChange('Yes')} className={classNames(s.lineContent, s.radioBlock)}>
-                <span className={classNames(s.radioButton, { [s.checked]: value === 'Yes' })} />
+              <button
+                type="button"
+                onClick={() => onChange('Yes')}
+                className={classNames(s.lineContent, s.radioBlock)}
+              >
+                <span
+                  className={classNames(s.radioButton, {
+                    [s.checked]: value === 'Yes',
+                  })}
+                />
                 Да
               </button>
-              <button type='button' onClick={() => onChange('No')} className={classNames(s.lineContent, s.radioBlock)}>
-                <span className={classNames(s.radioButton, { [s.checked]: value !== 'Yes' })} />
+              <button
+                type="button"
+                onClick={() => onChange('No')}
+                className={classNames(s.lineContent, s.radioBlock)}
+              >
+                <span
+                  className={classNames(s.radioButton, {
+                    [s.checked]: value !== 'Yes',
+                  })}
+                />
                 Нет
               </button>
             </>
-          </ResizableItem >
+          </ResizableItem>
         );
 
       case status === 'DATE':
@@ -207,7 +307,9 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent, {
+              [s.preview]: type === 'preview',
+            })}
           >
             <DatePicker
               sx={{
@@ -227,10 +329,10 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
                 },
               }}
               value={value}
-              onChange={(date) =>
-                date && onChange(dayjs(date).toISOString())
-              } />
-          </ResizableItem>);
+              onChange={(date) => date && onChange(dayjs(date).toISOString())}
+            />
+          </ResizableItem>
+        );
 
       case status === 'EMPTY':
         return (
@@ -252,20 +354,22 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onDelete={onDelete}
-            className={classNames(s.lineContent, { [s.preview]: type === 'preview' })}
+            className={classNames(s.lineContent)}
           >
             <UnderlineText
               value={value.toString()}
-              name=''
-              onChange={(event) => typeof event === 'object' ? onChange(event.target.value) : ''}
-              readOnly={type === 'preview'}
+              name=""
+              onChange={(event) =>
+                typeof event === 'object' ? onChange(event.target.value) : ''
+              }
             />
           </ResizableItem>
         );
 
       default:
         return (
-          <div ref={ref}
+          <div
+            ref={ref}
             onClick={onCreateItem}
             tabIndex={0}
             onKeyDown={() => false}
@@ -284,7 +388,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       {renderItem()}
       <Modal
         isOpen={isOpen}
-        type='custom'
+        type="custom"
         onSuccess={() => setOpen(false)}
         onClose={() => setOpen(false)}
         className={s.modal}
@@ -295,36 +399,60 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
           {dropdownVariables.map(({ id }) => (
             <div key={id} className={s.inputBlock}>
               <input
-                value={dropdownVariables.find(({ id: variableId }) => id === variableId)?.label}
-                onChange={(e) => setDropdownVariables(prev => prev.map((dropdownVariable) => {
-                  if (id === dropdownVariable.id) {
-                    return {
-                      ...dropdownVariable,
-                      label: e.target.value,
-                    };
-                  }
+                value={
+                  dropdownVariables.find(
+                    ({ id: variableId }) => id === variableId,
+                  )?.label
+                }
+                onChange={(e) =>
+                  setDropdownVariables((prev) =>
+                    prev.map((dropdownVariable) => {
+                      if (id === dropdownVariable.id) {
+                        return {
+                          ...dropdownVariable,
+                          label: e.target.value,
+                        };
+                      }
 
-                  return dropdownVariable;
-                }))}
+                      return dropdownVariable;
+                    }),
+                  )
+                }
                 type="text"
-                placeholder={dropdownVariables.length === 1 ? 'Первый вариант по умолчанию' : 'Введите вариант'} />
+                placeholder={
+                  dropdownVariables.length === 1
+                    ? 'Первый вариант по умолчанию'
+                    : 'Введите вариант'
+                }
+              />
               <button
-                type='button'
+                type="button"
                 className={s.deleteButton}
                 disabled={dropdownVariables.length === 1}
-                onClick={() => setDropdownVariables(prev => prev.filter(({ id: variableId }) => id !== variableId))}
-              >x</button>
+                onClick={() =>
+                  setDropdownVariables((prev) =>
+                    prev.filter(({ id: variableId }) => id !== variableId),
+                  )
+                }
+              >
+                x
+              </button>
             </div>
           ))}
           <Button
             className={s.createVariable}
-            onClick={() => setDropdownVariables(prev => [...prev, {
-              id: prev.length + 1,
-              value: prev.length + 1,
-              label: '',
-            }])}
-            type='button'
-            color='primary-reverse'
+            onClick={() =>
+              setDropdownVariables((prev) => [
+                ...prev,
+                {
+                  id: prev.length + 1,
+                  value: prev.length + 1,
+                  label: '',
+                },
+              ])
+            }
+            type="button"
+            color="primary-reverse"
           >
             <div className={s.createVariablePlus}>+</div>
             Создать вариант
@@ -355,7 +483,6 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
           </div>
         </div>
       </Modal>
-
     </>
   );
 });
