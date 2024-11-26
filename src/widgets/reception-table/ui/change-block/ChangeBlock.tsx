@@ -109,6 +109,16 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       setDropdownVariables(variables);
       setValue(variables[0]?.value);
     }
+
+    if (defaultValue && status === 'CHECK_BOX') {
+      const checkboxValue =
+        type !== 'preview'
+          ? value
+          : typeof value === 'string' &&
+            JSON.parse(value || defaultValue || '{}');
+
+      setChecked(checkboxValue.isChecked);
+    }
   }, []);
 
   useEffect(() => {
@@ -124,7 +134,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       updateCurrentBlock(subTemplateId, bodyBlockId, lineId, newValues);
 
       if (handleChange) {
-        handleChange({ id: lineId, value: values });
+        handleChange({ id: lineId, value: newValues.value });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,14 +1,21 @@
-import { useCallback, useEffect, useState } from 'react';
-import { MenuItem } from '@mui/material';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { MenuItem, SelectChangeEvent } from '@mui/material';
 import classNames from 'classnames';
+import html2canvas from 'html2canvas';
+import { jsPDF as JsPDF } from 'jspdf';
 import { useParams } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 import { toast } from 'react-toastify';
-import { TemplateStatus, useTreatmentId } from '~features/draggable-list';
-import { Api, API_URL } from '~shared/api/realworld';
+import {
+  TemplateStatus,
+  useTreatmentId,
+  useTreatmentUpdate,
+} from '~features/draggable-list';
+import { Api } from '~shared/api/realworld';
+import { errorHandler } from '~shared/lib/react-query';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { SelectField } from '~shared/ui/select-field';
-import { downloadPDF } from '~widgets/medical-informations';
 import { ChangeBlock, AnswerT } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
@@ -20,10 +27,12 @@ type Params = {
 
 export function ViewRecord() {
   const params = useParams<Params>();
-  const { data } = useTreatmentId(params.treatmentId!);
-  const [statusId, setStatusId] = useState<string | number>(1);
-  const [hasEdit, setEdit] = useState<boolean>(false);
+  const { data, isLoading } = useTreatmentId(params.treatmentId!);
+  const { mutate } = useTreatmentUpdate();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
 
+  const [statusId, setStatusId] = useState<string | number>(1);
   const [answers, setAnswers] = useState<AnswerT[]>([]);
   const [subTreatment, setSubTreatment] = useState<
     Api.SubTreatmentEntityDto | undefined
@@ -38,6 +47,7 @@ export function ViewRecord() {
     {
       value: 2,
       label: 'Закончено',
+      type: 'END',
     },
   ];
 
@@ -51,9 +61,24 @@ export function ViewRecord() {
     setAnswers(updatedAnswers);
   };
 
-  const handleEdit = () => {
-    setEdit(true);
-    toast('Редактирование разрешено!', { type: 'info' });
+  const handleStatus = (event: SelectChangeEvent<string | number>) => {
+    const value = event?.target?.value!;
+    const status = selectOptions.find((option) => option.value === value);
+    const statusData = {
+      id: Number(params.treatmentId),
+      status: status?.type,
+      category: data?.category,
+    };
+
+    mutate(statusData, {
+      onSuccess: async () => {
+        setStatusId(value);
+        toast('Success!', { type: 'success' });
+      },
+      onError: (error) => {
+        toast(errorHandler(error), { type: 'error' });
+      },
+    });
   };
 
   const answerBlock = useCallback(() => {
@@ -67,14 +92,73 @@ export function ViewRecord() {
   }, [subTreatment?.answerBlock]);
 
   useEffect(() => {
-    if (data?.subTreatments) {
-      const findTemplate = data.subTreatments.find(
-        ({ id }) => id.toString() === params.id,
+    if (!data?.subTreatments) return;
+
+    const findTemplate = data.subTreatments.find(
+      ({ id }) => id.toString() === params.id,
+    );
+    setSubTreatment(findTemplate);
+
+    const status = selectOptions.find(({ type }) => type === data.status);
+    if (status) setStatusId(status.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, params.id]);
+
+  useEffect(() => {
+    if (!data?.subTreatments) return;
+
+    const findTemplate = data.subTreatments.find(
+      ({ id }) => id.toString() === params.id,
+    );
+    setSubTreatment(findTemplate);
+
+    const status = selectOptions.find(({ type }) => type === data.status);
+    if (status) setStatusId(status.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, params.id]);
+
+  const down100dPDF = () => {
+    const input = contentRef.current;
+    if (!input) {
+      console.error(
+        'contentRef is not defined or not pointing to a valid element',
+      );
+      return;
+    }
+
+    html2canvas(input).then((canvas) => {
+      const pdf = new JsPDF('p', 'px', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+
+      const margin = 15;
+      const contentWidth = pdfWidth - margin * 2;
+      const contentHeight = pdfHeight - margin * 2;
+
+      const ratio = Math.min(
+        contentWidth / imgWidth,
+        contentHeight / imgHeight,
+      );
+      const imgX = margin;
+      const imgY = margin;
+
+      const imgData = canvas.toDataURL('image/png');
+
+      pdf.addImage(
+        imgData,
+        'PNG',
+        imgX,
+        imgY,
+        imgWidth * ratio,
+        imgHeight * ratio,
       );
 
-      setSubTreatment(findTemplate);
-    }
-  }, [data, params.id]);
+      pdf.save('invoice.pdf');
+    });
+  };
 
   return (
     <div className={s.root}>
@@ -82,25 +166,27 @@ export function ViewRecord() {
       <div className={s.container}>
         <div className={s.statusBlock}>
           <span>Статус лечения</span>
-          <SelectField
-            value={statusId}
-            onChange={(event) => setStatusId(event?.target?.value!)}
-            className={classNames(
-              'form-input buttons-header',
-              s.selectTemplate,
-            )}
-            selectNavigate
-            selectOptions={selectOptions}
-          >
-            {selectOptions.map(({ label, value: link }) => (
-              <MenuItem key={link} value={link} className="select-link">
-                {label}
-              </MenuItem>
-            ))}
-          </SelectField>
+          {!isLoading && (
+            <SelectField
+              value={statusId}
+              onChange={handleStatus}
+              className={classNames(
+                'form-input buttons-header',
+                s.selectTemplate,
+              )}
+              selectNavigate
+              selectOptions={selectOptions}
+            >
+              {selectOptions.map(({ label, value: link }) => (
+                <MenuItem key={link} value={link} className="select-link">
+                  {label}
+                </MenuItem>
+              ))}
+            </SelectField>
+          )}
         </div>
 
-        <div className={s.template}>
+        <div ref={contentRef} className={s.template}>
           <div className={s.title}>{answerBlock()?.name}</div>
 
           {answerBlock()?.bodyBlocks.map((bodyBlock) => (
@@ -114,7 +200,6 @@ export function ViewRecord() {
                         {...block}
                         key={block.lineId}
                         type="preview"
-                        isEditValue={hasEdit}
                         subTemplateId={bodyBlock.subTemplateId}
                         bodyBlockId={lineBlock.id}
                         status={block.status as TemplateStatus}
@@ -133,10 +218,7 @@ export function ViewRecord() {
             className={classNames(s.submit, s.submitDownload)}
             type="button"
             color="primary"
-            onClick={() =>
-              downloadPDF(`${API_URL}/${'patientInfo.medInfoPath'}`)
-            }
-            disabled={hasEdit}
+            onClick={() => down100dPDF()}
           >
             Скачать PDF
           </Button>
@@ -144,23 +226,9 @@ export function ViewRecord() {
             className={classNames(s.submit, s.submitPrint)}
             type="button"
             color="primary"
-            onClick={() =>
-              window.open(`${API_URL}/${'patientInfo.medInfoPath'}`, '_blank')
-            }
-            disabled={hasEdit}
+            onClick={() => reactToPrintFn()}
           >
             Печатать
-          </Button>
-          <Button
-            className={s.submit}
-            type="submit"
-            color="secondary"
-            onClick={handleEdit}
-          >
-            Редактировать
-          </Button>
-          <Button className={s.submit} type="submit" color="primary">
-            Сохранить
           </Button>
         </div>
       </div>

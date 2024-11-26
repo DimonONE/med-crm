@@ -60,6 +60,7 @@ export function CreateReceptionPage() {
     {
       value: 2,
       label: 'Закончено',
+      type: 'END',
     },
   ];
 
@@ -111,10 +112,6 @@ export function CreateReceptionPage() {
       comment: visitSummary.comment,
       plan: visitSummary.plan,
       blocks: JSON.stringify(answers),
-      // blocks: JSON.stringify([
-      //   { id: 155, answer: '10' },
-      //   { id: 156, answer: 25 },
-      // ]),
       ...(visitSummary?.files ? { files: visitSummary.files } : {}),
     };
 
@@ -220,6 +217,7 @@ export function CreateReceptionPage() {
                       {...block}
                       key={block.lineId}
                       type="preview"
+                      isEditValue
                       subTemplateId={bodyBlock.subTemplateId}
                       bodyBlockId={lineBlock.id}
                       status={block.status as TemplateStatus}
