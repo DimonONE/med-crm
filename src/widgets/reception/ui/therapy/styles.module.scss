@@ -51,6 +51,14 @@
     &:last-child {
       border: none;
     }
+
+    &.subTreatment:hover {
+      border: 1px solid #D4EFFF;
+      border-top: none;
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+      background: #48bdff2e;
+    }
   }
 
   .headInfo {

@@ -29,6 +29,7 @@ interface ChangeBlockProps extends Partial<UpdateCurrentBlock> {
   status: TemplateStatus;
   value?: string;
   type?: 'create' | 'preview';
+  isEditValue?: boolean;
   handleChange?: ({ id, value }: AnswerT) => void;
 }
 
@@ -57,6 +58,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
     lineId,
     status,
     type = 'create',
+    isEditValue = false,
     value: defaultValue,
     handleChange,
     ...positionParams
@@ -83,7 +85,6 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
 
     setValue(eventValue);
     updateCurrentBlock(subTemplateId, bodyBlockId, lineId, values);
-    console.log('handleChange', handleChange);
 
     if (handleChange) {
       handleChange({ id: lineId, value: values.value });
@@ -246,7 +247,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             <Checkbox
               className={s.checkbox}
               checked={checked}
-              onChange={() => setChecked((prev) => !prev)}
+              onChange={() => isEditValue && setChecked((prev) => !prev)}
             >
               <input
                 readOnly={type === 'preview'}
@@ -330,6 +331,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
               }}
               value={value}
               onChange={(date) => date && onChange(dayjs(date).toISOString())}
+              readOnly={!isEditValue}
             />
           </ResizableItem>
         );
@@ -362,6 +364,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
               onChange={(event) =>
                 typeof event === 'object' ? onChange(event.target.value) : ''
               }
+              readOnly={!isEditValue}
             />
           </ResizableItem>
         );

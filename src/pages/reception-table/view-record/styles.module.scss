@@ -1,0 +1,115 @@
+.root {
+  padding: 0 37px;
+  color: var(--color-font);
+  font-weight: 600;
+
+  .backButton {
+    line-height: 107%;
+    margin-top: 24px;
+  }
+}
+
+.draggable {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 15px auto 0;
+  padding: 30px;
+  border-radius: 14px;
+  border: 1px solid #BDE1F6;
+  background: #FCFEFF;
+  cursor: auto;
+
+  .headBlock {
+    font-weight: 600;
+    line-height: 17.12px;
+  }
+
+  .lineBlock {
+    margin-block: 20px;
+    margin-left: 10px;
+
+    .itemBlock {
+      display: flex;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 15px auto 0;
+
+  .statusBlock,
+  .submitBlock {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    margin-left: auto;
+  }
+
+  .statusBlock {
+    .selectTemplate {
+      margin-left: 10px;
+    }
+  }
+
+  .submitBlock {
+    margin-top: 15px;
+  }
+}
+.template {
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 21.4px;
+  }
+
+  &:not(:nth-child(2)) {
+    margin-top: 40px;
+  }
+}
+
+.selectTemplate {
+  border : 1px solid #0E5F8C;
+  color: #0E5F8C;
+  background: #C0FFE8;
+  padding: 0 20px;
+  width: max-content;
+  min-height: 38px;
+  font-size: 18px;
+}
+
+.submitButtons {
+  display: flex;
+  margin-block: 30px;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.submit {
+  width: max-content;
+  padding: 13px 26px;
+  border-radius: 39px;
+  font-size: 16px;
+  font-weight: 500;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.submitDownload {
+  color: #FFFFFF;
+  background: #578695;
+}
+
+.submitPrint {
+  color: #FFFFFF;
+  background: #029B64;
+}

@@ -26,7 +26,6 @@ type Params = {
   patientId: string;
   doctorId: string;
   treatmentId: string;
-  recordId: string;
 };
 
 export function CreateReceptionPage() {
@@ -80,8 +79,6 @@ export function CreateReceptionPage() {
         )
       : [...answers, { id, value }];
 
-    console.log('updatedAnswers', updatedAnswers);
-
     setAnswers(updatedAnswers);
   };
 
@@ -114,6 +111,10 @@ export function CreateReceptionPage() {
       comment: visitSummary.comment,
       plan: visitSummary.plan,
       blocks: JSON.stringify(answers),
+      // blocks: JSON.stringify([
+      //   { id: 155, answer: '10' },
+      //   { id: 156, answer: 25 },
+      // ]),
       ...(visitSummary?.files ? { files: visitSummary.files } : {}),
     };
 

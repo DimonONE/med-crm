@@ -192,4 +192,10 @@
   &:hover {
     background: linear-gradient(90deg, rgba(249, 253, 255, 0.00) 2.17%, #E2F4FF 26.71%, #E2F4FF 75.62%, rgba(249, 253, 255, 0.00) 95.16%);
   }
+
+  &.disabled {
+    pointer-events: none;
+    color: gray;
+    cursor: not-allowed;
+  }
 }

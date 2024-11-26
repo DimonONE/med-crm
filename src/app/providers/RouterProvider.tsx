@@ -38,6 +38,10 @@ const CreateReceptionPage = Loadable(
   lazy(() => import('~pages/reception-table/create-reception')),
 );
 
+const ViewRecordPage = Loadable(
+  lazy(() => import('~pages/reception-table/view-record')),
+);
+
 // Personnel
 const PersonnelHomePage = Loadable(lazy(() => import('~pages/personnel/home')));
 const PersonnelListPage = Loadable(
@@ -220,6 +224,10 @@ export function Router() {
             {
               path: 'create/:patientId/:doctorId/:id/:treatmentId',
               element: <CreateReceptionPage />,
+            },
+            {
+              path: 'view/:patientId/:treatmentId/:id',
+              element: <ViewRecordPage />,
             },
           ],
         },
