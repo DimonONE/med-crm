@@ -18,7 +18,7 @@ import { FileLoader, FileValues } from '~shared/ui/file-loader';
 import { SelectField } from '~shared/ui/select-field';
 import { TechInfo } from '~shared/ui/tech-info';
 import { UnderlineText } from '~shared/ui/underline-text';
-import { ChangeBlock, AnswerT } from '~widgets/reception-table';
+import { AnswerValueT, ChangeBlock } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
 type Params = {
@@ -26,6 +26,11 @@ type Params = {
   patientId: string;
   doctorId: string;
   treatmentId: string;
+};
+
+type AnswerT = {
+  id: number;
+  answer: string;
 };
 
 export function CreateReceptionPage() {
@@ -73,12 +78,12 @@ export function CreateReceptionPage() {
     [dataTemplate],
   );
 
-  const handleAnswer = ({ id, value }: AnswerT) => {
+  const handleAnswer = ({ id, value }: AnswerValueT) => {
     const updatedAnswers = answers.some((answer) => answer.id === id)
       ? answers.map((answer) =>
-          answer.id === id ? { ...answer, value } : answer,
+          answer.id === id ? { ...answer, answer: value } : answer,
         )
-      : [...answers, { id, value }];
+      : [...answers, { id, answer: value }];
 
     setAnswers(updatedAnswers);
   };
@@ -103,6 +108,7 @@ export function CreateReceptionPage() {
     }
 
     const recordId = recordsPatient[recordsPatient.length - 1]?.id;
+    console.log('answers', answers);
 
     const createData = {
       recordId,
@@ -117,7 +123,7 @@ export function CreateReceptionPage() {
 
     mutate(createData, {
       onSuccess: async (resp) => {
-        console.log('resp', resp);
+        console.log('/treatment/answer-create', JSON.parse(resp.data));
         toast('Success!', { type: 'success' });
       },
       onSettled: () => {},

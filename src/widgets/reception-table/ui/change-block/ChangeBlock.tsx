@@ -17,7 +17,7 @@ import { SelectField } from '~shared/ui/select-field';
 import { UnderlineText } from '~shared/ui/underline-text';
 import s from './styles.module.scss';
 
-export type AnswerT = {
+export type AnswerValueT = {
   id: number;
   value: string;
 };
@@ -28,9 +28,10 @@ interface ChangeBlockProps extends Partial<UpdateCurrentBlock> {
   lineId: number;
   status: TemplateStatus;
   value?: string;
+  answer?: string;
   type?: 'create' | 'preview';
   isEditValue?: boolean;
-  handleChange?: ({ id, value }: AnswerT) => void;
+  handleChange?: ({ id, value }: AnswerValueT) => void;
 }
 
 const ChangeBlock = React.memo((props: ChangeBlockProps) => {
@@ -70,6 +71,10 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
   };
 
   const onChange = (eventValue: string | number) => {
+    if (!isEditValue) {
+      return;
+    }
+
     const values = {
       value: eventValue.toString(),
       ...(status === 'DROPDOWN' && {
@@ -87,7 +92,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
     updateCurrentBlock(subTemplateId, bodyBlockId, lineId, values);
 
     if (handleChange) {
-      handleChange({ id: lineId, value: values.value });
+      handleChange({ id: props.id ?? lineId, value: values.value });
     }
   };
 
@@ -101,13 +106,15 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
 
   useEffect(() => {
     if (defaultValue) {
-      setValue(defaultValue);
+      setValue(props.answer ?? defaultValue);
     }
 
     if (defaultValue && status === 'DROPDOWN') {
       const variables = JSON.parse(defaultValue ?? '');
       setDropdownVariables(variables);
-      setValue(variables[0]?.value);
+
+      const dropdownAnswer = props.answer && JSON.parse(props.answer);
+      setValue(dropdownAnswer?.value ?? variables[0]?.value);
     }
 
     if (defaultValue && status === 'CHECK_BOX') {
@@ -115,7 +122,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
         type !== 'preview'
           ? value
           : typeof value === 'string' &&
-            JSON.parse(value || defaultValue || '{}');
+            JSON.parse(props.answer || defaultValue || '{}');
 
       setChecked(checkboxValue.isChecked);
     }
@@ -134,7 +141,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       updateCurrentBlock(subTemplateId, bodyBlockId, lineId, newValues);
 
       if (handleChange) {
-        handleChange({ id: lineId, value: newValues.value });
+        handleChange({ id: props.id ?? lineId, value: newValues.value });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -339,7 +346,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
                   color: '#0E5F8C',
                 },
               }}
-              value={value}
+              value={dayjs(value)}
               onChange={(date) => date && onChange(dayjs(date).toISOString())}
               readOnly={!isEditValue}
             />

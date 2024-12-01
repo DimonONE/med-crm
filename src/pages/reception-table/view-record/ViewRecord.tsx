@@ -16,7 +16,7 @@ import { errorHandler } from '~shared/lib/react-query';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { SelectField } from '~shared/ui/select-field';
-import { ChangeBlock, AnswerT } from '~widgets/reception-table';
+import { ChangeBlock } from '~widgets/reception-table';
 import s from './styles.module.scss';
 
 type Params = {
@@ -33,7 +33,6 @@ export function ViewRecord() {
   const reactToPrintFn = useReactToPrint({ contentRef });
 
   const [statusId, setStatusId] = useState<string | number>(1);
-  const [answers, setAnswers] = useState<AnswerT[]>([]);
   const [subTreatment, setSubTreatment] = useState<
     Api.SubTreatmentEntityDto | undefined
   >(undefined);
@@ -50,16 +49,6 @@ export function ViewRecord() {
       type: 'END',
     },
   ];
-
-  const handleAnswer = ({ id, value }: AnswerT) => {
-    const updatedAnswers = answers.some((answer) => answer.id === id)
-      ? answers.map((answer) =>
-          answer.id === id ? { ...answer, value } : answer,
-        )
-      : [...answers, { id, value }];
-
-    setAnswers(updatedAnswers);
-  };
 
   const handleStatus = (event: SelectChangeEvent<string | number>) => {
     const value = event?.target?.value!;
@@ -203,7 +192,7 @@ export function ViewRecord() {
                         subTemplateId={bodyBlock.subTemplateId}
                         bodyBlockId={lineBlock.id}
                         status={block.status as TemplateStatus}
-                        handleChange={(answerData) => handleAnswer(answerData)}
+                        handleChange={() => false}
                       />
                     </div>
                   ))}

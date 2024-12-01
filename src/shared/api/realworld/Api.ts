@@ -724,6 +724,7 @@ export interface CreateSubTemplateDtoDto {
 }
 
 export interface BlockEntityDto {
+  answer: string | undefined;
   id: number;
   lineId: number;
   sizeX: number;

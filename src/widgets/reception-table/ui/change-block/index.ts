@@ -1,3 +1,3 @@
 export { ChangeBlock } from './ChangeBlock';
 
-export type { AnswerT } from './ChangeBlock';
+export type { AnswerValueT } from './ChangeBlock';
