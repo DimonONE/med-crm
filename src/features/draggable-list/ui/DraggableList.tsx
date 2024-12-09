@@ -56,6 +56,8 @@ function DraggableItem(props: DraggableLineProps) {
             lineId={lineId}
             status={status}
             value={value}
+            type="create"
+            isEditValue
             {...params}
           />
         ))

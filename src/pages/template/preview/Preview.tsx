@@ -127,29 +127,45 @@ function Reception(props: IProps) {
     }
   };
 
-  const pasteSubTemplate = ({ id, params }: PasteT) => {
+  const pasteSubTemplate = (
+    targetId: number | undefined,
+    { id, params }: PasteT,
+  ) => {
     const selectSubTemplate = subTemplates.find((sT) => sT.id === params.id);
-    const bodyBlock = selectSubTemplate?.bodyBlocks.find(
-      (sT) => sT.id === Number(id),
-    );
+    if (!selectSubTemplate) {
+      throw new Error('subTemplate of undefined');
+    }
 
+    const bodyBlock = selectSubTemplate.bodyBlocks.find(
+      (block) => block.id === Number(id),
+    );
     if (!bodyBlock) {
       throw new Error('bodyBlock of undefined');
     }
 
+    const targetTemplate = template.bodyBlocks.find((t) => t.id === targetId);
+    if (!targetTemplate) {
+      throw new Error('targetTemplate of undefined');
+    }
+
+    const formatLineBlocks = (lineBlocks: Api.LineBlockEntityDto[]) =>
+      lineBlocks.map(({ id: _, blocks, ...lineBlock }) => ({
+        ...lineBlock,
+        blockInfo: blocks.map(({ id: __, status, ...info }) => ({
+          ...info,
+          status: status as TemplateStatus,
+          value: info.value ?? null,
+        })),
+      }));
+
+    const targetLineBlocks = formatLineBlocks(targetTemplate.lineBlocks);
+    const bodyBlockLineBlocks = formatLineBlocks(bodyBlock.lineBlocks);
+
     const templateData: Template = {
-      name: bodyBlock.name,
+      id: targetId,
+      name: targetTemplate.name,
       positionId: bodyBlock.positionId,
-      lineBlocks: bodyBlock.lineBlocks.map(
-        ({ id: _, blocks, ...lineBlock }) => ({
-          ...lineBlock,
-          blockInfo: blocks.map(({ id: __, status, ...info }) => ({
-            ...info,
-            status: status as TemplateStatus,
-            value: info.value ?? null,
-          })),
-        }),
-      ),
+      lineBlocks: [...targetLineBlocks, ...bodyBlockLineBlocks],
       subTemplateId: template.id,
     };
 
@@ -219,8 +235,8 @@ function Reception(props: IProps) {
 
       <PasteMenu
         copyId="subTemplateId"
-        handlePaste={(pasteId) => {
-          pasteSubTemplate(pasteId);
+        handlePaste={(pasteIds) => {
+          pasteSubTemplate(id, pasteIds);
           handleCloseMenu();
         }}
       />
@@ -310,6 +326,7 @@ export function Preview() {
     params.subTemplateId as string,
   );
   const { mutate } = useCreateSubTemplate();
+  // const { mutate: updateBodyBlock } = useCreateUpdateBodyBlock();
   const { mutate: deleteSubTemplate } = useDeleteSubTemplate();
   const { mutate: deleteTemplate } = useDeleteTemplate();
 
@@ -372,6 +389,16 @@ export function Preview() {
         : block,
     );
 
+    // updateBodyBlock(id, {
+    //   onSuccess: () => {
+    //     refetch();
+    //     toast('Success!', { type: 'success' });
+    //   },
+
+    //   onError: (error) => {
+    //     toast(errorHandler(error), { type: 'error' });
+    //   },
+    // });
     setSubTemplate(deleteBlock);
   };
 

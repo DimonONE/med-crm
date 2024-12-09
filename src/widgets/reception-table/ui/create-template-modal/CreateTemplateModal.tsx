@@ -11,27 +11,34 @@ import s from './styles.module.scss';
 
 type IProps = {
   isOpen: boolean;
-  defaultTemplateId: string
+  defaultTemplateId: string;
   handleClose: () => void;
 };
 
 export function CreateTemplateModal(props: IProps) {
   const { isOpen, handleClose, defaultTemplateId } = props;
   const [value, setValue] = useState('');
-  const [templateValue, setTemplateValue] = useState<string | number>(defaultTemplateId);
+  const [templateValue, setTemplateValue] = useState<string | number>(
+    defaultTemplateId,
+  );
   const { mutate } = useCreateTemplate();
 
-  const templates = Object.entries(ReversedReceptionTableEnum).map(([key, label]) => ({
-    value: key,
-    label,
-  }));
+  const templates = Object.entries(ReversedReceptionTableEnum).map(
+    ([key, label]) => ({
+      value: key,
+      label,
+    }),
+  );
 
   const onSave = () => {
     const createData = {
       id: 0,
-      category: templates.find(({ value: categoryId }) => categoryId === templateValue)?.label as string,
+      category: templates.find(
+        ({ value: categoryId }) => categoryId === templateValue,
+      )?.label as string,
       name: value,
-      techInfo: 'Настоящее приложение разработано на основании «Клинических рекомендаций (протоколов ведения) при диагнозе болезни периапикальных тканей» (Утверждены Постановлением № 15 Совета Ассоциации общественных объединений «Стоматологическая Ассоциация России» от 30 сентября 2014 года, актуализированы 02 августа 2018 года).',
+      techInfo:
+        'Настоящее приложение разработано на основании «Клинических рекомендаций (протоколов ведения) при диагнозе болезни периапикальных тканей» (Утверждены Постановлением № 15 Совета Ассоциации общественных объединений «Стоматологическая Ассоциация России» от 30 сентября 2014 года, актуализированы 02 августа 2018 года).',
     };
 
     mutate(createData, {
@@ -52,7 +59,7 @@ export function CreateTemplateModal(props: IProps) {
   return (
     <Modal
       isOpen={isOpen}
-      type='custom'
+      type="custom"
       onSuccess={() => handleClose()}
       onClose={() => handleClose()}
       className={s.modal}
@@ -62,24 +69,19 @@ export function CreateTemplateModal(props: IProps) {
           <div className={s.headBlock}>Категория шаблона</div>
 
           <SelectField
-            value={templateValue}
+            value={templateValue ?? 1}
             onChange={(e) => setTemplateValue(e.target.value)}
             className={s.dropdown}
             selectNavigate
             selectOptions={templates}
           >
             {templates.map(({ label, value: link }) => (
-              <MenuItem
-                key={link}
-                value={link}
-                className="select-link"
-              >
+              <MenuItem key={link} value={link} className="select-link">
                 {label}
               </MenuItem>
             ))}
           </SelectField>
         </div>
-
 
         <div className={s.headBlock}>Название шаблона</div>
 
@@ -88,8 +90,8 @@ export function CreateTemplateModal(props: IProps) {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             type="text"
-            placeholder="Введите название шаблона" />
-
+            placeholder="Введите название шаблона"
+          />
         </div>
 
         <div className={s.buttonBlock}>
@@ -115,6 +117,6 @@ export function CreateTemplateModal(props: IProps) {
           </Button>
         </div>
       </div>
-    </Modal >
+    </Modal>
   );
 }
