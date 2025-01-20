@@ -124,16 +124,14 @@ input.defaultInput {
     }
   }
 
-  .list {
-    .inputBlock {
-      width: auto;
-      float: right;
-    }
-
-    .defaultInput {
-      position: static;
-      text-align: left;
-      transform: translateY(-25%);
+  &.marker {
+    .inputBlock{
+      &::before {
+          content: '•';
+          font-size: 1.7em;
+          color: black;
+          margin-right: 5px;
+      }
     }
   }
 

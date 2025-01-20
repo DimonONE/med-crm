@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import classNames from 'classnames';
 import {
   DragDropContext,
@@ -30,13 +30,17 @@ interface DraggableBlockProps extends Template {
 }
 
 function DraggableItem(props: DraggableLineProps) {
-  const [isFocused, setFocused] = useState(false);
   const { bodyBlockId, subTemplateId, blockInfo, provided, onDelete } = props;
+  const contentBlockRef = useRef<HTMLDivElement | null>(null);
+  const [isFocused, setFocused] = useState(false);
 
   return (
     <div
       className={s.contentBlock}
-      ref={provided.innerRef}
+      ref={(el) => {
+        provided.innerRef(el);
+        contentBlockRef.current = el;
+      }}
       role="button"
       tabIndex={0}
       onMouseEnter={() => setFocused(true)}
@@ -51,6 +55,7 @@ function DraggableItem(props: DraggableLineProps) {
         blockInfo.map(({ lineId, status, value, ...params }) => (
           <ChangeBlock
             key={lineId}
+            parentRef={contentBlockRef.current}
             subTemplateId={subTemplateId}
             bodyBlockId={bodyBlockId}
             lineId={lineId}

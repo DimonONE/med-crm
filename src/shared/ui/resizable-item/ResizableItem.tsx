@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import classNames from 'classnames';
 import { debounce } from 'lodash';
@@ -6,36 +6,64 @@ import { TemplateBlockInfo } from '~features/draggable-list';
 import s from './styles.module.scss';
 
 export type AnchorEl = {
-  element: null | HTMLElement
-  offsetX: number
+  element: null | HTMLElement;
+  offsetX: number;
 };
 
 type Props = {
+  parentRef?: HTMLDivElement | null;
   children: React.JSX.Element;
-  positionParams: Partial<TemplateBlockInfo>
-  onDelete: () => void
-  onEdit?: () => void
-  className?: string
-  preview?: boolean
-  onUpdate?: (updateData: Partial<TemplateBlockInfo>) => void
+  positionParams: Partial<TemplateBlockInfo>;
+  onDelete: () => void;
+  onEdit?: () => void;
+  className?: string;
+  preview?: boolean;
+  onUpdate?: (updateData: Partial<TemplateBlockInfo>) => void;
 };
 
 export function ResizableItem(props: Props) {
   const [isSelected, setSelected] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const { children, preview, className, positionParams, onDelete, onEdit, onUpdate } = props;
+  const {
+    children,
+    preview,
+    className,
+    positionParams,
+    onDelete,
+    onEdit,
+    onUpdate,
+    parentRef,
+  } = props;
 
   const [anchorEl, setAnchorEl] = useState<AnchorEl>({
     element: null,
     offsetX: 0,
   });
 
-
   const debouncedUpdate = debounce((newWidth: number) => {
     if (onUpdate) {
       onUpdate({ sizeX: newWidth }); // Вызываем функцию onUpdate с новой шириной
     }
-  }, 200);
+  }, 100);
+
+  const widthResizeBlocks = useCallback(() => {
+    let totalWidth = 0;
+    if (parentRef) {
+      const childrenBlocks = Array.from(parentRef.children);
+
+      if (childrenBlocks.length > 1) {
+        totalWidth = childrenBlocks.slice(0, -1).reduce((sum, child) => {
+          const childElement = child as HTMLElement;
+          return sum + childElement.offsetWidth;
+        }, 0);
+
+        return (parentRef?.offsetWidth || 0) - totalWidth;
+      }
+    }
+    return totalWidth;
+  }, [parentRef]);
+
+  const maxWidthSize = widthResizeBlocks();
 
   const handleResize = (event: React.MouseEvent) => {
     if (ref.current) {
@@ -55,12 +83,14 @@ export function ResizableItem(props: Props) {
             newWidth = startWidth - deltaX;
             ref.current!.style.left = `${rect.left + deltaX}px`;
           } else if (isResizingRight) {
-            newWidth = startWidth + deltaX;
+            newWidth =
+              deltaX < maxWidthSize
+                ? startWidth + deltaX
+                : startWidth + maxWidthSize;
           }
 
           if (newWidth && newWidth > 0) {
             ref.current!.style.width = `${newWidth}px`;
-
             debouncedUpdate(newWidth);
           }
         };
@@ -80,7 +110,6 @@ export function ResizableItem(props: Props) {
     setSelected(true);
   };
 
-
   const handleAnchorEl = (element: AnchorEl) => {
     setAnchorEl(element);
   };
@@ -97,7 +126,10 @@ export function ResizableItem(props: Props) {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       handleSelect();
-    } else if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+    } else if (
+      event.key === 'ContextMenu' ||
+      (event.shiftKey && event.key === 'F10')
+    ) {
       handleContextMenu(event);
     }
   };
@@ -118,12 +150,17 @@ export function ResizableItem(props: Props) {
   };
 
   if (preview) {
-    return <div style={stylesPosition} className={className}>{children}</div>;
+    return (
+      <div style={stylesPosition} className={className}>
+        {children}
+      </div>
+    );
   }
 
   return (
     <div className={s.root} style={stylesPosition}>
-      <div ref={ref}
+      <div
+        ref={ref}
         onClick={handleSelect}
         tabIndex={0}
         onMouseDown={handleResize}
@@ -136,26 +173,34 @@ export function ResizableItem(props: Props) {
         {children}
         <div className={s.right} />
       </div>
-      {
-        anchorEl.element && (
-          <Menu
-            anchorEl={anchorEl.element}
-            open={Boolean(anchorEl.element)}
-            onClose={handleCloseMenu}
-            anchorPosition={{ top: 0, left: 0 }}
-            style={{ marginLeft: anchorEl.offsetX / 2, marginTop: -20 }}
-          >
-            {onEdit && <MenuItem onClick={() => {
-              onEdit();
-              handleCloseMenu();
-            }}>Редактировать</MenuItem>}
-            <MenuItem onClick={() => {
+      {anchorEl.element && (
+        <Menu
+          anchorEl={anchorEl.element}
+          open={Boolean(anchorEl.element)}
+          onClose={handleCloseMenu}
+          anchorPosition={{ top: 0, left: 0 }}
+          style={{ marginLeft: anchorEl.offsetX / 2, marginTop: -20 }}
+        >
+          {onEdit && (
+            <MenuItem
+              onClick={() => {
+                onEdit();
+                handleCloseMenu();
+              }}
+            >
+              Редактировать
+            </MenuItem>
+          )}
+          <MenuItem
+            onClick={() => {
               onDelete();
               handleCloseMenu();
-            }}>Удалить</MenuItem>
-          </Menu>
-        )
-      }
+            }}
+          >
+            Удалить
+          </MenuItem>
+        </Menu>
+      )}
     </div>
   );
 }

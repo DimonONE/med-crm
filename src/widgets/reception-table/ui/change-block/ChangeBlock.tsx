@@ -23,6 +23,7 @@ export type AnswerValueT = {
 };
 
 interface ChangeBlockProps extends Partial<UpdateCurrentBlock> {
+  parentRef?: HTMLDivElement | null;
   subTemplateId: number;
   bodyBlockId: number;
   lineId: number;
@@ -152,6 +153,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'TEXT':
         return (
           <ResizableItem
+            parentRef={props.parentRef}
             positionParams={positionParams}
             preview={type === 'preview'}
             onUpdate={onUpdate}
@@ -200,20 +202,18 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             preview={type === 'preview'}
             onUpdate={onUpdate}
             onDelete={onDelete}
-            className={classNames(s.lineContent, {
+            className={classNames(s.lineContent, s.marker, {
               [s.preview]: type === 'preview',
             })}
           >
-            <li className={s.list}>
-              <div className={s.inputBlock}>
-                <input
-                  readOnly={type === 'preview'}
-                  className={classNames(s.defaultInput)}
-                  value={value}
-                  onChange={(e) => onChange(e.target.value)}
-                />
-              </div>
-            </li>
+            <div className={s.inputBlock}>
+              <input
+                readOnly={type === 'preview'}
+                className={classNames(s.defaultInput)}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+              />
+            </div>
           </ResizableItem>
         );
 
