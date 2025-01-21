@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { MenuItem } from '@mui/material';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAllRecordsPatient } from '~entities/doctor';
 import {
@@ -12,6 +12,7 @@ import {
 } from '~features/draggable-list';
 import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
+import { PATH_PAGE } from '~shared/lib/react-router';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
 import { FileLoader, FileValues } from '~shared/ui/file-loader';
@@ -45,6 +46,8 @@ export function CreateReceptionPage() {
     plan: '',
     files: undefined,
   });
+  const navigate = useNavigate();
+
   const [subTemplateId, setSubTemplateId] = useState<
     string | number | undefined
   >(undefined);
@@ -123,8 +126,11 @@ export function CreateReceptionPage() {
 
     mutate(createData, {
       onSuccess: async (resp) => {
-        console.log('/treatment/answer-create', JSON.parse(resp.data));
+        const data = JSON.parse(resp.data);
+        console.log('/treatment/answer-create', data);
         toast('Success!', { type: 'success' });
+
+        navigate(PATH_PAGE.reception.info(params.patientId!, params.doctorId!));
       },
       onSettled: () => {},
       onError: (error) => {
