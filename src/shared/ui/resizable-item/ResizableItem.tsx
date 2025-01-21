@@ -42,6 +42,9 @@ export function ResizableItem(props: Props) {
 
   const debouncedUpdate = debounce((newWidth: number) => {
     if (onUpdate) {
+      ref.current!.style.marginLeft = `${0}px`;
+
+      // Обнуляем отступ слева
       onUpdate({ sizeX: newWidth }); // Вызываем функцию onUpdate с новой шириной
     }
   }, 100);
@@ -70,7 +73,7 @@ export function ResizableItem(props: Props) {
       const rect = ref.current.getBoundingClientRect();
       const startX = event.clientX;
       const startWidth = ref.current.offsetWidth;
-
+      const minWidth = 80;
       const isResizingLeft = startX - rect.left <= 20;
       const isResizingRight = rect.right - startX <= 20;
 
@@ -79,9 +82,13 @@ export function ResizableItem(props: Props) {
           const deltaX = moveEvent.clientX - startX;
           let newWidth;
 
-          if (isResizingLeft) {
-            newWidth = startWidth - deltaX;
-            ref.current!.style.left = `${rect.left + deltaX}px`;
+          if (isResizingLeft && deltaX > 0) {
+            newWidth = Math.max(startWidth - deltaX, minWidth);
+
+            if (newWidth > minWidth) {
+              ref.current!.style.marginLeft = `${deltaX}px`;
+              debouncedUpdate(newWidth);
+            }
           } else if (isResizingRight) {
             newWidth =
               deltaX < maxWidthSize
@@ -89,7 +96,7 @@ export function ResizableItem(props: Props) {
                 : startWidth + maxWidthSize;
           }
 
-          if (newWidth && newWidth > 0) {
+          if (newWidth && newWidth > minWidth) {
             ref.current!.style.width = `${newWidth}px`;
             debouncedUpdate(newWidth);
           }
