@@ -1,1 +1,0 @@
-import{a$ as o,b0 as t,u as r,r as u,P as a}from"./index-28b8728f.js";import{s as n}from"./sessionApi-46741555.js";import"./useQuery-5e80a04e.js";import"./useBaseQuery-d5b5de49.js";function i(e){o(),e.removeQueries(n.session.currentUser())}function m(){const e=t(),s=r();return u.useEffect(()=>{i(e),s(a.login)},[]),null}export{m as default};
