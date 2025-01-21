@@ -176,6 +176,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'BOLD_TEXT':
         return (
           <ResizableItem
+            parentRef={props.parentRef}
             positionParams={positionParams}
             preview={type === 'preview'}
             onUpdate={onUpdate}
@@ -198,6 +199,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'POINT_TEXT':
         return (
           <ResizableItem
+            parentRef={props.parentRef}
             positionParams={positionParams}
             preview={type === 'preview'}
             onUpdate={onUpdate}
@@ -220,7 +222,8 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'DROPDOWN':
         return (
           <ResizableItem
-            positionParams={positionParams}
+            parentRef={props.parentRef}
+            positionParams={{ ...positionParams, minWidth: 90 }}
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onEdit={() => setOpen(true)}
@@ -244,6 +247,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
             </SelectField>
           </ResizableItem>
         );
+
       case status === 'CHECK_BOX': {
         const checkboxValue =
           type !== 'preview'
@@ -253,6 +257,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
 
         return (
           <ResizableItem
+            parentRef={props.parentRef}
             positionParams={positionParams}
             onUpdate={onUpdate}
             preview={type === 'preview'}
@@ -281,11 +286,12 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'RADIO_BOX':
         return (
           <ResizableItem
-            positionParams={positionParams}
+            parentRef={props.parentRef}
+            positionParams={{ ...positionParams, minWidth: 170 }}
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onDelete={onDelete}
-            className={classNames(s.lineContent, {
+            className={classNames(s.lineContent, s.radioButtonsBlock, {
               [s.preview]: type === 'preview',
             })}
           >
@@ -321,7 +327,8 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'DATE':
         return (
           <ResizableItem
-            positionParams={positionParams}
+            parentRef={props.parentRef}
+            positionParams={{ ...positionParams, minWidth: 170 }}
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onDelete={onDelete}
@@ -356,6 +363,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'EMPTY':
         return (
           <ResizableItem
+            parentRef={props.parentRef}
             positionParams={positionParams}
             onUpdate={onUpdate}
             preview={type === 'preview'}
@@ -369,7 +377,8 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
       case status === 'WRITE_TEXT':
         return (
           <ResizableItem
-            positionParams={positionParams}
+            parentRef={props.parentRef}
+            positionParams={{ ...positionParams, minWidth: 200 }}
             onUpdate={onUpdate}
             preview={type === 'preview'}
             onDelete={onDelete}

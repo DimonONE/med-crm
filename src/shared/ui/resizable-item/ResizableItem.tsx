@@ -10,10 +10,14 @@ export type AnchorEl = {
   offsetX: number;
 };
 
+type CustomParams = {
+  minWidth: number;
+};
+
 type Props = {
   parentRef?: HTMLDivElement | null;
   children: React.JSX.Element;
-  positionParams: Partial<TemplateBlockInfo>;
+  positionParams: Partial<TemplateBlockInfo> & Partial<CustomParams>;
   onDelete: () => void;
   onEdit?: () => void;
   className?: string;
@@ -73,7 +77,7 @@ export function ResizableItem(props: Props) {
       const rect = ref.current.getBoundingClientRect();
       const startX = event.clientX;
       const startWidth = ref.current.offsetWidth;
-      const minWidth = 80;
+      const minWidth = positionParams.minWidth ?? 80;
       const isResizingLeft = startX - rect.left <= 20;
       const isResizingRight = rect.right - startX <= 20;
 
