@@ -454,8 +454,8 @@ export function Preview() {
             onClose={() => setToggle(false)}
             style={{ top: -50, left: 30 }}
           >
-            <MenuItem onClick={() => false}>Копировать</MenuItem>
-            <MenuItem onClick={() => false}>Редактировать</MenuItem>
+            {/* <MenuItem onClick={() => false}>Копировать</MenuItem>
+            <MenuItem onClick={() => false}>Редактировать</MenuItem> */}
             <MenuItem
               onClick={() => onDeleteTemplate(Number(params.subTemplateId))}
             >
