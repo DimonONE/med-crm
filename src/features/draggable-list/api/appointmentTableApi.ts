@@ -34,6 +34,7 @@ export const appointmentTableKeys = {
   templateGetAll: (category: string) => [...appointmentTableKeys.root, `template-get-all-${category}`],
   deleteTemplate: () => [...appointmentTableKeys.root, 'template-delete-template'],
   deleteSubTemplate: () => [...appointmentTableKeys.root, 'template-delete-sub-template'],
+  deleteBodyBlock: () => [...appointmentTableKeys.root, 'template-delete-body-block'],
   templateGetOne: (id: string) => [...appointmentTableKeys.root, `template-get-one-${id}`],
   createUpdateBodyBlock: () => [...appointmentTableKeys.root, 'create-update-body-block'],
   createTemplate: () => [...appointmentTableKeys.root, 'create-template'],
@@ -132,6 +133,19 @@ export function useDeleteSubTemplate() {
       const response = await axiosInstance({
         url: `/template/delete-sub-template/${id}`,
         method: 'DELETE',
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useDeleteBodyBlock() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.deleteBodyBlock(),
+    mutationFn: async (id: number): Promise<any> => {
+      const response = await axiosInstance({
+        url: `/template/delete-body-block/${id}`,
+        method: 'POST',
       });
       return response.data;
     },

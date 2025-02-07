@@ -13,6 +13,7 @@ import {
   useDraggableSlice,
   useTemplateGetOne,
   useCreateUpdateBodyBlock,
+  useDeleteBodyBlock,
 } from '~features/draggable-list';
 import { HeaderTemplate } from '~features/header-template';
 import { Api } from '~shared/api/realworld';
@@ -37,13 +38,12 @@ type IProps = {
   refetchData: () => void;
   onCreateReception: () => void;
   onDeleteSubTemplate: (id: number) => void;
-  onDeleteBlockTemplate: (templateId: number, id: number) => void;
 };
 
 function Reception(props: IProps) {
   const navigate = useNavigate();
   const { mutate } = useCreateUpdateBodyBlock();
-
+  const { mutate: deleteBodyBlock } = useDeleteBodyBlock();
   const [isOpen, setOpen] = useState(false);
 
   const {
@@ -52,7 +52,6 @@ function Reception(props: IProps) {
     refetchData,
     onCreateReception,
     onDeleteSubTemplate,
-    onDeleteBlockTemplate,
   } = props;
   const { handleTemplates } = useDraggableSlice();
 
@@ -180,6 +179,18 @@ function Reception(props: IProps) {
     });
   };
 
+  const onDeleteBlockTemplate = async (id: number) => {
+    deleteBodyBlock(id, {
+      onSuccess: async () => {
+        toast('Deleted!', { type: 'success' });
+        refetchData();
+      },
+      onError: (error) => {
+        toast(errorHandler(error), { type: 'error' });
+      },
+    });
+  };
+
   const menuItemsReception = (handleCloseMenu: () => void) => (
     <>
       <MenuItem
@@ -249,7 +260,7 @@ function Reception(props: IProps) {
       >
         Редактировать
       </MenuItem>
-      <MenuItem onClick={() => id && onDeleteBlockTemplate(template.id, id)}>
+      <MenuItem onClick={() => id && onDeleteBlockTemplate(id)}>
         Удалить
       </MenuItem>
     </>
@@ -377,31 +388,6 @@ export function Preview() {
     });
   };
 
-  const onDeleteBlockTemplate = (templateId: number, id: number) => {
-    const deleteBlock = subTemplate.map((block) =>
-      block.id === templateId
-        ? {
-            ...block,
-            bodyBlocks: block.bodyBlocks.filter(
-              (bodyBlock) => bodyBlock.id !== id,
-            ),
-          }
-        : block,
-    );
-
-    // updateBodyBlock(id, {
-    //   onSuccess: () => {
-    //     refetch();
-    //     toast('Success!', { type: 'success' });
-    //   },
-
-    //   onError: (error) => {
-    //     toast(errorHandler(error), { type: 'error' });
-    //   },
-    // });
-    setSubTemplate(deleteBlock);
-  };
-
   useEffect(() => {
     if (!isLoading && !data?.subTemplates.length) {
       createReception(1);
@@ -455,7 +441,6 @@ export function Preview() {
                 createReception(data.subTemplates.length + 1)
               }
               onDeleteSubTemplate={(id) => onDeleteSubTemplate(id)}
-              onDeleteBlockTemplate={onDeleteBlockTemplate}
             />
             <div className={classNames(s.draggable, s.reception)}>
               <div className={s.headBlock}>Краткое резюме посещения</div>
