@@ -250,7 +250,7 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
 
       case status === 'CHECK_BOX': {
         const checkboxValue =
-          type !== 'preview'
+          type !== 'preview' && !isEditValue
             ? value
             : (typeof value === 'string' && JSON.parse(value || '{}'))?.value ??
               '';
