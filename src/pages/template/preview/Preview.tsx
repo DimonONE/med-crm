@@ -274,7 +274,9 @@ function Reception(props: IProps) {
           className={classNames(s.draggable, s.reception)}
           onClick={() => setOpen((prev) => !prev)}
         >
-          <div className={s.headBlock}>{template.name}</div>
+          <div className={s.headBlock} style={{ textAlign: 'left' }}>
+            {template.name}
+          </div>
           <div className={classNames(s.arrowBottom, { [s.active]: isOpen })}>
             <ArrowBottomICO />
           </div>

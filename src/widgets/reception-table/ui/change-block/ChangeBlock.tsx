@@ -249,11 +249,17 @@ const ChangeBlock = React.memo((props: ChangeBlockProps) => {
         );
 
       case status === 'CHECK_BOX': {
-        const checkboxValue =
-          type !== 'preview' && !isEditValue
-            ? value
-            : (typeof value === 'string' && JSON.parse(value || '{}'))?.value ??
-              '';
+        let checkboxValue: string | number = '';
+
+        if (type !== 'preview' && !isEditValue) {
+          checkboxValue = value;
+        } else if (typeof value === 'string') {
+          try {
+            checkboxValue = JSON.parse(value)?.value ?? '';
+          } catch (error) {
+            checkboxValue = value;
+          }
+        }
 
         return (
           <ResizableItem
