@@ -284,38 +284,40 @@ function Reception(props: IProps) {
       </DropDownMenu>
       {isOpen && (
         <div>
-          {template.bodyBlocks.map((bodyBlock) => (
-            <div key={bodyBlock.id} className={classNames(s.draggable)}>
-              <div className={s.headBlock}>{bodyBlock.name}</div>
-              <div className={classNames(s.blockWithPadding, s.lineBlock)}>
-                {bodyBlock.lineBlocks.map((lineBlock) => (
-                  <div key={lineBlock.id} className={s.itemBlock}>
-                    {lineBlock.blocks.map((block) => (
-                      <div key={block.id}>
-                        <ChangeBlock
-                          {...block}
-                          key={block.lineId}
-                          type="preview"
-                          subTemplateId={bodyBlock.subTemplateId}
-                          bodyBlockId={lineBlock.id}
-                          status={block.status as TemplateStatus}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-              <DropDownMenu
-                menuItems={(handleCloseMenu) =>
-                  menuItemsBlock(handleCloseMenu, bodyBlock.id)
-                }
-              >
-                <div className={s.arrowBottom}>
-                  <ArrowBottomICO />
+          {template.bodyBlocks
+            .sort((a, b) => a.id - b.id)
+            .map((bodyBlock) => (
+              <div key={bodyBlock.id} className={classNames(s.draggable)}>
+                <div className={s.headBlock}>{bodyBlock.name} </div>
+                <div className={classNames(s.blockWithPadding, s.lineBlock)}>
+                  {bodyBlock.lineBlocks.map((lineBlock) => (
+                    <div key={lineBlock.id} className={s.itemBlock}>
+                      {lineBlock.blocks.map((block) => (
+                        <div key={block.id}>
+                          <ChangeBlock
+                            {...block}
+                            key={block.lineId}
+                            type="preview"
+                            subTemplateId={bodyBlock.subTemplateId}
+                            bodyBlockId={lineBlock.id}
+                            status={block.status as TemplateStatus}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ))}
                 </div>
-              </DropDownMenu>
-            </div>
-          ))}
+                <DropDownMenu
+                  menuItems={(handleCloseMenu) =>
+                    menuItemsBlock(handleCloseMenu, bodyBlock.id)
+                  }
+                >
+                  <div className={s.arrowBottom}>
+                    <ArrowBottomICO />
+                  </div>
+                </DropDownMenu>
+              </div>
+            ))}
 
           {!template.bodyBlocks.length ? (
             <div className={s.draggable}>
