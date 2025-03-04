@@ -218,33 +218,37 @@ export function CreateReceptionPage() {
           </Button>
         </div>
 
-        {template?.bodyBlocks.map((bodyBlock) => (
-          <div key={bodyBlock.id} className={classNames(s.draggable)}>
-            <div className={s.headBlock}>{bodyBlock.name}</div>
-            {bodyBlock.lineBlocks.map((lineBlock) => (
-              <div key={lineBlock.id} className={s.itemBlock}>
-                {lineBlock.blocks.map((block) => (
-                  <div key={block.id}>
-                    <ChangeBlock
-                      {...block}
-                      key={block.lineId}
-                      type="preview"
-                      isEditValue
-                      subTemplateId={bodyBlock.subTemplateId}
-                      bodyBlockId={lineBlock.id}
-                      status={block.status as TemplateStatus}
-                      handleChange={(data) => handleAnswer(data)}
-                    />
+        {template?.bodyBlocks
+          .sort((a, b) => a.id - b.id)
+          .map((bodyBlock) => (
+            <div key={bodyBlock.id} className={classNames(s.draggable)}>
+              <div className={s.headBlock}>{bodyBlock.name}</div>
+              <div className={classNames(s.blockWithPadding, s.lineBlock)}>
+                {bodyBlock.lineBlocks.map((lineBlock) => (
+                  <div key={lineBlock.id} className={s.itemBlock}>
+                    {lineBlock.blocks.map((block) => (
+                      <div key={block.id}>
+                        <ChangeBlock
+                          {...block}
+                          key={block.lineId}
+                          type="preview"
+                          isEditValue
+                          subTemplateId={bodyBlock.subTemplateId}
+                          bodyBlockId={lineBlock.id}
+                          status={block.status as TemplateStatus}
+                          handleChange={(data) => handleAnswer(data)}
+                        />
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
-            ))}
-          </div>
-        ))}
+            </div>
+          ))}
         {template && (
           <>
             <div className={classNames(s.draggable)}>
-              <div className={s.headBlock}>Краткое резюме посещения</div>
+              <div className={s.headBlock}>Краткое резюме посещения </div>
               <div className={s.visitSummary}>
                 <li className={s.name}>План: </li>
                 <UnderlineText
