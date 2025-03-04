@@ -93,13 +93,14 @@ export function useCreateSubTemplate() {
   });
 }
 
-export function useTemplateGetOne(id: string) {
+export function useTemplateGetOne(id: string = '') {
   return useQuery({
     queryKey: appointmentTableKeys.templateGetOne(id),
     queryFn: async (): Promise<Api.TemplateEntityDto> => {
       const response = await axiosInstance({ url: `/template/get-one/${id}`, method: 'GET' });
       return response.data;
     },
+    enabled: !!id,
   });
 }
 

@@ -240,7 +240,7 @@ export function Router() {
               path: ':id?/:patientId?/:doctorId?',
             },
             {
-              path: 'create/:subTemplateId',
+              path: 'create/:id/:subTemplateId',
               element: <CreatingTemplatePage />,
             },
           ],

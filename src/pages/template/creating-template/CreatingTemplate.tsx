@@ -6,8 +6,11 @@ import {
   DraggableList,
   useCreateUpdateBodyBlock,
   useDraggableSlice,
+  useTemplateGetOne,
+  Template,
 } from '~features/draggable-list';
 import { HeaderTemplate } from '~features/header-template';
+import { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { BackButton } from '~shared/ui/back-button';
 import { Button } from '~shared/ui/button';
@@ -15,11 +18,13 @@ import { DatePicker } from '~shared/ui/date-picker';
 import s from './styles.module.scss';
 
 type Params = {
+  id: string;
   subTemplateId: string;
 };
 
 export function CreatingTemplate() {
-  const { subTemplateId } = useParams<Params>();
+  const { id: templateId, subTemplateId } = useParams<Params>();
+  const { refetch } = useTemplateGetOne(templateId);
   const navigate = useNavigate();
 
   const { mutate } = useCreateUpdateBodyBlock();
@@ -58,6 +63,7 @@ export function CreatingTemplate() {
     mutate(templateData, {
       onSuccess: async () => {
         toast('Success!', { type: 'success' });
+
         if (isClose) {
           handleTemplates([
             {
@@ -74,6 +80,31 @@ export function CreatingTemplate() {
             },
           ]);
           navigate(-1);
+          return;
+        }
+
+        const { data: dataTemplate } = await refetch();
+        const subTemplate = dataTemplate?.subTemplates.find(
+          (sub) => sub.id.toString() === subTemplateId,
+        );
+
+        const selectTemplate = subTemplate?.bodyBlocks?.reduce(
+          (max, block) => (block.id > (max?.id ?? -Infinity) ? block : max),
+          null as Api.BodyBlockEntityDto | null,
+        );
+
+        if (selectTemplate) {
+          handleTemplates([
+            {
+              ...selectTemplate,
+              lineBlocks: selectTemplate.lineBlocks.map(
+                ({ blocks, ...lineBlock }) => ({
+                  ...lineBlock,
+                  blockInfo: blocks,
+                }),
+              ) as any,
+            },
+          ] as Template[]);
         }
       },
       onError: (error) => {

@@ -41,6 +41,7 @@ type IProps = {
 };
 
 function Reception(props: IProps) {
+  const params = useParams<Params>();
   const navigate = useNavigate();
   const { mutate } = useCreateUpdateBodyBlock();
   const { mutate: deleteBodyBlock } = useDeleteBodyBlock();
@@ -71,7 +72,9 @@ function Reception(props: IProps) {
     };
 
     handleTemplates([templates as any] as Template[]);
-    navigate(PATH_PAGE.template.create(template.id.toString()));
+    navigate(
+      PATH_PAGE.template.create(params.subTemplateId, template.id.toString()),
+    );
   };
 
   const onCopyTemplate = async (text: string) => {
@@ -128,9 +131,9 @@ function Reception(props: IProps) {
 
   const pasteSubTemplate = (
     targetId: number | undefined,
-    { id, params }: PasteT,
+    { id, params: param }: PasteT,
   ) => {
-    const selectSubTemplate = subTemplates.find((sT) => sT.id === params.id);
+    const selectSubTemplate = subTemplates.find((sT) => sT.id === param.id);
     if (!selectSubTemplate) {
       throw new Error('subTemplate of undefined');
     }
@@ -228,7 +231,12 @@ function Reception(props: IProps) {
     <>
       <MenuItem
         onClick={() => {
-          navigate(PATH_PAGE.template.create(template.id.toString()));
+          navigate(
+            PATH_PAGE.template.create(
+              params.subTemplateId, // subTemplateId this template id
+              template.id.toString(),
+            ),
+          );
           handleCloseMenu();
         }}
       >

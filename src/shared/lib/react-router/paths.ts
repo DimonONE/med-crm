@@ -39,7 +39,8 @@ export const PATH_PAGE = {
     root: '/template',
     tab: (id: string, patientId?: string, doctorId?: string) => `/template/${id}/${patientId ? `${patientId}/` : ''}${doctorId ? `${doctorId}/` : ''}`,
     preview: (id: string, subTemplateId: string) => `/template/preview/${id}/${subTemplateId}`,
-    create: (id?: string) => `/template/create/${id ?? ''}`,
+    create: (id?: string, subTemplateId?: string) =>
+      `/template/create${id ? `/${id}` : ''}${subTemplateId ? `/${subTemplateId}` : ''}`,
   },
   reception: {
     root: '/reception',
