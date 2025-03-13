@@ -181,23 +181,25 @@ export function ViewRecord() {
           {answerBlock()?.bodyBlocks.map((bodyBlock) => (
             <div key={bodyBlock.id} className={classNames(s.draggable)}>
               <div className={s.headBlock}>{bodyBlock.name}</div>
-              {bodyBlock.lineBlocks.map((lineBlock) => (
-                <div key={lineBlock.id} className={s.itemBlock}>
-                  {lineBlock.blocks.map((block) => (
-                    <div key={block.id}>
-                      <ChangeBlock
-                        {...block}
-                        key={block.lineId}
-                        type="preview"
-                        subTemplateId={bodyBlock.subTemplateId}
-                        bodyBlockId={lineBlock.id}
-                        status={block.status as TemplateStatus}
-                        handleChange={() => false}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ))}
+              <div className={classNames(s.blockWithPadding, s.lineBlock)}>
+                {bodyBlock.lineBlocks.map((lineBlock) => (
+                  <div key={lineBlock.id} className={s.itemBlock}>
+                    {lineBlock.blocks.map((block) => (
+                      <div key={block.id}>
+                        <ChangeBlock
+                          {...block}
+                          key={block.lineId}
+                          type="preview"
+                          subTemplateId={bodyBlock.subTemplateId}
+                          bodyBlockId={lineBlock.id}
+                          status={block.status as TemplateStatus}
+                          handleChange={() => false}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
