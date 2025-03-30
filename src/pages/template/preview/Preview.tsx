@@ -16,7 +16,7 @@ import {
   useDeleteBodyBlock,
 } from '~features/draggable-list';
 import { HeaderTemplate } from '~features/header-template';
-import { Api } from '~shared/api/realworld';
+import axiosInstance, { Api } from '~shared/api/realworld';
 import { errorHandler } from '~shared/lib/react-query';
 import { PATH_PAGE } from '~shared/lib/react-router';
 import ArrowBottomICO from '~shared/svg/arrow-bottom-filter.svg';
@@ -47,13 +47,8 @@ function Reception(props: IProps) {
   const { mutate: deleteBodyBlock } = useDeleteBodyBlock();
   const [isOpen, setOpen] = useState(false);
 
-  const {
-    template,
-    subTemplates,
-    refetchData,
-    onCreateReception,
-    onDeleteSubTemplate,
-  } = props;
+  const { template, refetchData, onCreateReception, onDeleteSubTemplate } =
+    props;
   const { handleTemplates } = useDraggableSlice();
 
   const onEdit = (id?: number) => {
@@ -86,54 +81,73 @@ function Reception(props: IProps) {
     }
   };
 
-  const pasteReception = async ({ id }: PasteT) => {
-    const selectSubTemplate = subTemplates.find((sT) => sT.id === Number(id));
+  const pasteReception = async ({ id, params: pasteParams }: PasteT) => {
+    const response: { data: Api.TemplateEntityDto } = await axiosInstance({
+      url: `/template/get-one/${pasteParams.coreTemplateId}`,
+      method: 'GET',
+    });
+
+    const selectSubTemplate = response.data.subTemplates.find(
+      (sT) => sT.id === Number(id),
+    );
 
     if (!selectSubTemplate) return;
 
-    const mutationPromises = selectSubTemplate.bodyBlocks.map((bodyBlock) => {
-      const templateData: Template = {
-        name: bodyBlock.name,
-        positionId: bodyBlock.positionId,
-        lineBlocks: bodyBlock.lineBlocks.map(
-          ({ id: _, blocks, ...lineBlock }) => ({
-            ...lineBlock,
-            blockInfo: blocks.map(({ id: __, status, ...info }) => ({
-              ...info,
-              status: status as TemplateStatus,
-              value: info.value ?? null,
-            })),
-          }),
-        ),
-        subTemplateId: template.id,
-      };
+    const mutationPromises = selectSubTemplate.bodyBlocks
+      .sort((a, b) => a.id - b.id)
+      .map((bodyBlock, index) => {
+        const templateData: Template = {
+          name: bodyBlock.name,
+          positionId: bodyBlock.positionId,
+          lineBlocks: bodyBlock.lineBlocks.map(
+            ({ id: _, blocks, ...lineBlock }) => ({
+              ...lineBlock,
+              blockInfo: blocks.map(({ id: __, status, ...info }) => ({
+                ...info,
+                status: status as TemplateStatus,
+                value: info.value ?? null,
+              })),
+            }),
+          ),
+          subTemplateId: template.id,
+        };
 
-      return new Promise<void>((resolve, reject) => {
-        mutate(templateData, {
-          onSuccess: async () => {
-            resolve();
-          },
-          onError: (error) => {
-            toast(errorHandler(error), { type: 'error' });
-            reject(error);
-          },
+        return new Promise<void>((resolve, reject) => {
+          mutate(templateData, {
+            onSuccess: async () => {
+              resolve();
+              if (selectSubTemplate.bodyBlocks.length === index + 1) {
+                toast('Copied!', { type: 'success' });
+                refetchData();
+              }
+            },
+            onError: (error) => {
+              toast(errorHandler(error), { type: 'error' });
+              reject(error);
+            },
+          });
         });
       });
-    });
     try {
       await Promise.all(mutationPromises);
-      toast('Copied!', { type: 'success' });
-      refetchData();
     } catch (error) {
       console.error('Ошибка при выполнении мутаций:', error);
     }
   };
 
-  const pasteSubTemplate = (
+  const pasteSubTemplate = async (
     targetId: number | undefined,
     { id, params: param }: PasteT,
   ) => {
-    const selectSubTemplate = subTemplates.find((sT) => sT.id === param.id);
+    const response: { data: Api.TemplateEntityDto } = await axiosInstance({
+      url: `/template/get-one/${param.coreTemplateId}`,
+      method: 'GET',
+    });
+
+    const selectSubTemplate = response.data.subTemplates.find(
+      (sT) => sT.id === param.id,
+    );
+
     if (!selectSubTemplate) {
       throw new Error('subTemplate of undefined');
     }
@@ -167,7 +181,9 @@ function Reception(props: IProps) {
       id: targetId,
       name: targetTemplate.name,
       positionId: bodyBlock.positionId,
-      lineBlocks: [...targetLineBlocks, ...bodyBlockLineBlocks],
+      lineBlocks: [...targetLineBlocks, ...bodyBlockLineBlocks].sort(
+        (a, b) => a.positionId - b.positionId,
+      ),
       subTemplateId: template.id,
     };
 
@@ -215,7 +231,9 @@ function Reception(props: IProps) {
 
       <MenuItem
         onClick={() => {
-          onCopyTemplate(`{"templateId":${template.id}}`);
+          onCopyTemplate(
+            `{"templateId":${template.id}, "coreTemplateId":${template.templateId}}`,
+          );
           handleCloseMenu();
         }}
       >
@@ -245,7 +263,9 @@ function Reception(props: IProps) {
 
       <MenuItem
         onClick={() => {
-          onCopyTemplate(`{"subTemplateId":${id}, "id":${template.id}}`);
+          onCopyTemplate(
+            `{"subTemplateId":${id}, "id":${template.id}, "coreTemplateId":${template.templateId}}`,
+          );
           handleCloseMenu();
         }}
       >
