@@ -14,6 +14,7 @@ import {
   useTemplateGetOne,
   useCreateUpdateBodyBlock,
   useDeleteBodyBlock,
+  useTemplateUpdate,
 } from '~features/draggable-list';
 import { HeaderTemplate } from '~features/header-template';
 import axiosInstance, { Api } from '~shared/api/realworld';
@@ -369,7 +370,7 @@ export function Preview() {
     params.subTemplateId as string,
   );
   const { mutate } = useCreateSubTemplate();
-  // const { mutate: updateBodyBlock } = useCreateUpdateBodyBlock();
+  const { mutate: updateTemplateTechInfo } = useTemplateUpdate();
   const { mutate: deleteSubTemplate } = useDeleteSubTemplate();
   const { mutate: deleteTemplate } = useDeleteTemplate();
 
@@ -420,6 +421,28 @@ export function Preview() {
     });
   };
 
+  const onSaveInfo = (html: string) => {
+    if (!data) return;
+
+    updateTemplateTechInfo(
+      {
+        id: data.id,
+        category: data.category,
+        name: data.name,
+        techInfo: html,
+      },
+      {
+        onSuccess: () => {
+          refetch();
+          toast('Success!', { type: 'success' });
+        },
+        onError: (error) => {
+          toast(errorHandler(error), { type: 'error' });
+        },
+      },
+    );
+  };
+
   useEffect(() => {
     if (!isLoading && !data?.subTemplates.length) {
       createReception(1);
@@ -450,7 +473,6 @@ export function Preview() {
           link={PATH_PAGE.template.root}
           className={s.backButton}
         />
-
         <div className={s.draggable}>
           <div className={s.headBlock}>
             {data.category}. {data.name}
@@ -461,8 +483,9 @@ export function Preview() {
           techInfo={{
             info: data.techInfo,
           }}
+          isEditing
+          onSaveInfo={onSaveInfo}
         />
-
         {subTemplate.map((template) => (
           <div key={template.id}>
             <Reception
@@ -479,7 +502,6 @@ export function Preview() {
             </div>
           </div>
         ))}
-
         <div className={s.toggleBlock}>
           <Menu
             open={toggle}

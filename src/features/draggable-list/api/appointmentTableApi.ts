@@ -36,6 +36,7 @@ export const appointmentTableKeys = {
   deleteSubTemplate: () => [...appointmentTableKeys.root, 'template-delete-sub-template'],
   deleteBodyBlock: () => [...appointmentTableKeys.root, 'template-delete-body-block'],
   templateGetOne: (id: string) => [...appointmentTableKeys.root, `template-get-one-${id}`],
+  templateUpdate: () => [...appointmentTableKeys.root, 'template-template-update'],
   createUpdateBodyBlock: () => [...appointmentTableKeys.root, 'create-update-body-block'],
   createTemplate: () => [...appointmentTableKeys.root, 'create-template'],
   createSubTemplate: () => [...appointmentTableKeys.root, 'create-sub-template'],
@@ -84,6 +85,26 @@ export function useCreateSubTemplate() {
     mutationFn: async (data: CreateSubTemplate) => {
       const response = await axiosInstance({
         url: '/template/create-sub-template',
+        method: 'POST',
+        data,
+
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useTemplateUpdate() {
+  return useMutation({
+    mutationKey: appointmentTableKeys.templateUpdate(),
+    mutationFn: async (data: {
+      id: number,
+      category: string,
+      name: string,
+      techInfo: string,
+    }) => {
+      const response = await axiosInstance({
+        url: '/template/update-template',
         method: 'POST',
         data,
 

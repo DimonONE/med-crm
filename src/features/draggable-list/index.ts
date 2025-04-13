@@ -4,7 +4,7 @@ export { useDraggableSlice } from './model/draggableSlice';
 
 // API
 export {
-  useTemplateGetOne, useTemplateGetAll, useCreateTemplate, useCreateSubTemplate, useDeleteTemplate, useDeleteSubTemplate,
+  useTemplateGetOne, useTemplateGetAll, useCreateTemplate, useCreateSubTemplate, useTemplateUpdate, useDeleteTemplate, useDeleteSubTemplate,
   useTreatment, useTreatmentId, useTreatmentCreate, useTreatmentUpdate, useTreatmentAnswerCreate, useDeleteBodyBlock,
 } from './api/appointmentTableApi';
 
